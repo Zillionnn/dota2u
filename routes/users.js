@@ -1,7 +1,13 @@
 var express = require('express');
 var router = express.Router();
 var request=require('request');
+
 var MatchHistoryModel=require('../model/MatchHistoryModel');
+var AccountMatchHistoryModel=require('../model/AccountMatchHistoryModel');
+var UserInfoModel=require('../model/UserInfo');
+
+var dota2constant=require('dotaconstants');
+var async=require('async');
 
 let CONFIG=require('../config/config');
 /* GET users listing. */
@@ -9,12 +15,16 @@ router.get('/', function(req, res, next) {
     res.send('respond with a resource');
 });
 
-var  userSummeries='http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key='+CONFIG.key+'&steamids=76561198081585830';
+var  userSummeries='http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key='+CONFIG.key+'&steamids=76561198081585830';
 var RecentlyPlayedGames='http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1?key='+CONFIG.key+'&steamid=76561198081585830';
 let getMatchHistoryURL='http://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1?key='+CONFIG.key;
 let getMatchDetail='http://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/v1?key='+CONFIG.key+'&match_id=';
 
 var matchhistory=new MatchHistoryModel();
+var accountMatchHistoryModel=new AccountMatchHistoryModel();
+var userInfoModel=new UserInfoModel();
+
+
 /*matchhistory.selectAll(function (data) {
     console.log("HERE",data);
 })*/
@@ -22,9 +32,56 @@ let params=[123456,123456,818,0,0,7,'[{"id":1,"name":"jack"},{"id":2,"name":"bob
 /*matchhistory.insert(params,function (data) {
     console.log(data);
 });*/
+//===========================
+getUserInfo();
+function getUserInfo() {
+    request(userSummeries,function (err, data) {
+        if(err){
+            throw console.error(err);
+        }else{
+         //  console.log(data.body);
+           let result=JSON.parse(data.body).response.players[0];
+           console.log(result);
+           let sql_params=[];
+           sql_params.push(parseInt(result.steamid));
+            sql_params.push(result.communityvisibilitystate);
+            sql_params.push(result.profilestate);
+            sql_params.push(result.personaname);
+            sql_params.push(result.lastlogoff);
+            sql_params.push(result.commentpermission);
+            sql_params.push(result.profileurl);
+            sql_params.push(result.avatar);
+            sql_params.push(result.avatarmedium);
+            sql_params.push(result.avatarfull);
+            sql_params.push(result.personastate);
+            sql_params.push(result.realname);
+            sql_params.push(result.primaryclanid);
+            sql_params.push(result.timecreated);
+            sql_params.push(result.personastateflags);
+            sql_params.push(result.loccountrycode);
+            //console.log(sql_params);
+            userInfoModel.selectBySteamId([parseInt(result.steamid)],function (data) {
+                if(data.rowCount>0){
+                    console.log('>>user exist');
+                    return;
+                }else{
+                    userInfoModel.insert(sql_params,function (data) {
+                        if(data.rowCount>=1){
+                            console.log("insert user info SUCCESS");
+                        };
+                    });
+                }
+            });
 
+        }
+    });
+}
+
+
+
+//============================
 let url=getMatchHistoryURL+'&matches_requested='+10+'&min_players='+2;
-
+//getMatchHistory();
 function getMatchHistory(start_match_id) {
     console.log(start_match_id);
     let  new_url=url;
@@ -47,6 +104,7 @@ function getMatchHistory(start_match_id) {
                 match_param.push(matches[i].radiant_team_id);
                 match_param.push(matches[i].dire_team_id);
                 match_param.push(JSON.stringify(matches[i].players));
+              //  console.log(match_param);
                 let rowcount_match_id;
                 matchhistory.selectByMatchId([matches[i].match_id],function (data ) {
                     //    console.log("select by id",data.rowCount);
@@ -62,9 +120,11 @@ function getMatchHistory(start_match_id) {
             console.log(matches[9]);
             if(matches[9]){
                 let lastID=matches[9].match_id-1;
-                getMatchHistory(lastID);
+                    getMatchHistory(lastID);
             }else{
-                getMatchHistory();
+                setTimeout(function () {
+                    getMatchHistory();
+                },60000);
             }
 
 
@@ -73,10 +133,66 @@ function getMatchHistory(start_match_id) {
     });
 }
 
-getMatchHistory();
-/*matchhistory.selectOne(function (data) {
-    console.log(data);
-})*/
+//console.log(dota2constant.heroes[1]);
+
+//获取用户所有比赛
+/*async.eachSeries(dota2constant.heroes,function (item,callback) {
+    getAccountMatchHistory(121320102,"",item.id,callback);
+});*/
+function getAccountMatchHistory(account_id,start_at_match_id,hero_id,callback) {
+    let new_url=url+'&account_id='+account_id+'&hero_id='+hero_id;
+
+    if(start_at_match_id){
+        new_url=new_url+'&start_at_match_id='+start_at_match_id;
+    }
+    console.log(new_url);
+    request(new_url,function (err,data) {
+        if(err){
+            //logger.info(err);
+        }else{
+            //  //logger.info(data.body);
+            var matches=JSON.parse(data.body).result.matches;
+          //  console.log(matches);
+            for(var i in matches){
+                let match_param=[];
+                match_param.push(account_id);
+                match_param.push(matches[i].match_id);
+                match_param.push(matches[i].match_seq_num);
+                match_param.push(matches[i].start_time);
+                match_param.push(matches[i].lobby_type);
+                match_param.push(matches[i].radiant_team_id);
+                match_param.push(matches[i].dire_team_id);
+                match_param.push(JSON.stringify(matches[i].players));
+              //  console.log(match_param);
+
+                let rowcount_match_id;
+                accountMatchHistoryModel.selectByMatchId([matches[i].match_id],function (data ) {
+                    //    console.log("select by id",data.rowCount);
+                    rowcount_match_id=data.rowCount;
+                    if(rowcount_match_id<=0){
+                        accountMatchHistoryModel.insert(match_param,function (data) {
+                            console.log(data);
+                        });
+                    }
+                });
+
+            }
+
+            if(matches[9]){
+                let lastID=matches[9].match_id-1;
+                getAccountMatchHistory(121320102,lastID,hero_id,callback);
+
+            }else {
+                callback();
+            }
+
+        }
+    });
+}
+
+
+
+
 /*router.get('/userinfo',function (req, res, next) {
   ////logger.info("userinfo");
     request(userSummeries,function (err, data) {

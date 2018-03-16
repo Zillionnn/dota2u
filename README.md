@@ -2,3 +2,13 @@
 
 
 http://steamwebapi.azurewebsites.net/
+
+https://developer.valvesoftware.com/wiki/Steam_Web_API
+
+http://steamcommunity.com/dev
+
+
+ http://steamcommunity.com/openid
+ 
+ 
+ https://www.npmjs.com/package/openid-client

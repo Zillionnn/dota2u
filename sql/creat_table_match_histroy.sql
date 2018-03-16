@@ -6,5 +6,5 @@
   radiant_team_id integer,
   dire_team_id integer,
   lobby_type integer,
-  players json[]
+  players json
 );
