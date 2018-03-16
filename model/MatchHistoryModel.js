@@ -10,7 +10,7 @@ const sql_options={
     selectOne:`SELECT * FROM users WHERE id = ${1}`,
     INSERT:`insert into t_match_history(match_id,match_seq_num,start_time,radiant_team_id,dire_team_id,lobby_type,players)
      VALUES($1,$2,$3,$4,$5,$6,$7) ;`,
-    SELECT_BY_MATCH_ID:`select * from t_match_history where match_id=$1`
+    SELECT_BY_MATCH_ID:`select * from t_match_history where match_id=$1;`
 };
 //继承
 util.inherits(MatchHistoryModel,_pgdb);

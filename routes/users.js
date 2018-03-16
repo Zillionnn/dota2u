@@ -6,7 +6,7 @@ var MatchHistoryModel=require('../model/MatchHistoryModel');
 let CONFIG=require('../config/config');
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+    res.send('respond with a resource');
 });
 
 var  userSummeries='http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key='+CONFIG.key+'&steamids=76561198081585830';
@@ -27,10 +27,12 @@ let url=getMatchHistoryURL+'&matches_requested='+10+'&min_players='+2;
 
 function getMatchHistory(start_match_id) {
     console.log(start_match_id);
+    let  new_url=url;
     if(start_match_id){
-        url=url+'&start_at_match_id='+start_match_id;
+        new_url=new_url+'&start_at_match_id='+start_match_id;
     }
-    request(url,function (err, data) {
+    console.log(new_url);
+    request(new_url,function (err, data) {
         if(err){
             //logger.info(err);
         }else{
@@ -45,13 +47,28 @@ function getMatchHistory(start_match_id) {
                 match_param.push(matches[i].radiant_team_id);
                 match_param.push(matches[i].dire_team_id);
                 match_param.push(JSON.stringify(matches[i].players));
-                //matchhistory.selectByMatchId();
-                matchhistory.insert(match_param,function (data) {
-                    console.log(data);
+                let rowcount_match_id;
+                matchhistory.selectByMatchId([matches[i].match_id],function (data ) {
+                    //    console.log("select by id",data.rowCount);
+                    rowcount_match_id=data.rowCount;
+                    if(rowcount_match_id<=0){
+                        matchhistory.insert(match_param,function (data) {
+                            console.log(data);
+                        });
+                    }
                 });
+
             }
-            let lastID=matches[9].match_id-1;
-          //  getMatchHistory(lastID);
+            console.log(matches[9]);
+            if(matches[9]){
+                let lastID=matches[9].match_id-1;
+                getMatchHistory(lastID);
+            }else{
+                getMatchHistory();
+            }
+
+
+
         }
     });
 }
@@ -87,14 +104,14 @@ router.get('/userRecentlyPlayedGames',function (req, res, next) {
 
 //查询的匹配历史
 router.post('/getMatchHistory',function (req, res, next) {
- //   ////logger.info("getMatchHistory>>");
+    //   ////logger.info("getMatchHistory>>");
     let hero_id=parseInt(req.body.hero_id);
 
     let    min_players=parseInt(req.body.min_players);
-        let account_id=parseInt(req.body.account_id);
-        let start_at_match_id=parseInt(req.body.start_at_match_id);
+    let account_id=parseInt(req.body.account_id);
+    let start_at_match_id=parseInt(req.body.start_at_match_id);
 
-  let matches_requested=parseInt(req.body.matches_requested);
+    let matches_requested=parseInt(req.body.matches_requested);
     let url=getMatchHistory+'&account_id='+account_id+'&hero_id='+hero_id+'&matches_requested='+matches_requested+'&min_players='+min_players+'&start_at_match_id='+start_at_match_id;
     //logger.info(req.body);
     //logger.warn("getMatchHistoryByHero url>>",url);
@@ -102,7 +119,7 @@ router.post('/getMatchHistory',function (req, res, next) {
         if(err){
             //logger.info(err);
         }else{
-         //  //logger.info(data.body);
+            //  //logger.info(data.body);
             res.send(data.body);
         }
     })
@@ -120,7 +137,7 @@ router.post('/getMatchDetail',function (req, res, next) {
         if(err){
             //logger.info(err);
         }else{
-           // //logger.info(data.body);
+            // //logger.info(data.body);
             res.send(data.body);
         }
 
