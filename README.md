@@ -12,3 +12,6 @@ http://steamcommunity.com/dev
  
  
  https://www.npmjs.com/package/openid-client
+ 
+ 
+ _用户注册，绑定account，（解绑）_

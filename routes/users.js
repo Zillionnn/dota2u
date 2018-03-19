@@ -32,7 +32,9 @@ let params=[123456,123456,818,0,0,7,'[{"id":1,"name":"jack"},{"id":2,"name":"bob
 /*matchhistory.insert(params,function (data) {
     console.log(data);
 });*/
-//===========================
+
+
+//==========get user steam info=================
 getUserInfo();
 function getUserInfo() {
     request(userSummeries,function (err, data) {
@@ -43,7 +45,8 @@ function getUserInfo() {
            let result=JSON.parse(data.body).response.players[0];
            console.log(result);
            let sql_params=[];
-           sql_params.push(parseInt(result.steamid));
+            result.steamid=parseInt(result.steamid);
+           sql_params.push(result.steamid);
             sql_params.push(result.communityvisibilitystate);
             sql_params.push(result.profilestate);
             sql_params.push(result.personaname);
@@ -59,11 +62,15 @@ function getUserInfo() {
             sql_params.push(result.timecreated);
             sql_params.push(result.personastateflags);
             sql_params.push(result.loccountrycode);
-            //console.log(sql_params);
-            userInfoModel.selectBySteamId([parseInt(result.steamid)],function (data) {
+            console.log(sql_params);
+            userInfoModel.selectBySteamId([result.steamid],function (data) {
                 if(data.rowCount>0){
                     console.log('>>user exist');
-                    return;
+                    sql_params.push(result.steamid);
+                    userInfoModel.update(sql_params,function (data) {
+                        console.log(data);
+                    });
+
                 }else{
                     userInfoModel.insert(sql_params,function (data) {
                         if(data.rowCount>=1){
@@ -79,7 +86,7 @@ function getUserInfo() {
 
 
 
-//============================
+//============match history================
 let url=getMatchHistoryURL+'&matches_requested='+10+'&min_players='+2;
 //getMatchHistory();
 function getMatchHistory(start_match_id) {
@@ -132,6 +139,14 @@ function getMatchHistory(start_match_id) {
         }
     });
 }
+
+
+
+
+
+
+
+
 
 //console.log(dota2constant.heroes[1]);
 
