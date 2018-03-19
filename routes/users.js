@@ -25,17 +25,11 @@ var accountMatchHistoryModel=new AccountMatchHistoryModel();
 var userInfoModel=new UserInfoModel();
 
 
-/*matchhistory.selectAll(function (data) {
-    console.log("HERE",data);
-})*/
 let params=[123456,123456,818,0,0,7,'[{"id":1,"name":"jack"},{"id":2,"name":"bob"}]'];
-/*matchhistory.insert(params,function (data) {
-    console.log(data);
-});*/
 
 
 //==========get user steam info=================
-getUserInfo();
+//getUserInfo();
 function getUserInfo() {
     request(userSummeries,function (err, data) {
         if(err){
@@ -87,7 +81,7 @@ function getUserInfo() {
 
 
 //============match history================
-let url=getMatchHistoryURL+'&matches_requested='+10+'&min_players='+2;
+let url=getMatchHistoryURL+'&matches_requested='+100+'&min_players='+2;
 //getMatchHistory();
 function getMatchHistory(start_match_id) {
     console.log(start_match_id);
@@ -142,20 +136,21 @@ function getMatchHistory(start_match_id) {
 
 
 
-
-
-
-
-
-
 //console.log(dota2constant.heroes[1]);
 
-//获取用户所有比赛
+//===========================================获取用户所有比赛
 /*async.eachSeries(dota2constant.heroes,function (item,callback) {
     getAccountMatchHistory(121320102,"",item.id,callback);
 });*/
+//insertAccountMatchHistory100(121320102);
 function getAccountMatchHistory(account_id,start_at_match_id,hero_id,callback) {
-    let new_url=url+'&account_id='+account_id+'&hero_id='+hero_id;
+    let new_url=url+'&account_id='+account_id;
+    if(hero_id && start_at_match_id){
+        new_url=url+'&account_id='+account_id+'&hero_id='+hero_id+'&start_at_match_id='+start_at_match_id;
+    }
+    if (hero_id){
+         new_url=url+'&account_id='+account_id+'&hero_id='+hero_id;
+    }
 
     if(start_at_match_id){
         new_url=new_url+'&start_at_match_id='+start_at_match_id;
@@ -206,6 +201,180 @@ function getAccountMatchHistory(account_id,start_at_match_id,hero_id,callback) {
 }
 
 
+function insertAccountMatchHistory100(account_id,start_at_match_id,hero_id) {
+    let new_url=url+'&account_id='+account_id;
+    if(hero_id && start_at_match_id){
+        new_url=url+'&account_id='+account_id+'&hero_id='+hero_id+'&start_at_match_id='+start_at_match_id;
+    }
+    if (hero_id){
+        new_url=url+'&account_id='+account_id+'&hero_id='+hero_id;
+    }
+
+    if(start_at_match_id){
+        new_url=new_url+'&start_at_match_id='+start_at_match_id;
+    }
+    console.log(new_url);
+    request(new_url,function (err,data) {
+        if(err){
+            //logger.info(err);
+        }else{
+            //  //logger.info(data.body);
+            var matches=JSON.parse(data.body).result.matches;
+              console.log(matches.length);
+            for(var i in matches){
+                let match_param=[];
+                match_param.push(account_id);
+                match_param.push(matches[i].match_id);
+                match_param.push(matches[i].match_seq_num);
+                match_param.push(matches[i].start_time);
+                match_param.push(matches[i].lobby_type);
+                match_param.push(matches[i].radiant_team_id);
+                match_param.push(matches[i].dire_team_id);
+                match_param.push(JSON.stringify(matches[i].players));
+                //  console.log(match_param);
+
+                let rowcount_match_id;
+                accountMatchHistoryModel.selectByMatchId([matches[i].match_id],function (data ) {
+                    //    console.log("select by id",data.rowCount);
+                    rowcount_match_id=data.rowCount;
+                    if(rowcount_match_id<=0){
+                        accountMatchHistoryModel.insert(match_param,function (data) {
+                            console.log(data);
+                        });
+                    }
+                });
+
+            }
+
+        }
+    });
+}
+let dataArray=[];
+let get100Data=false;
+if(get100Data){
+    doOneHundred();
+}
+function doOneHundred(){
+
+    let sumKills=0,
+        sumDeaths=0,
+        sumAssists=0,
+        sumLastHits=0,
+        sumDenies=0,
+        sumGoldPerMin=0,
+        sumXp=0,
+        sumHeroDamage=0,
+        sumTowerDamage=0,
+        sumScaledHeroDamage=0,
+        sumScaledTowerDamage=0,
+        sumScaledHeroHealing=0  ;
+
+
+    for(let  i in dataArray){
+        //   console.log(i);
+        sumKills+=dataArray[i].kills;
+        sumDeaths+=dataArray[i].deaths;
+        sumAssists+=dataArray[i].assists;
+        sumLastHits+=dataArray[i].last_hits;
+        sumDenies+=dataArray[i].denies;
+        sumGoldPerMin+=dataArray[i].gold_per_min;
+        sumXp+=dataArray[i].xp_per_min;
+        sumHeroDamage+=dataArray[i].hero_damage;
+        sumTowerDamage+=dataArray[i].tower_damage;
+        sumScaledHeroDamage+=dataArray[i].scaled_hero_damage;
+
+        sumScaledTowerDamage+=dataArray[i].scaled_tower_damage;
+
+        sumScaledHeroHealing+=dataArray[i].scaled_hero_healing;
+
+    }
+    let avgKills=sumKills/100;
+    let avgDeaths=sumDeaths/100;
+    let avgAssists=sumAssists/100;
+    let avgDenies=sumDenies/100;
+    let avgSumLastHits=sumLastHits/100;
+    let avgHeroDamage=sumHeroDamage/100;
+    let avgScaledHeroDamange=sumScaledHeroDamage/100;
+    let avgScaledHeroHealing=sumScaledHeroHealing/100;
+    let avgScaledTowerDamage=sumScaledTowerDamage/100;
+    let avgSumXp=sumXp/100;
+
+    let avgGoldPerMin=sumGoldPerMin/100;
+    console.log(avgKills,avgDeaths);
+
+}
+get100LastestAccountMatchIds(121320102);
+function get100LastestAccountMatchIds (account_id) {
+    accountMatchHistoryModel.selectAccount100([account_id],function (data ) {
+        console.log( data.rows[0].match_id);
+
+
+        async.eachSeries(data.rows,function (item, done) {
+            let matchId=parseInt(item.match_id);
+          //  console.log(item);
+
+          getMatchDetails(account_id,matchId,done,function (data) {
+             //  console.log(data);
+               dataArray.push(data);
+           });
+            //console.log(dataArray);
+
+
+        });
+
+
+
+
+    });
+}
+
+function getMatchDetails(account_id,match_id,done,callback) {
+    let playerData={
+       kills:0,
+       deaths:0,
+       assists:0,
+        last_hits:0,
+        denies:0,
+        gold_per_min:0,
+        xp_per_min:0,
+        hero_damage:0,
+        tower_damage:0,
+        scaled_hero_damage:0,
+        scaled_tower_damage:0,
+        scaled_hero_healing:0
+    };
+    let url=getMatchDetail+match_id;
+    //console.log(url);
+    request(url,function (err,data) {
+        if(err){
+            //logger.info(err);
+        }else{
+        //  console.log(data.body);
+          let result=JSON.parse(data.body).result;
+           let players=result.players;
+           for(var i in players){
+               if(account_id==players[i].account_id){
+                   //console.log(players[i]);
+                   playerData.kills=players[i].kills;
+                   playerData.deaths=players[i].deaths;
+                   playerData.assists=players[i].assists;
+                   playerData.last_hits=players[i].last_hits;
+                   playerData.denies=players[i].denies;
+                   playerData.gold_per_min=players[i].gold_per_min;
+                   playerData.xp_per_min=players[i].xp_per_min;
+                   playerData.hero_damage=players[i].hero_damage;
+                   playerData.tower_damage=players[i].tower_damage;
+                   playerData.scaled_hero_damage=players[i].scaled_hero_damage;
+                   playerData.scaled_tower_damage=players[i].scaled_tower_damage;
+                   playerData.scaled_hero_healing=players[i].scaled_hero_healing;
+                   callback(playerData);
+                   done();
+               }
+           }
+        }
+
+    });
+}
 
 
 /*router.get('/userinfo',function (req, res, next) {

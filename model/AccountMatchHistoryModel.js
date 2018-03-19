@@ -10,7 +10,9 @@ const sql_options={
     SELECT_ONE:`SELECT * FROM users WHERE id = ${1}`,
     INSERT:`insert into t_account_match_history(account_id,match_id,match_seq_num,start_time,radiant_team_id,dire_team_id,lobby_type,players)
      VALUES($1,$2,$3,$4,$5,$6,$7,$8) ;`,
-    SELECT_BY_MATCH_ID:`select * from t_account_match_history where match_id=$1;`
+    SELECT_BY_MATCH_ID:`select * from t_account_match_history where match_id=$1;`,
+
+    SELECT_PLAYER_100_MATCHES:'SELECT match_id FROM  t_account_match_history WHERE account_id = $1 ORDER BY start_time DESC LIMIT 100;'
 };
 //继承
 util.inherits(AccountMatchHistoryModel,_pgdb);
@@ -41,4 +43,10 @@ AccountMatchHistoryModel.prototype.insert=function (params,callback) {
     });
 }
 
+
+AccountMatchHistoryModel.prototype.selectAccount100=function (params, callback) {
+    this._query(sql_options.SELECT_PLAYER_100_MATCHES,params,function (data) {
+        callback(data);
+    })
+}
 module.exports=AccountMatchHistoryModel;

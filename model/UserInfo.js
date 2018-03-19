@@ -20,7 +20,9 @@ const sql_options={
     UPDATE_BY_STEAM_ID:`update t_user_info SET steam_id=$1 ,communityvisibilitystate=$2 ,profilestate =$3,
     personaname=$4 ,lastlogoff =$5,commentpermission =$6,profileurl=$7,avatar=$8,avatarmedium=$9,avatarfull=$10,
         personastate=$11,realname=$12,primaryclanid =$13,timecreated=$14 ,personastateflags =$15,
-        loccountrycode=$16 WHERE steam_id =$17;`
+        loccountrycode=$16 WHERE steam_id =$17;`,
+
+
 };
 //继承
 util.inherits(UserInfoModel,_pgdb);
@@ -40,7 +42,7 @@ UserInfoModel.prototype.selectOne=function (callback) {
 }
 
 UserInfoModel.prototype.selectBySteamId=function (params,callback) {
-    console.log(params);
+ // console.log(params);
     this._query(sql_options.SELECT_BY_STEAM__ID,params,function (data) {
         callback( data);
     });
@@ -48,14 +50,14 @@ UserInfoModel.prototype.selectBySteamId=function (params,callback) {
 
 //steam api
 UserInfoModel.prototype.insert=function (params,callback) {
-    console.log(params);
+    //console.log(params);
     this._query(sql_options.INSERT,params,function (data) {
         callback( data);
     });
 }
 
 UserInfoModel.prototype.update=function (params,callback) {
-    console.log(params);
+ //   console.log(params);
     this._query(sql_options.UPDATE_BY_STEAM_ID,params,function (data) {
         callback(data);
     });
