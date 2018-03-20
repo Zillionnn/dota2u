@@ -2,8 +2,8 @@ create table t_match_detail(
 	id serial PRIMARY KEY,
 	match_id bigint NOT NULL,
 	match_seq_num bigint NOT NULL,
-	radiant_win boolean NOT NULL DEFAULT 0,
-		duration bigint NOT NULL,
+	radiant_win boolean NOT NULL DEFAULT true,
+	duration bigint NOT NULL,
 	start_time bigint NOT NULL,
 
 	tower_status_radiant integer NOT NULL,
