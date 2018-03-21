@@ -1,5 +1,6 @@
-﻿create table t_user_info(
+create table t_user_info(
 	id serial PRIMARY KEY,
+	user_id bigint NOT NULL,
 	account_id integer DEFAULT 0,
 	 steam_id bigint NOT NULL,
 	communityvisibilitystate integer  DEFAULT 0,

@@ -1,5 +1,6 @@
 create table t_user_data(
 	id serial PRIMARY KEY,
+		user_id text NOT NULL,
 	account_id integer NOT NULL,
 	
 	avg_kill numeric NOT NULL DEFAULT 0,
