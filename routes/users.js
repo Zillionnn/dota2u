@@ -85,7 +85,7 @@ function getUserInfo() {
 //=======100场=====match history================
 //============match history====当前 最新500场============
 let url=getMatchHistoryURL+'&matches_requested='+10+'&min_players='+2;
-//getMatchHistory();
+
 function getMatchHistory(start_match_id) {
     console.log(start_match_id);
     let  new_url=url;

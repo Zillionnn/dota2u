@@ -1,6 +1,7 @@
 var pg=require("pg");
 
 var config={
+    host:'192.168.137.86',
     user:"postgres",
     database:"dota2u",
     password:"123456",
