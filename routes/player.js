@@ -10,20 +10,30 @@ const MatchDetailModel=require('../model/MatchDetailModel');
 
 const  dota2constant=require('dotaconstants');
 const  async=require('async');
+const dota2Client=require('../steam_dota2_client/dota2Client');
 
 let CONFIG=require('../config/config');
+
+
+
 /* GET users listing. */
 router.post('/getRecentMatchesByAccount', function(req, res, next) {
     console.log(req.body);
     let account=req.body.account;
     getPlayerRecentMatchHistory(account,function (data) {
-        console.log(data);
+        //console.log(data);
         res.send(data);
     });
     
 });
 
-var  userSummeries='http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key='+CONFIG.key+'&steamids=76561198081585830';
+router.post('./getUserInfoByAccount',function (req, res, next) {
+    console.log(req.body);
+    let account_id=req.body.account;
+    getUserInfo(account_id);
+});
+
+var  userSummeries='http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key='+CONFIG.key;
 var RecentlyPlayedGames='http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1?key='+CONFIG.key+'&steamid=76561198081585830';
 let getMatchHistoryURL='http://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1?key='+CONFIG.key;
 let getMatchDetail='http://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/v1?key='+CONFIG.key+'&match_id=';
@@ -37,15 +47,20 @@ let params=[123456,123456,818,0,0,7,'[{"id":1,"name":"jack"},{"id":2,"name":"bob
 
 
 //==========get user steam info=================
-//getUserInfo();
-function getUserInfo() {
-    request(userSummeries,function (err, data) {
+getUserInfo(368114095);
+function getUserInfo(account_id,callback) {
+    console.log(userSummeries);
+    let steamID=dota2Client.ToSteamID(account_id);
+    console.log("steam id ==",steamID);
+    let new_url=userSummeries+'&steamids='+steamID;
+    console.log(new_url);
+    request(new_url,function (err, data) {
         if(err){
             throw console.error(err);
         }else{
-            //  console.log(data.body);
-            let result=JSON.parse(data.body).response.players[0];
-            console.log(result);
+              console.log(data.body);
+           let result=JSON.parse(data.body).response.players[0];
+           console.log(result);
             let sql_params=[];
             result.steamid=parseInt(result.steamid);
             sql_params.push(result.steamid);
@@ -64,6 +79,7 @@ function getUserInfo() {
             sql_params.push(result.timecreated);
             sql_params.push(result.personastateflags);
             sql_params.push(result.loccountrycode);
+            sql_params.push(account_id);
             console.log(sql_params);
             userInfoModel.selectBySteamId([result.steamid],function (data) {
                 if(data.rowCount>0){
@@ -160,13 +176,20 @@ function getMatchHistory(start_match_id) {
 
 //console.log(dota2constant.heroes[1]);
 
-//===========================================获取用户所有比赛
-/*async.eachSeries(dota2constant.heroes,function (item,callback) {
- getAccountMatchHistory(121320102,"",item.id,callback);
- });*/
+
 //insertAccountMatchHistory100(121320102);
 
+
+/***
+ * 获取玩家比赛记录
+ * account_id
+ * start_at_match_id
+ * hero_id
+ * callback
+ *
+ * */
 function getAccountMatchHistory(account_id,start_at_match_id,hero_id,callback) {
+    let url=getMatchHistoryURL+'&matches_requested='+10+'&min_players='+2;
     let new_url=url+'&account_id='+account_id;
     if(hero_id && start_at_match_id){
         new_url=url+'&account_id='+account_id+'&hero_id='+hero_id+'&start_at_match_id='+start_at_match_id;
@@ -213,7 +236,7 @@ function getAccountMatchHistory(account_id,start_at_match_id,hero_id,callback) {
 
             if(matches[9]){
                 let lastID=matches[9].match_id-1;
-                getAccountMatchHistory(121320102,lastID,hero_id,callback);
+                getAccountMatchHistory(account_id,lastID,hero_id,callback);
 
             }else {
                 callback();
@@ -241,8 +264,8 @@ function getPlayerRecentMatchHistory(account_id, callback) {
             accountMatchHistoryModel.selectByMatchId([lastest_match_id],function (data) {
                 if(data.rowCount==0){
                     console.warn("THE ACCOUNT NEED TO UPDATE DATA");
-                    //TODO
-                    //updatePlayerMatchHistory(account_id);
+                    //更新王家所有比赛记录
+                    updatePlayerMatchHistory(account_id);
 
                 }else if(data.rowCount==1){
                     let request_num=20;
@@ -296,7 +319,22 @@ function getPlayerRecentMatchHistory(account_id, callback) {
     });*/
 }
 
+//更新玩家所有比赛记录
+function updatePlayerMatchHistory(account_id) {
+    accountMatchHistoryModel.selectByAccount([account_id],function (data) {
+        if(data.rowCount>0){
+            console.log(data.rowCount);
+            //按时间顺序获取记录；
+            getAccountMatchHistory(account_id);
+        }else{
+            //==========获取用户所有比赛=========
+            async.eachSeries(dota2constant.heroes,function (item,callback) {
+                getAccountMatchHistory(account_id,"",item.id,callback);
+            });
+        }
+    });
 
+}
 
 function selectPlayerMatch(account_id,request_num,callback) {
     let sql_params=[];

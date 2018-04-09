@@ -26,6 +26,28 @@ var onSteamLogOn = function onSteamLogOn(logonResp) {
 
             Dota2.on("ready", function() {
                 util.log("Node-dota2 ready.");
+
+
+
+
+                let match_id=-1;
+                if(match_id>0){
+                    Dota2.requestMatchDetails(match_id,function (err, data) {
+                        if(err){
+                            console.log(err);
+                        }else{
+                            console.log("REQUEST MATCH DETAILS ");
+                            console.log(JSON.stringify(data));
+                        }
+                    });
+                }
+
+
+                Dota2.on("matchDetailsData",function (match_id, matchDetailsResponse) {
+                    console.log("EVENT  >> MATCHDETAILSDATA");
+                    console.log(match_id);
+                    console.log(matchDetailsResponse);
+                });
            //     getMatchHistory();
 
          /*       Dota2.requestMatches({
@@ -120,11 +142,11 @@ catch (beef){
 
 steamClient.connect();
 
-/*setTimeout(function () {
+setTimeout(function () {
     Dota2.exit();
     steamClient.disconnect();
     console.log("==CLIENT DISCONNECTED==");
-},60000);*/
+},60000);
 
 
 steamClient.on('connected', function() {
@@ -232,3 +254,12 @@ function requestDetail(match_id,callback) {
     });
 
 }
+
+
+exports.ToSteamID=function (account_id) {
+    console.log("dota2 client>>",account_id);
+    let steam_id=Dota2.ToSteamID(account_id);
+    console.log(steam_id.toString());
+    return steam_id.toString();
+
+};
