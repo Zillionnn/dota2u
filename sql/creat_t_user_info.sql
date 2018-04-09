@@ -1,6 +1,5 @@
 create table t_user_info(
 	id serial PRIMARY KEY,
-	user_id bigint NOT NULL,
 	account_id integer DEFAULT 0,
 	 steam_id bigint NOT NULL,
 	communityvisibilitystate integer  DEFAULT 0,
@@ -15,7 +14,7 @@ create table t_user_info(
 	personastate integer  DEFAULT 0,
 	realname text,
 	primaryclanid text,
-	timecreated bigint NOT NULL,
+	timecreated bigint ,
 	personastateflags integer DEFAULT 0,
 	gameextrainfo text,
 	gameid text,
