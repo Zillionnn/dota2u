@@ -142,11 +142,11 @@ catch (beef){
 
 steamClient.connect();
 
-setTimeout(function () {
+/*setTimeout(function () {
     Dota2.exit();
     steamClient.disconnect();
     console.log("==CLIENT DISCONNECTED==");
-},60000);
+},60000);*/
 
 
 steamClient.on('connected', function() {
