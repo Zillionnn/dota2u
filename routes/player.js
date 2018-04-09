@@ -27,10 +27,15 @@ router.post('/getRecentMatchesByAccount', function(req, res, next) {
     
 });
 
-router.post('./getUserInfoByAccount',function (req, res, next) {
+/**
+ * API 查询玩家基本信息
+ * */
+router.post('/getUserInfoByAccount',function (req, res, next) {
     console.log(req.body);
     let account_id=req.body.account;
-    getUserInfo(account_id);
+    getUserInfo(account_id,function (data) {
+        res.send(data);
+    });
 });
 
 var  userSummeries='http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key='+CONFIG.key;
@@ -46,9 +51,19 @@ let matchDetailModel=new MatchDetailModel();
 let params=[123456,123456,818,0,0,7,'[{"id":1,"name":"jack"},{"id":2,"name":"bob"}]'];
 
 
-//==========get user steam info=================
-getUserInfo(368114095);
+//=======通过account_id查询玩家信息========?????????==
+
 function getUserInfo(account_id,callback) {
+    fetchUserInfo(account_id,function (data) {
+        console.log("getUserInfo >>",data);
+        callback(data);
+    });
+    }
+
+
+
+//==========fetch user steam info=================
+function fetchUserInfo(account_id,callback) {
     console.log(userSummeries);
     let steamID=dota2Client.ToSteamID(account_id);
     console.log("steam id ==",steamID);
@@ -58,9 +73,8 @@ function getUserInfo(account_id,callback) {
         if(err){
             throw console.error(err);
         }else{
-              console.log(data.body);
            let result=JSON.parse(data.body).response.players[0];
-           console.log(result);
+          // console.log(result);
             let sql_params=[];
             result.steamid=parseInt(result.steamid);
             sql_params.push(result.steamid);
@@ -96,6 +110,11 @@ function getUserInfo(account_id,callback) {
                         };
                     });
                 }
+            });
+
+            userInfoModel.selectByAccountID([account_id],function (data) {
+               console.log("select by account id ===============>.",data.rows[0]);
+               callback(data.rows[0]);
             });
 
         }
@@ -258,28 +277,37 @@ function getPlayerRecentMatchHistory(account_id, callback) {
             //logger.info(err);
         }else{
             //  //logger.info(data.body);
-            var matches=JSON.parse(data.body).result.matches;
-            //  console.log(matches);
-            let lastest_match_id=matches[0].match_id;
-            accountMatchHistoryModel.selectByMatchId([lastest_match_id],function (data) {
-                if(data.rowCount==0){
-                    console.warn("THE ACCOUNT NEED TO UPDATE DATA");
-                    //更新王家所有比赛记录
-                    updatePlayerMatchHistory(account_id);
+            let result=JSON.parse(data.body).result;
+            console.log(result);
+            if(result.status!=1){
+                callback({error:403});
+                return;
+            }
+            let matches=result.matches;
 
-                }else if(data.rowCount==1){
-                    let request_num=20;
-                    selectPlayerMatch(account_id,request_num,function (data) {
-                        console.log(data.rows[0]);
-                        let matches=[];
-                        for(let i in data.rows){
-                            matches.push(data.rows[i]);
-                        }
-                        callback(matches);
-                    });
-                }
-            });
-         //   callback(matches);
+            if(matches){
+                let lastest_match_id=matches[0].match_id;
+                accountMatchHistoryModel.selectByMatchId([lastest_match_id],function (data) {
+                    if(data.rowCount==0){
+                        console.warn("THE ACCOUNT NEED TO UPDATE DATA");
+                        //更新王家所有比赛记录
+                        updatePlayerMatchHistory(account_id);
+
+                    }else if(data.rowCount==1){
+                        let request_num=20;
+                        selectPlayerMatch(account_id,request_num,function (data) {
+                            console.log(data.rows[0]);
+                            let matches=[];
+                            for(let i in data.rows){
+                                matches.push(data.rows[i]);
+                            }
+                            callback(matches);
+                        });
+                    }
+                });
+                //   callback(matches);
+            }
+
         }
     });
 
@@ -325,7 +353,7 @@ function updatePlayerMatchHistory(account_id) {
         if(data.rowCount>0){
             console.log(data.rowCount);
             //按时间顺序获取记录；
-            getAccountMatchHistory(account_id);
+            getAccountMatchHistory(account_id,callback);
         }else{
             //==========获取用户所有比赛=========
             async.eachSeries(dota2constant.heroes,function (item,callback) {

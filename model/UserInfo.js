@@ -22,6 +22,7 @@ const sql_options={
         personastate=$11,realname=$12,primaryclanid =$13,timecreated=$14 ,personastateflags =$15,
         loccountrycode=$16,account_id=$17 WHERE steam_id =$18;`,
 
+    SELECT_BY_ACCOUNT_ID:`SELECT * FROM t_user_info where account_id=$1;`,
 
 };
 //继承
@@ -59,6 +60,13 @@ UserInfoModel.prototype.insert=function (params,callback) {
 UserInfoModel.prototype.update=function (params,callback) {
  //   console.log(params);
     this._query(sql_options.UPDATE_BY_STEAM_ID,params,function (data) {
+        callback(data);
+    });
+}
+
+UserInfoModel.prototype.selectByAccountID=function (params,callback) {
+    //   console.log(params);
+    this._query(sql_options.SELECT_BY_ACCOUNT_ID,params,function (data) {
         callback(data);
     });
 }
