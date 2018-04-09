@@ -226,11 +226,41 @@ function getAccountMatchHistory(account_id,start_at_match_id,hero_id,callback) {
 
 
 function getPlayerRecentMatchHistory(account_id, callback) {
-    let recentURL=getMatchHistoryURL+'&matches_requested='+25+'&min_players='+2;
+    let recentURL=getMatchHistoryURL+'&matches_requested='+1+'&min_players='+2;
     let new_url=recentURL+'&account_id='+account_id;
 
     console.log(new_url);
     request(new_url,function (err,data) {
+        if(err){
+            //logger.info(err);
+        }else{
+            //  //logger.info(data.body);
+            var matches=JSON.parse(data.body).result.matches;
+            //  console.log(matches);
+            let lastest_match_id=matches[0].match_id;
+            accountMatchHistoryModel.selectByMatchId([lastest_match_id],function (data) {
+                if(data.rowCount==0){
+                    console.warn("THE ACCOUNT NEED TO UPDATE DATA");
+                    //TODO
+                    updatePlayerMatchHistory(account_id);
+
+                }else if(data.rowCount==1){
+                    let request_num=20;
+                    selectPlayerMatch(account_id,request_num,function (data) {
+                        console.log(data.rows[0]);
+                        let matches=[];
+                        for(let i in data.rows){
+                            matches.push(data.rows[i]);
+                        }
+                        callback(matches);
+                    });
+                }
+            });
+         //   callback(matches);
+        }
+    });
+
+/*    request(new_url,function (err,data) {
         if(err){
             //logger.info(err);
         }else{
@@ -263,10 +293,20 @@ function getPlayerRecentMatchHistory(account_id, callback) {
             }
             callback(matches);
         }
-    });
+    });*/
 }
 
 
+
+function selectPlayerMatch(account_id,request_num,callback) {
+    let sql_params=[];
+    sql_params.push(account_id);
+    sql_params.push(request_num);
+    accountMatchHistoryModel.selectByPlayerIdAndLimit(sql_params,function (data) {
+
+        callback(data);
+    })
+}
 
 function insertAccountMatchHistory100(account_id,start_at_match_id,hero_id) {
     let new_url=url+'&account_id='+account_id;
