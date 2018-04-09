@@ -242,7 +242,7 @@ function getPlayerRecentMatchHistory(account_id, callback) {
                 if(data.rowCount==0){
                     console.warn("THE ACCOUNT NEED TO UPDATE DATA");
                     //TODO
-                    updatePlayerMatchHistory(account_id);
+                    //updatePlayerMatchHistory(account_id);
 
                 }else if(data.rowCount==1){
                     let request_num=20;
