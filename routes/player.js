@@ -16,7 +16,10 @@ let CONFIG=require('../config/config');
 
 
 
-/* GET users listing. */
+/**
+ *
+ * GET users listing.
+ * */
 router.post('/getRecentMatchesByAccount', function(req, res, next) {
     console.log(req.body);
     let account=req.body.account;
@@ -38,6 +41,23 @@ router.post('/getUserInfoByAccount',function (req, res, next) {
     });
 });
 
+
+/**
+ * 取得一场比赛的详细信息；
+ */
+router.get('/getonematchdetail/:match_id',function (req, res, next) {
+    console.log("match_id>>",req.params.match_id);
+    let match_id=req.params.match_id;
+    matchDetailModel.selectByMatchId([match_id],function (data) {
+        console.log("matchDetailsModel>>\n",data);
+        res.json(data.rows);
+    })
+});
+
+
+/**
+ * ============================================================
+ * */
 var  userSummeries='http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key='+CONFIG.key;
 var RecentlyPlayedGames='http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1?key='+CONFIG.key+'&steamid=76561198081585830';
 let getMatchHistoryURL='http://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1?key='+CONFIG.key;
