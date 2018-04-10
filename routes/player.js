@@ -332,6 +332,7 @@ function getAccountMatchHistory(account_id,start_at_match_id,hero_id) {
                         accountMatchHistoryModel.insert(match_param,function (data) {
                             console.log(data);
                         });
+                        insertMatchDetails(matches[i].match_id);
                     }else{
                         return;
                     }
