@@ -73,49 +73,55 @@ function fetchUserInfo(account_id,callback) {
         if(err){
             throw console.error(err);
         }else{
-           let result=JSON.parse(data.body).response.players[0];
-          // console.log(result);
-            let sql_params=[];
-            result.steamid=parseInt(result.steamid);
-            sql_params.push(result.steamid);
-            sql_params.push(result.communityvisibilitystate);
-            sql_params.push(result.profilestate);
-            sql_params.push(result.personaname);
-            sql_params.push(result.lastlogoff);
-            sql_params.push(result.commentpermission);
-            sql_params.push(result.profileurl);
-            sql_params.push(result.avatar);
-            sql_params.push(result.avatarmedium);
-            sql_params.push(result.avatarfull);
-            sql_params.push(result.personastate);
-            sql_params.push(result.realname);
-            sql_params.push(result.primaryclanid);
-            sql_params.push(result.timecreated);
-            sql_params.push(result.personastateflags);
-            sql_params.push(result.loccountrycode);
-            sql_params.push(account_id);
-            console.log(sql_params);
-            userInfoModel.selectBySteamId([result.steamid],function (data) {
-                if(data.rowCount>0){
-                    console.log('>>user exist');
-                    sql_params.push(result.steamid);
-                    userInfoModel.update(sql_params,function (data) {
-                        console.log(data);
-                    });
+            try{
+                let result=JSON.parse(data.body).response.players[0];
+                // console.log(result);
+                let sql_params=[];
+                result.steamid=parseInt(result.steamid);
+                sql_params.push(result.steamid);
+                sql_params.push(result.communityvisibilitystate);
+                sql_params.push(result.profilestate);
+                sql_params.push(result.personaname);
+                sql_params.push(result.lastlogoff);
+                sql_params.push(result.commentpermission);
+                sql_params.push(result.profileurl);
+                sql_params.push(result.avatar);
+                sql_params.push(result.avatarmedium);
+                sql_params.push(result.avatarfull);
+                sql_params.push(result.personastate);
+                sql_params.push(result.realname);
+                sql_params.push(result.primaryclanid);
+                sql_params.push(result.timecreated);
+                sql_params.push(result.personastateflags);
+                sql_params.push(result.loccountrycode);
+                sql_params.push(account_id);
+                console.log(sql_params);
+                userInfoModel.selectBySteamId([result.steamid],function (data) {
+                    if(data.rowCount>0){
+                        console.log('>>user exist');
+                        sql_params.push(result.steamid);
+                        userInfoModel.update(sql_params,function (data) {
+                            console.log(data);
+                        });
 
-                }else{
-                    userInfoModel.insert(sql_params,function (data) {
-                        if(data.rowCount>=1){
-                            console.log("insert user info SUCCESS");
-                        };
-                    });
-                }
-            });
+                    }else{
+                        userInfoModel.insert(sql_params,function (data) {
+                            if(data.rowCount>=1){
+                                console.log("insert user info SUCCESS");
+                            };
+                        });
+                    }
+                });
 
-            userInfoModel.selectByAccountID([account_id],function (data) {
-               console.log("select by account id ===============>.",data.rows[0]);
-               callback(data.rows[0]);
-            });
+                userInfoModel.selectByAccountID([account_id],function (data) {
+                    console.log("select by account id ===============>.",data.rows[0]);
+                    callback(data.rows[0]);
+                });
+
+            }catch (e) {
+                console.error("ERROR>>>>\n",e);
+                callback(e);
+            }
 
         }
     });
@@ -207,7 +213,7 @@ function getMatchHistory(start_match_id) {
  * callback
  *
  * */
-function getAccountMatchHistory(account_id,start_at_match_id,hero_id,callback) {
+function getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callback) {
     let url=getMatchHistoryURL+'&matches_requested='+10+'&min_players='+2;
     let new_url=url+'&account_id='+account_id;
     if(hero_id && start_at_match_id){
@@ -255,7 +261,7 @@ function getAccountMatchHistory(account_id,start_at_match_id,hero_id,callback) {
 
             if(matches[9]){
                 let lastID=matches[9].match_id-1;
-                getAccountMatchHistory(account_id,lastID,hero_id,callback);
+                getAccountMatchHistorySeries(account_id,lastID,hero_id,callback);
 
             }else {
                 callback();
@@ -265,7 +271,62 @@ function getAccountMatchHistory(account_id,start_at_match_id,hero_id,callback) {
     });
 }
 
+function getAccountMatchHistory(account_id,start_at_match_id,hero_id) {
+    let url=getMatchHistoryURL+'&matches_requested='+10+'&min_players='+2;
+    let new_url=url+'&account_id='+account_id;
+    if(hero_id && start_at_match_id){
+        new_url=url+'&account_id='+account_id+'&hero_id='+hero_id+'&start_at_match_id='+start_at_match_id;
+    }
+    if (hero_id){
+        new_url=url+'&account_id='+account_id+'&hero_id='+hero_id;
+    }
 
+    if(start_at_match_id){
+        new_url=new_url+'&start_at_match_id='+start_at_match_id;
+    }
+    console.log(new_url);
+    request(new_url,function (err,data) {
+        if(err){
+            //logger.info(err);
+        }else{
+            //  //logger.info(data.body);
+            var matches=JSON.parse(data.body).result.matches;
+            //  console.log(matches);
+            for(var i in matches){
+                let match_param=[];
+                match_param.push(account_id);
+                match_param.push(matches[i].match_id);
+                match_param.push(matches[i].match_seq_num);
+                match_param.push(matches[i].start_time);
+                match_param.push(matches[i].lobby_type);
+                match_param.push(matches[i].radiant_team_id);
+                match_param.push(matches[i].dire_team_id);
+                match_param.push(JSON.stringify(matches[i].players));
+                //  console.log(match_param);
+
+                let rowcount_match_id;
+                accountMatchHistoryModel.selectByMatchId([matches[i].match_id],function (data ) {
+                    //    console.log("select by id",data.rowCount);
+                    rowcount_match_id=data.rowCount;
+                    if(rowcount_match_id<=0){
+                        accountMatchHistoryModel.insert(match_param,function (data) {
+                            console.log(data);
+                        });
+                    }else{
+                        return;
+                    }
+                });
+
+            }
+
+            if(matches[9]){
+                let lastID=matches[9].match_id-1;
+                getAccountMatchHistory(account_id,lastID,hero_id);
+            }
+
+        }
+    });
+}
 
 function getPlayerRecentMatchHistory(account_id, callback) {
     let recentURL=getMatchHistoryURL+'&matches_requested='+1+'&min_players='+2;
@@ -290,7 +351,7 @@ function getPlayerRecentMatchHistory(account_id, callback) {
                 accountMatchHistoryModel.selectByMatchId([lastest_match_id],function (data) {
                     if(data.rowCount==0){
                         console.warn("THE ACCOUNT NEED TO UPDATE DATA");
-                        //更新王家所有比赛记录
+                        //更新玩家比赛记录
                         updatePlayerMatchHistory(account_id);
 
                     }else if(data.rowCount==1){
@@ -347,17 +408,22 @@ function getPlayerRecentMatchHistory(account_id, callback) {
     });*/
 }
 
-//更新玩家所有比赛记录
+/**
+ *
+ *
+ * 更新玩家所有比赛记录
+ *
+ * */
 function updatePlayerMatchHistory(account_id) {
     accountMatchHistoryModel.selectByAccount([account_id],function (data) {
         if(data.rowCount>0){
             console.log(data.rowCount);
             //按时间顺序获取记录；
-            getAccountMatchHistory(account_id,callback);
+            getAccountMatchHistory(account_id);
         }else{
             //==========获取用户所有比赛=========
             async.eachSeries(dota2constant.heroes,function (item,callback) {
-                getAccountMatchHistory(account_id,"",item.id,callback);
+                getAccountMatchHistorySeries(account_id,"",item.id,callback);
             });
         }
     });
