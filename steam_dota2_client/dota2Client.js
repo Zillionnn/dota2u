@@ -140,7 +140,7 @@ catch (beef){
     util.log("Cannot load the sentry. " + beef);
 }
 
-steamClient.connect();
+//steamClient.connect();
 
 /*setTimeout(function () {
     Dota2.exit();
@@ -257,6 +257,7 @@ function requestDetail(match_id,callback) {
 
 
 exports.ToSteamID=function (account_id) {
+    steamClient.connect();
     console.log("dota2 client>>",account_id);
     let steam_id=Dota2.ToSteamID(account_id);
     console.log(steam_id.toString());
