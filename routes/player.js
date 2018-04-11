@@ -1,6 +1,7 @@
 const  express = require('express');
 const  router = express.Router();
 const  request=require('request');
+const fs=require('fs');
 
 const  MatchHistoryModel=require('../model/MatchHistoryModel');
 const  AccountMatchHistoryModel=require('../model/AccountMatchHistoryModel');
@@ -35,6 +36,7 @@ router.post('/getRecentMatchesByAccount', function(req, res, next) {
  * */
 router.post('/getUserInfoByAccount',function (req, res, next) {
     console.log(req.body);
+    console.log("process===",process.pid);
     let account_id=req.body.account;
     getUserInfo(account_id,function (data) {
         res.send(data);
@@ -52,6 +54,18 @@ router.get('/getonematchdetail/:match_id',function (req, res, next) {
         console.log("matchDetailsModel>>\n",data);
         res.json(data.rows);
     })
+});
+
+
+/**
+ * 同步玩家的记录
+ * ====================（线程）？
+ */
+router.post('/SynchronousPlayerData',function (req, res, next) {
+    console.log(req.body);
+    let account_id=req.body.account;
+    SynchronousPlayerMatches(account_id);
+    res.json({"info":"同步中..."});
 });
 
 
@@ -234,6 +248,8 @@ function getMatchHistory(start_match_id) {
  *
  * */
 function getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callback) {
+    console.log('hero id==============',hero_id);
+    console.log('getAccountMatchHistorySeries');
     let url=getMatchHistoryURL+'&matches_requested='+10+'&min_players='+2;
     let new_url=url+'&account_id='+account_id;
     if(hero_id && start_at_match_id){
@@ -252,39 +268,62 @@ function getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callb
             //logger.info(err);
         }else{
             //  //logger.info(data.body);
-            var matches=JSON.parse(data.body).result.matches;
-            //  console.log(matches);
-            for(var i in matches){
-                let match_param=[];
-                match_param.push(account_id);
-                match_param.push(matches[i].match_id);
-                match_param.push(matches[i].match_seq_num);
-                match_param.push(matches[i].start_time);
-                match_param.push(matches[i].lobby_type);
-                match_param.push(matches[i].radiant_team_id);
-                match_param.push(matches[i].dire_team_id);
-                match_param.push(JSON.stringify(matches[i].players));
-                //  console.log(match_param);
+            try{
+                var matches=JSON.parse(data.body).result.matches;
+                //  console.log(matches);
+                //     for(var i in matches){
+                async.eachSeries(matches,function (match, callback_c) {
+                    let match_param=[];
+                    match_param.push(account_id);
+                    match_param.push(match.match_id);
+                    match_param.push(match.match_seq_num);
+                    match_param.push(match.start_time);
+                    match_param.push(match.lobby_type);
+                    match_param.push(match.radiant_team_id);
+                    match_param.push(match.dire_team_id);
+                    match_param.push(JSON.stringify(match.players));
+                    //  console.log(match_param);
 
-                let rowcount_match_id;
-                accountMatchHistoryModel.selectByMatchId([matches[i].match_id],function (data ) {
-                    //    console.log("select by id",data.rowCount);
-                    rowcount_match_id=data.rowCount;
-                    if(rowcount_match_id<=0){
-                        accountMatchHistoryModel.insert(match_param,function (data) {
-                            console.log(data);
-                        });
-                    }
+                    let rowcount_match_id;
+                    accountMatchHistoryModel.selectByMatchId([match.match_id],function (data ) {
+                        // console.log("select by id",data.rowCount);
+                        rowcount_match_id=data.rowCount;
+
+                        if(rowcount_match_id<=0){
+                            accountMatchHistoryModel.insert(match_param,function (data) {
+                                console.log(data);
+                            });
+
+                            insertMatchDetailsWithoutCallback(match.match_id);
+                            callback_c();
+
+                        }else {
+                            insertMatchDetailsWithoutCallback(match.match_id);
+                            callback_c();
+                        }
+                    });
+
                 });
 
-            }
 
-            if(matches[9]){
-                let lastID=matches[9].match_id-1;
-                getAccountMatchHistorySeries(account_id,lastID,hero_id,callback);
+                //  }
 
-            }else {
-                callback();
+
+
+                if(matches[9]){
+                    let lastID=matches[9].match_id-1;
+                    getAccountMatchHistorySeries(account_id,lastID,hero_id,callback);
+
+                }else {
+                    callback();
+                }
+
+            }catch (e){
+                fs.writeFile('error.log',JSON.stringify(e),function (err) {
+                    if(err){
+                        console.log("写入失败");
+                    }
+                });
             }
 
         }
@@ -393,40 +432,6 @@ function getPlayerRecentMatchHistory(account_id, callback) {
         }
     });
 
-/*    request(new_url,function (err,data) {
-        if(err){
-            //logger.info(err);
-        }else{
-            //  //logger.info(data.body);
-            var matches=JSON.parse(data.body).result.matches;
-            //  console.log(matches);
-            for(var i in matches){
-                let match_param=[];
-                match_param.push(account_id);
-                match_param.push(matches[i].match_id);
-                match_param.push(matches[i].match_seq_num);
-                match_param.push(matches[i].start_time);
-                match_param.push(matches[i].lobby_type);
-                match_param.push(matches[i].radiant_team_id);
-                match_param.push(matches[i].dire_team_id);
-                match_param.push(JSON.stringify(matches[i].players));
-                //  console.log(match_param);
-
-                let rowcount_match_id;
-                accountMatchHistoryModel.selectByMatchId([matches[i].match_id],function (data ) {
-                    //    console.log("select by id",data.rowCount);
-                    rowcount_match_id=data.rowCount;
-                    if(rowcount_match_id<=0){
-                        accountMatchHistoryModel.insert(match_param,function (data) {
-                            console.log(data);
-                        });
-                    }
-                });
-
-            }
-            callback(matches);
-        }
-    });*/
 }
 
 /**
@@ -676,64 +681,70 @@ function getPlayerMatchData(account_id,match_id,done,callback) {
 
 
 function insertMatchDetails(match_id,callback) {
+    console.log("insertMatchDetails>>");
     let url=getMatchDetail+match_id;
     console.log(url);
     request(url,function (err,data) {
         if(err){
             //logger.info(err);
         }else{
-            console.log(data.body);
-            let result=JSON.parse(data.body).result;
-            //console.log(result);
-            let sql_pararms=[];
-            let player_accounts=[];
-            for(var i in result.players){
-                player_accounts.push(result.players[i].account_id);
-            }
-            sql_pararms.push(result.match_id);
-            sql_pararms.push(result.match_seq_num);
-            sql_pararms.push(result.radiant_win);
-            sql_pararms.push(result.duration);
-            sql_pararms.push(result.start_time);
-            sql_pararms.push(result.tower_status_radiant);
-            sql_pararms.push(result.tower_status_dire);
-            sql_pararms.push(result.barracks_status_radiant);
-            sql_pararms.push(result.barracks_status_dire);
-            sql_pararms.push(result.cluster);
-            sql_pararms.push(result.first_blood_time);
-            sql_pararms.push(result.lobby_type);
-            sql_pararms.push(result.human_players);
-            sql_pararms.push(result.leagueid);
-            sql_pararms.push(result.positive_votes);
-            sql_pararms.push(result.negative_votes);
-            sql_pararms.push(result.game_mode);
-            sql_pararms.push(result.flags);
-            sql_pararms.push(result.engine);
-            sql_pararms.push(result.radiant_score);
-            sql_pararms.push(result.dire_score);
-            sql_pararms.push(result.tournament_id);
-            sql_pararms.push(result.tournament_round);
-            sql_pararms.push(result.radiant_team_id);
-            sql_pararms.push(result.radiant_name);
-            sql_pararms.push(result.radiant_logo);
-            sql_pararms.push(result.radiant_team_complete);
-            sql_pararms.push(result.dire_team_id);
-            sql_pararms.push(result.dire_name);
-            sql_pararms.push(result.dire_logo);
-            sql_pararms.push(result.dire_team_complete);
-            sql_pararms.push(result.radiant_captain);
-            sql_pararms.push(result.dire_captain);
-            sql_pararms.push(JSON.stringify(player_accounts));
-            sql_pararms.push(JSON.stringify(result.players));
-            sql_pararms.push(JSON.stringify(result.picks_bans));
-            matchDetailModel.selectByMatchId([result.match_id],function (data) {
-                if(data.rowCount==0){
-                    matchDetailModel.insert(sql_pararms,function (data) {
-                        console.log(data);
-                        callback();
-                    })
+          //  console.log(data.body);
+
+                let result=JSON.parse(data.body).result;
+                //console.log(result);
+                let sql_pararms=[];
+                let player_accounts=[];
+                for(var i in result.players){
+                    player_accounts.push(result.players[i].account_id);
                 }
-            })
+                sql_pararms.push(result.match_id);
+                sql_pararms.push(result.match_seq_num);
+                sql_pararms.push(result.radiant_win);
+                sql_pararms.push(result.duration);
+                sql_pararms.push(result.start_time);
+                sql_pararms.push(result.tower_status_radiant);
+                sql_pararms.push(result.tower_status_dire);
+                sql_pararms.push(result.barracks_status_radiant);
+                sql_pararms.push(result.barracks_status_dire);
+                sql_pararms.push(result.cluster);
+                sql_pararms.push(result.first_blood_time);
+                sql_pararms.push(result.lobby_type);
+                sql_pararms.push(result.human_players);
+                sql_pararms.push(result.leagueid);
+                sql_pararms.push(result.positive_votes);
+                sql_pararms.push(result.negative_votes);
+                sql_pararms.push(result.game_mode);
+                sql_pararms.push(result.flags);
+                sql_pararms.push(result.engine);
+                sql_pararms.push(result.radiant_score);
+                sql_pararms.push(result.dire_score);
+                sql_pararms.push(result.tournament_id);
+                sql_pararms.push(result.tournament_round);
+                sql_pararms.push(result.radiant_team_id);
+                sql_pararms.push(result.radiant_name);
+                sql_pararms.push(result.radiant_logo);
+                sql_pararms.push(result.radiant_team_complete);
+                sql_pararms.push(result.dire_team_id);
+                sql_pararms.push(result.dire_name);
+                sql_pararms.push(result.dire_logo);
+                sql_pararms.push(result.dire_team_complete);
+                sql_pararms.push(result.radiant_captain);
+                sql_pararms.push(result.dire_captain);
+                sql_pararms.push(JSON.stringify(player_accounts));
+                sql_pararms.push(JSON.stringify(result.players));
+                sql_pararms.push(JSON.stringify(result.picks_bans));
+                matchDetailModel.selectByMatchId([result.match_id],function (data) {
+                    if(data.rowCount==0){
+                        matchDetailModel.insert(sql_pararms,function (data) {
+                            //console.log(data);
+                            callback();
+                        })
+                    }else{
+                        //已存在 callback进入下一个
+                        callback();
+                    }
+                })
+
 
 
         }
@@ -742,29 +753,89 @@ function insertMatchDetails(match_id,callback) {
 }
 
 
-/*router.get('/userinfo',function (req, res, next) {
- ////logger.info("userinfo");
- request(userSummeries,function (err, data) {
- if(err){
+function insertMatchDetailsWithoutCallback(match_id) {
+    console.log('insertMatchDetailsWithoutCallback');
+    let url=getMatchDetail+match_id;
+    console.log(url);
+    request(url,function (err,data) {
+        if(err){
+            //logger.info(err);
+        }else{
+          //  console.log(data.body);
+           try{
+               console.log('has result');
+               let result=JSON.parse(data.body).result;
+               //console.log(result);
+               let sql_pararms=[];
+               let player_accounts=[];
+               for(var i in result.players){
+                   player_accounts.push(result.players[i].account_id);
+               }
+               sql_pararms.push(result.match_id);
+               sql_pararms.push(result.match_seq_num);
+               sql_pararms.push(result.radiant_win);
+               sql_pararms.push(result.duration);
+               sql_pararms.push(result.start_time);
+               sql_pararms.push(result.tower_status_radiant);
+               sql_pararms.push(result.tower_status_dire);
+               sql_pararms.push(result.barracks_status_radiant);
+               sql_pararms.push(result.barracks_status_dire);
+               sql_pararms.push(result.cluster);
+               sql_pararms.push(result.first_blood_time);
+               sql_pararms.push(result.lobby_type);
+               sql_pararms.push(result.human_players);
+               sql_pararms.push(result.leagueid);
+               sql_pararms.push(result.positive_votes);
+               sql_pararms.push(result.negative_votes);
+               sql_pararms.push(result.game_mode);
+               sql_pararms.push(result.flags);
+               sql_pararms.push(result.engine);
+               sql_pararms.push(result.radiant_score);
+               sql_pararms.push(result.dire_score);
+               sql_pararms.push(result.tournament_id);
+               sql_pararms.push(result.tournament_round);
+               sql_pararms.push(result.radiant_team_id);
+               sql_pararms.push(result.radiant_name);
+               sql_pararms.push(result.radiant_logo);
+               sql_pararms.push(result.radiant_team_complete);
+               sql_pararms.push(result.dire_team_id);
+               sql_pararms.push(result.dire_name);
+               sql_pararms.push(result.dire_logo);
+               sql_pararms.push(result.dire_team_complete);
+               sql_pararms.push(result.radiant_captain);
+               sql_pararms.push(result.dire_captain);
+               sql_pararms.push(JSON.stringify(player_accounts));
+               sql_pararms.push(JSON.stringify(result.players));
+               sql_pararms.push(JSON.stringify(result.picks_bans));
+               matchDetailModel.selectByMatchId([result.match_id],function (data) {
+                   if(data.rowCount==0){
+                       matchDetailModel.insert(sql_pararms,function (data) {
+                           console.log(data);
+                       })
+                   }
+               })
 
- }else{
- //   //logger.info(data.body);
- res.send(data.body);
- }
- })
- });
 
- router.get('/userRecentlyPlayedGames',function (req, res, next) {
- //logger.info("userRecentlyPlayedGames");
- request(RecentlyPlayedGames,function (err, data) {
- if(err){
- //logger.info(err);
- }else{
- ////logger.info(data.body);
- res.send(data.body);
- }
- })
- });*/
+           }catch (e){
+               fs.writeFile('insertMatchDetailsWithoutCallback.log',JSON.stringify(e),function (err) {
+                   if(err){
+                       console.log("写入失败");
+                   }
+               });
+           }
+
+
+
+        }
+
+    });
+}
+
+function SynchronousPlayerMatches(account_id){
+    async.eachSeries(dota2constant.heroes,function (item,callback) {
+        getAccountMatchHistorySeries(account_id,"",item.id,callback);
+    });
+}
 
 
 //查询的匹配历史
