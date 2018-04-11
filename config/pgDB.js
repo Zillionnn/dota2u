@@ -1,7 +1,8 @@
 var pg=require("pg");
+const log=require('log4js').getLogger("POSTGRESQL>>");
 
 var config={
-    host:'192.168.137.86',
+    host:'192.168.137.164',
     user:"postgres",
     database:"dota2u",
     password:"123456",
@@ -21,7 +22,7 @@ _pgdb.prototype._connect=function (callback) {
     //console.log('connecting..');
     pool.connect((err,client,done)=>{
         if(err){
-            return console.error("连接错误connect error",err);
+            return log.error("连接错误connect error",err);
         }
         callback({client:client,done:done});
 
@@ -49,7 +50,7 @@ _pgdb.prototype._query=function (sql, params, callback) {
         client.query(sql,params,function (err, result) {
             done();
             if(err){
-                return console.error("查询错误.QueryERROR>> ",err);
+                return log.error("查询错误.QueryERROR>> ",err);
             }else{
                 callback(result);
             }
