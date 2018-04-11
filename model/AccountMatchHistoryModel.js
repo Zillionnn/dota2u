@@ -16,7 +16,9 @@ const sql_options={
 
     SELECT_PLAYER_MATCHES_LIMIT:'SELECT * FROM t_account_match_history WHERE account_id=$1ORDER BY start_time DESC LIMIT $2;',
 
-    SELECT_BY_ACCOUNT:'SELECT * FROM t_account_match_history WHERE account_id=$1;'
+    SELECT_BY_ACCOUNT:'SELECT * FROM t_account_match_history WHERE account_id=$1;',
+    
+    SELECT_ID_BY_ACCOUNT:'SELECT id FROM t_account_match_history WHERE account_id=$1;'
 };
 //继承
 util.inherits(AccountMatchHistoryModel,_pgdb);
@@ -62,6 +64,12 @@ AccountMatchHistoryModel.prototype.selectByPlayerIdAndLimit=function (params,cal
 
 AccountMatchHistoryModel.prototype.selectByAccount=function (params,callback) {
     this._query(sql_options.SELECT_BY_ACCOUNT,params,function (data) {
+        callback( data);
+    });
+}
+
+AccountMatchHistoryModel.prototype.selectIDSByAccount=function (params,callback) {
+    this._query(sql_options.SELECT_ID_BY_ACCOUNT,params,function (data) {
         callback( data);
     });
 }
