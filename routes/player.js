@@ -35,7 +35,7 @@ router.post('/getRecentMatchesByAccount', function(req, res, next) {
 
 /**
  * API 查询玩家基本信息
- * TODO 从数据库查询；没有再通过steamwebapi查询并写入，通过搜索框查询玩家，更新玩家信息；
+ *
  * */
 router.post('/getUserInfoByAccount',function (req, res, next) {
     log.info(req.body);
@@ -46,6 +46,17 @@ router.post('/getUserInfoByAccount',function (req, res, next) {
     });
 });
 
+/***
+ * 通过steam web api 查询玩家信息；
+ */
+router.post('/fetchUserInfoByAccount',function (req, res, next) {
+    log.info(req.body);
+    log.info("process===",process.pid);
+    let account_id=req.body.account;
+    fetchUserInfo(account_id,function (data) {
+        res.send(data);
+    });
+});
 
 /**
  * 取得一场比赛的详细信息；
@@ -111,8 +122,11 @@ function getUserInfo(account_id, callback) {
 }
 
 
-
-//==========fetch user steam info=================
+/**
+ * steam web api 查询用户信息
+ * @param account_id
+ * @param callback
+ */
 function fetchUserInfo(account_id,callback) {
     
     let steamID=dota2Client.ToSteamID(account_id);
@@ -148,7 +162,7 @@ function fetchUserInfo(account_id,callback) {
                 log.info(sql_params);
                 userInfoModel.selectBySteamId([result.steamid],function (data) {
                     if(data.rowCount>0){
-                        log.info('>>user exist');
+                        log.info('>>user exist，update user');
                         sql_params.push(result.steamid);
                         userInfoModel.update(sql_params,function (data) {
                             log.info(data);

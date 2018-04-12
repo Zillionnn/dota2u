@@ -19,6 +19,7 @@
     "openid": "^2.0.6",
     "openid-client": "^1.20.0",
     "pg": "^7.4.1",
+    "pm2": "^2.10.2",
     "request": "^2.85.0",
     "serve-favicon": "~2.4.5",
     "steam": "^1.4.0"
