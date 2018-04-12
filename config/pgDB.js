@@ -22,6 +22,7 @@ _pgdb.prototype._connect=function (callback) {
     //console.log('connecting..');
     pool.connect((err,client,done)=>{
         if(err){
+            console.error("连接错误connect error",err);
             return log.error("连接错误connect error",err);
         }
         callback({client:client,done:done});
@@ -50,6 +51,7 @@ _pgdb.prototype._query=function (sql, params, callback) {
         client.query(sql,params,function (err, result) {
             done();
             if(err){
+                console.error("查询错误.QueryERROR>> ",err);
                 return log.error("查询错误.QueryERROR>> ",err);
             }else{
                 callback(result);

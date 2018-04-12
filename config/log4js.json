@@ -9,7 +9,7 @@
     "app": {
       "type": "file",
       "filename": "log/app.log",
-      "maxLogSize": 104800000,
+      "maxLogSize": 10800000,
       "numBackups": 3
     },
     "errorFile": {
