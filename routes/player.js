@@ -35,6 +35,7 @@ router.post('/getRecentMatchesByAccount', function(req, res, next) {
 
 /**
  * API 查询玩家基本信息
+ * TODO 从数据库查询；没有再通过steamwebapi查询并写入，通过搜索框查询玩家，更新玩家信息；
  * */
 router.post('/getUserInfoByAccount',function (req, res, next) {
     log.info(req.body);
@@ -87,24 +88,37 @@ let matchDetailModel=new MatchDetailModel();
 let params=[123456,123456,818,0,0,7,'[{"id":1,"name":"jack"},{"id":2,"name":"bob"}]'];
 
 
-//=======通过account_id查询玩家信息========?????????==
+/**
+ * 通过account_id查询玩家信息；
+ * @param account_id
+ * @param callback
+ */
+function getUserInfo(account_id, callback) {
+    userInfoModel.selectByAccountID([account_id], function (data) {
 
-function getUserInfo(account_id,callback) {
-    fetchUserInfo(account_id,function (data) {
-        log.info("getUserInfo >>",data);
-        callback(data);
+        if (data.rowCount > 0) {
+            console.log("exist player");
+            callback(data.rows[0]);
+        } else {
+            fetchUserInfo(account_id, function (data) {
+                log.info("getUserInfo >>", data);
+                callback(data);
+            });
+        }
+
     });
-    }
+
+}
 
 
 
 //==========fetch user steam info=================
 function fetchUserInfo(account_id,callback) {
-    log.info(userSummeries);
+    
     let steamID=dota2Client.ToSteamID(account_id);
-    log.info("steam id ==",steamID);
+    console.log("steam id ==",steamID);
     let new_url=userSummeries+'&steamids='+steamID;
-    log.info(new_url);
+    console.log(new_url);
     request(new_url,function (err, data) {
         if(err){
             throw log.error(err);
@@ -477,7 +491,7 @@ function updatePlayerMatchHistory(account_id) {
             async.eachSeries(dota2constant.heroes,function (item,callback) {
                 getAccountMatchHistorySeries(account_id,"",item.id,callback);
             });
-            callback({"result":"success"});
+          //  callback({"result":"success"});
         }
     });
 
