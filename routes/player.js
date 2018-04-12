@@ -317,22 +317,29 @@ function getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callb
                     getAccountMatchHistorySeries(account_id,lastID,hero_id,callback);
 
                 }else {
+                    //下一个英雄
                     callback();
                 }
 
             }catch (e){
-                fs.writeFile('error.log',JSON.stringify(e),function (err) {
-                    if(err){
-                        log.info("写入失败");
-                    }
-                });
+             console.error(e);
+                log.error("getAccountMatchHistorySeries>>",e);
+                log.error("getAccountMatchHistorySeries body>>",data.body);
             }
 
         }
     });
 }
 
-function getAccountMatchHistory(account_id,start_at_match_id,hero_id) {
+/**
+ * 更新玩家记录；
+ * 获取最近500场比赛
+ * @param account_id
+ * @param start_at_match_id
+ * @param hero_id
+ */
+function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id) {
+    console.log('====get player recent 500 matches=====\n');
     let url=getMatchHistoryURL+'&matches_requested='+10+'&min_players='+2;
     let new_url=url+'&account_id='+account_id;
     if(hero_id && start_at_match_id){
@@ -375,7 +382,16 @@ function getAccountMatchHistory(account_id,start_at_match_id,hero_id) {
                         });
                         insertMatchDetailsWithoutCallback(matches[i].match_id);
                     }else{
-                        return;
+                        //更新完毕，返回最近20场比赛
+                        selectPlayerMatch(account_id,20,function (data) {
+
+                            let matches=[];
+                            for(let i in data.rows){
+                                matches.push(data.rows[i]);
+                            }
+                          return matches;
+                        });
+
                     }
                 });
 
@@ -383,7 +399,7 @@ function getAccountMatchHistory(account_id,start_at_match_id,hero_id) {
 
             if(matches[9]){
                 let lastID=matches[9].match_id-1;
-                getAccountMatchHistory(account_id,lastID,hero_id);
+                updateAccount500MatchHistory(account_id,lastID,hero_id);
             }
 
         }
@@ -403,7 +419,7 @@ function getPlayerRecentMatchHistory(account_id, callback) {
             try{
 
                 let result=JSON.parse(data.body).result;
-                log.info(result);
+               log.info(result);
                 if(result.status!=1){
                     callback({error:403});
                     return;
@@ -419,6 +435,7 @@ function getPlayerRecentMatchHistory(account_id, callback) {
                             updatePlayerMatchHistory(account_id);
 
                         }else if(data.rowCount==1){
+                            //取最近20场比赛
                             let request_num=20;
                             selectPlayerMatch(account_id,request_num,function (data) {
                                 log.info(data.rows[0]);
@@ -453,13 +470,14 @@ function updatePlayerMatchHistory(account_id) {
         if(data.rowCount>0){
             log.info(data.rowCount);
             //按时间顺序获取记录；
-            getAccountMatchHistory(account_id);
+            updateAccount500MatchHistory(account_id);
         }else{
-            //==========获取用户所有比赛=========
-            console.log('=获取用户所有比赛==');
+            //==========更新用户所有比赛=========
+            console.log('=更新用户所有比赛==');
             async.eachSeries(dota2constant.heroes,function (item,callback) {
                 getAccountMatchHistorySeries(account_id,"",item.id,callback);
             });
+            callback({"result":"success"});
         }
     });
 
@@ -470,7 +488,11 @@ function selectPlayerMatch(account_id,request_num,callback) {
     sql_params.push(account_id);
     sql_params.push(request_num);
     accountMatchHistoryModel.selectByPlayerIdAndLimit(sql_params,function (data) {
-
+        let matches=data.rows;
+        //没办法，查询20个，写到数据库
+        for(var i in matches){
+            insertMatchDetailsWithoutCallback(matches[i].match_id);
+        }
         callback(data);
     })
 }
@@ -701,58 +723,63 @@ function insertMatchDetails(match_id,callback) {
                     //logger.info(err);
                 }else{
                     //  log.info(data.body);
+                    try{
+                        let result=JSON.parse(data.body).result;
+                        //log.info(result);
+                        let sql_pararms=[];
+                        let player_accounts=[];
+                        for(var i in result.players){
+                            player_accounts.push(result.players[i].account_id);
+                        }
+                        sql_pararms.push(result.match_id);
+                        sql_pararms.push(result.match_seq_num);
+                        sql_pararms.push(result.radiant_win);
+                        sql_pararms.push(result.duration);
+                        sql_pararms.push(result.start_time);
+                        sql_pararms.push(result.tower_status_radiant);
+                        sql_pararms.push(result.tower_status_dire);
+                        sql_pararms.push(result.barracks_status_radiant);
+                        sql_pararms.push(result.barracks_status_dire);
+                        sql_pararms.push(result.cluster);
+                        sql_pararms.push(result.first_blood_time);
+                        sql_pararms.push(result.lobby_type);
+                        sql_pararms.push(result.human_players);
+                        sql_pararms.push(result.leagueid);
+                        sql_pararms.push(result.positive_votes);
+                        sql_pararms.push(result.negative_votes);
+                        sql_pararms.push(result.game_mode);
+                        sql_pararms.push(result.flags);
+                        sql_pararms.push(result.engine);
+                        sql_pararms.push(result.radiant_score);
+                        sql_pararms.push(result.dire_score);
+                        sql_pararms.push(result.tournament_id);
+                        sql_pararms.push(result.tournament_round);
+                        sql_pararms.push(result.radiant_team_id);
+                        sql_pararms.push(result.radiant_name);
+                        sql_pararms.push(result.radiant_logo);
+                        sql_pararms.push(result.radiant_team_complete);
+                        sql_pararms.push(result.dire_team_id);
+                        sql_pararms.push(result.dire_name);
+                        sql_pararms.push(result.dire_logo);
+                        sql_pararms.push(result.dire_team_complete);
+                        sql_pararms.push(result.radiant_captain);
+                        sql_pararms.push(result.dire_captain);
+                        sql_pararms.push(JSON.stringify(player_accounts));
+                        sql_pararms.push(JSON.stringify(result.players));
+                        sql_pararms.push(JSON.stringify(result.picks_bans));
+                        matchDetailModel.insert(sql_pararms,function (data) {
+                            //log.info(data);
 
-                    let result=JSON.parse(data.body).result;
-                    //log.info(result);
-                    let sql_pararms=[];
-                    let player_accounts=[];
-                    for(var i in result.players){
-                        player_accounts.push(result.players[i].account_id);
+                        });
+                        callback();
+
+
+                    }catch (e){
+                        console.error(e);
+                        log.error("insertMatchDetails>>",e);
+                        log.error("insertMatchDetails  BODY>>>\n",data.body);
                     }
-                    sql_pararms.push(result.match_id);
-                    sql_pararms.push(result.match_seq_num);
-                    sql_pararms.push(result.radiant_win);
-                    sql_pararms.push(result.duration);
-                    sql_pararms.push(result.start_time);
-                    sql_pararms.push(result.tower_status_radiant);
-                    sql_pararms.push(result.tower_status_dire);
-                    sql_pararms.push(result.barracks_status_radiant);
-                    sql_pararms.push(result.barracks_status_dire);
-                    sql_pararms.push(result.cluster);
-                    sql_pararms.push(result.first_blood_time);
-                    sql_pararms.push(result.lobby_type);
-                    sql_pararms.push(result.human_players);
-                    sql_pararms.push(result.leagueid);
-                    sql_pararms.push(result.positive_votes);
-                    sql_pararms.push(result.negative_votes);
-                    sql_pararms.push(result.game_mode);
-                    sql_pararms.push(result.flags);
-                    sql_pararms.push(result.engine);
-                    sql_pararms.push(result.radiant_score);
-                    sql_pararms.push(result.dire_score);
-                    sql_pararms.push(result.tournament_id);
-                    sql_pararms.push(result.tournament_round);
-                    sql_pararms.push(result.radiant_team_id);
-                    sql_pararms.push(result.radiant_name);
-                    sql_pararms.push(result.radiant_logo);
-                    sql_pararms.push(result.radiant_team_complete);
-                    sql_pararms.push(result.dire_team_id);
-                    sql_pararms.push(result.dire_name);
-                    sql_pararms.push(result.dire_logo);
-                    sql_pararms.push(result.dire_team_complete);
-                    sql_pararms.push(result.radiant_captain);
-                    sql_pararms.push(result.dire_captain);
-                    sql_pararms.push(JSON.stringify(player_accounts));
-                    sql_pararms.push(JSON.stringify(result.players));
-                    sql_pararms.push(JSON.stringify(result.picks_bans));
-                    matchDetailModel.insert(sql_pararms,function (data) {
-                        //log.info(data);
-
-                    });
-                    callback();
-
-
-
+                    
                 }
 
             });
@@ -826,9 +853,8 @@ function insertMatchDetailsWithoutCallback(match_id) {
                         sql_pararms.push(JSON.stringify(result.players));
                         sql_pararms.push(JSON.stringify(result.picks_bans));
                         matchDetailModel.insert(sql_pararms,function (data) {
-                            console.log(data);
+                            console.log("===INSERT MATCH DETAIL SUCCESS===\n",data);
                         })
-
 
                     }catch (e){
                         console.error(e);
@@ -837,12 +863,8 @@ function insertMatchDetailsWithoutCallback(match_id) {
                         log.error('data body >>',data.body);
                     }
 
-
-
                 }
-
             });
-
 
         }
     });
