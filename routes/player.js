@@ -112,7 +112,7 @@ function getUserInfo(account_id, callback) {
             callback(data.rows[0]);
         } else {
             fetchUserInfo(account_id, function (data) {
-                log.info("getUserInfo >>", data);
+                console.log("getUserInfo >>", data);
                 callback(data);
             });
         }
@@ -167,21 +167,18 @@ function fetchUserInfo(account_id,callback) {
                         userInfoModel.update(sql_params,function (data) {
                             log.info(data);
                         });
+                        callback(result);
 
                     }else{
                         userInfoModel.insert(sql_params,function (data) {
                             if(data.rowCount>=1){
                                 log.info("insert user info SUCCESS");
                             };
+                            callback(result);
                         });
                     }
                 });
-
-                userInfoModel.selectByAccountID([account_id],function (data) {
-                    log.info("select by account id ===============>.",data.rows[0]);
-                    callback(data.rows[0]);
-                });
-
+                
             }catch (e) {
                 log.error("ERROR>>>>\n",e);
                 callback(e);
@@ -376,7 +373,7 @@ function getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callb
 }
 
 /**
- * 更新玩家记录；
+ * 更新玩家最近比赛记录；
  * 获取最近500场比赛
  * @param account_id
  * @param start_at_match_id
@@ -422,11 +419,13 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
                     //    log.info("select by id",data.rowCount);
                     rowcount_match_id=data.rowCount;
                     if(rowcount_match_id<=0){
+                        console.log("row count>>",rowcount_match_id);
                         accountMatchHistoryModel.insert(match_param,function (data) {
                             log.info(data);
                         });
                         insertMatchDetailsWithoutCallback(matches[i].match_id);
                     }else{
+                        console.log('row count >>',rowcount_match_id);
                         //更新完毕，返回最近20场比赛
                         update_over=true;
                     // break;
@@ -450,6 +449,7 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
  
 
             if(matches[9]){
+                console.log("has next 10 matches");
                 let lastID=matches[9].match_id-1;
                 updateAccount500MatchHistory(account_id,lastID,hero_id,callback_main);
             }

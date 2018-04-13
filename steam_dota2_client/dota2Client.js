@@ -199,12 +199,12 @@ function getMatchHistory(match_id) {
 
 
 exports.ToSteamID=function (account_id) {
-    steamClient.connect();
+   // steamClient.connect();
     console.log("dota2 client>>",account_id);
     let steam_id=Dota2.ToSteamID(account_id);
     console.log(steam_id.toString());
-    Dota2.exit();
-    steamClient.disconnect();
+ //   Dota2.exit();
+   // steamClient.disconnect();
     return steam_id.toString();
 
 };
