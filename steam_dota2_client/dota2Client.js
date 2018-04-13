@@ -140,7 +140,7 @@ catch (beef){
     util.log("Cannot load the sentry. " + beef);
 }
 
-//steamClient.connect();
+steamClient.connect();
 
 /*setTimeout(function () {
     Dota2.exit();
@@ -197,64 +197,6 @@ function getMatchHistory(match_id) {
 
 
 
-/*request(url,function (err, data) {
-    if(err){
-
-    }else{
-        let result=JSON.parse(data.body);
-        let matches=result.result.matches;
-        let matchIdArray=[];
-        for(var i in matches){
-            matchIdArray.push(matches[i].match_id);
-        }
-        console.log(matchIdArray);
-        async.eachSeries(matchIdArray,function (match_id, callback) {
-            requestMatchDetail(match_id,callback);
-            /!*           if(matchIdArray[9]==match_id){
-             let new_url=url+'&start_at_match_id='+matchIdArray[9];
-             console.log("new_url>>"+new_url);
-             getMatchHistory(new_url);
-             }*!/
-
-        });
-    }
-})*/
-function requestDetail(match_id,callback) {
-
-    Dota2.requestMatchDetails(match_id, function(err, data){
-        console.log("check Match id>>");
-        util.log(JSON.stringify(data));
-        let match_id=data.match.match_id;
-        let duration=data.match.duration;
-        let cluster=data.match.cluster;
-        let replay_salt=data.match.replay_salt;
-        let replay_state=data.match.replay_state;
-        let game_mode=data.match.game_mode;
-        let duration_m=(duration/60).toFixed(0);
-
-            console.log("    match_id>>"+match_id);
-            console.log("    duration_m>>"+duration_m);
-            console.log("    cluster>>"+cluster);
-            console.log("  game_mode>>"+game_mode);
-            console.log("    replay_salt>>"+replay_salt);
-            console.log("    replay_state>>"+replay_state);
-
-        if (replay_state!='REPLAY_EXPIRED') {
-            console.log('REPLAY_AVAILABLE============START DOWNLOAD========');
-            let downloadUrl = `http://replay${cluster}.valve.net/570/${match_id}_${replay_salt}.dem.bz2`;
-            console.log(downloadUrl);
-            let fileName = `./download/${match_id}.dem.bz2`;
-            //开始下载
-            var stream=fs.createWriteStream(fileName);
-            request(downloadUrl).pipe(stream).on('close',callback);
-
-        }else{
-            callback();
-        }
-    });
-
-}
-
 
 exports.ToSteamID=function (account_id) {
     steamClient.connect();
@@ -266,3 +208,17 @@ exports.ToSteamID=function (account_id) {
     return steam_id.toString();
 
 };
+
+exports.requestMatchDetails=function (match_id) {
+    //steamClient.connect();
+    console.log("dota2 client>>",match_id);
+    let match_detail;
+    Dota2.requestMatchDetails(match_id,function (data) {
+        console.log("dota2client >>",data);
+       match_detail=data;
+    });
+
+  /*  Dota2.exit();
+    steamClient.disconnect();*/
+
+}
