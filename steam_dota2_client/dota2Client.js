@@ -45,8 +45,8 @@ var onSteamLogOn = function onSteamLogOn(logonResp) {
 
                 Dota2.on("matchDetailsData",function (match_id, matchDetailsResponse) {
                     console.log("EVENT  >> MATCHDETAILSDATA");
-                    console.log(match_id);
-                    console.log(matchDetailsResponse);
+                    console.log(match_id.toString());
+                    console.log(matchDetailsResponse.match);
                 });
            //     getMatchHistory();
 
@@ -214,7 +214,7 @@ exports.requestMatchDetails=function (match_id) {
     console.log("dota2 client>>",match_id);
     let match_detail;
     Dota2.requestMatchDetails(match_id,function (data) {
-        console.log("dota2client >>",data);
+        console.log("requestMatchDetails >>",data);
        match_detail=data;
     });
 

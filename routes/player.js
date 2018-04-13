@@ -64,6 +64,7 @@ router.post('/fetchUserInfoByAccount',function (req, res, next) {
 router.get('/getonematchdetail/:match_id',function (req, res, next) {
     log.info("match_id>>",req.params.match_id);
     let match_id=req.params.match_id;
+//    dota2Client.requestMatchDetails(match_id);
     matchDetailModel.selectByMatchId([match_id],function (data) {
         log.info("matchDetailsModel>>\n",data);
         res.json(data.rows);
