@@ -464,6 +464,7 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
                         for(let i in data.rows){
                             matches.push(data.rows[i]);
                         }
+                        //返回结果
                         callback_main(matches);
                     });
                     series_callback();
@@ -506,9 +507,7 @@ function getPlayerRecentMatchHistory(account_id, callback) {
                         if(data.rowCount==0){
                             console.warn("THE ACCOUNT NEED TO UPDATE DATA");
                             //更新玩家比赛记录
-                            updatePlayerMatchHistory(account_id,function (matches) {
-                                callback(matches);
-                            });
+                            updatePlayerMatchHistory(account_id,callback);
 
                         }else if(data.rowCount==1){
                             //取最近20场比赛
