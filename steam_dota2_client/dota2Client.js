@@ -30,7 +30,7 @@ var onSteamLogOn = function onSteamLogOn(logonResp) {
 
 
 
-                let match_id=-1;
+              /* let match_id=3830421190;
                 if(match_id>0){
                     Dota2.requestMatchDetails(match_id,function (err, data) {
                         if(err){
@@ -40,14 +40,14 @@ var onSteamLogOn = function onSteamLogOn(logonResp) {
                             console.log(JSON.stringify(data));
                         }
                     });
-                }
+                }*/
 
 
-                Dota2.on("matchDetailsData",function (match_id, matchDetailsResponse) {
+         /*       Dota2.on("matchDetailsData",function (match_id, matchDetailsResponse) {
                     console.log("EVENT  >> MATCHDETAILSDATA");
                     console.log(match_id.toString());
                     console.log(matchDetailsResponse.match);
-                });
+                });*/
            //     getMatchHistory();
 
          /*       Dota2.requestMatches({
@@ -209,16 +209,70 @@ exports.ToSteamID=function (account_id) {
 
 };
 
-exports.requestMatchDetails=function (match_id) {
+exports.requestMatchDetails=function (match_id,callback) {
     //steamClient.connect();
     console.log("dota2 client>>",match_id);
-    let match_detail;
-    Dota2.requestMatchDetails(match_id,function (data) {
-        console.log("requestMatchDetails >>",data);
-       match_detail=data;
-    });
+     Dota2.requestMatchDetails(match_id,function (err,data) {
+         if(err){
+             console.error(err);
+             log.error("dota2client request match detail ERROR>>\n",err);
+         }else{
+            // console.log("CLIENT DATA>>",data);
+             callback(data.match);
+         }
+     });
 
   /*  Dota2.exit();
     steamClient.disconnect();*/
 
+};
+
+/**
+ * GC 获取比赛
+ * @param obj
+ * @param callback
+ */
+exports.requestMatches=function (obj, callback) {
+    Dota2.requestMatches(obj,function (err, data) {
+        if(err){
+            console.log(err);
+            log.error("DOTA2 CLIENT REQUEST MATCHES ERROR>>\n",err);
+        }else{
+            callback(data);
+        }
+    })
+};
+
+/**
+ * 获取玩家比赛历史
+ * @param account_id
+ * @param options
+ * @param callback
+ */
+exports.requestPlayerMatchHistory=function (account_id,options, callback) {
+    Dota2.requestPlayerMatchHistory(account_id,options,function (err, data) {
+        if(err){
+            console.log(err);
+            log.error("DOTA2 CLIENT REQUEST PLAYER MATCHES ERROR:>>>\n",err);
+        }else{
+            callback(data);
+        }
+    });
+};
+
+exports.requestPlayerInfo=function (account_id) {
+    let result=Dota2.requestPlayerInfo(account_id);
+    return result;
+};
+
+exports.requestProfileCard=function (account_id,callback) {
+    Dota2.requestProfileCard(account_id,function (err, data) {
+        if(err){
+            console.error(err);
+            log.error("DOTA2 REQUEST PROFILE CARD ERROR>>\n",err);
+        }else{
+            callback(data);
+        }
+    });
 }
+
