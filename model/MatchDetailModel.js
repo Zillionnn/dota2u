@@ -17,6 +17,8 @@ const sql_options={
 
     SELECT_BY_MATCH_ID:`select * from t_match_detail where match_id=$1;`,
 
+    SELECT_ALL_BY_CONTAIN_ACCOUNT_ID:`SELECT * FROM t_match_detail where player_accounts @> $1;`
+
 };
 //继承
 util.inherits(MatchDetailModel,_pgdb);
@@ -40,6 +42,17 @@ MatchDetailModel.prototype.selectByMatchId=function (params,callback) {
 MatchDetailModel.prototype.insert=function (params,callback) {
     this._query(sql_options.INSERT,params,function (data) {
         callback( data);
+    });
+}
+
+/**
+ * 查询 player_accounts中包含account_id的元素
+ * @param params
+ * @param callback
+ */
+MatchDetailModel.prototype.selectByContainAccountID=function (params, callback) {
+    this._query(sql_options.SELECT_ALL_BY_CONTAIN_ACCOUNT_ID,params,function (data) {
+        callback(data);
     });
 }
 
