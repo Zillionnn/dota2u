@@ -23,8 +23,7 @@ let CONFIG=require('../config/config');
  * GET RECENT 20 MATCHES;
  * */
 router.post('/getRecentMatchesByAccount', function(req, res, next) {
-    log.info("getRecentMatchesByAccount");
-    log.info(req.body);
+   console.log("getRecentMatchesByAccount");
     let account=req.body.account;
     getPlayerRecentMatchHistory(account,function (data) {
         //log.info(data);
@@ -352,16 +351,12 @@ function getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callb
                         }else {
                             //下一个英雄
                             console.log('next hero >');
+                            series_callback();
                             callback();
                         }
-                        series_callback();
+
                     }
                 ]);
-
-
-
-
-
 
             }catch (e){
              console.error(e);
@@ -458,7 +453,7 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
                             updateAccount500MatchHistory(account_id,lastID,hero_id,callback_main);
                         }
                     }
-                    selectPlayerMatch(account_id,20,function (data) {
+                    selectPlayerLatest20Match(account_id,function (data) {
                         log.info(data.rows[0]);
                         let matches=[];
                         for(let i in data.rows){
@@ -484,8 +479,9 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
 function getPlayerRecentMatchHistory(account_id, callback) {
     let recentURL=getMatchHistoryURL+'&matches_requested='+1+'&min_players='+2;
     let new_url=recentURL+'&account_id='+account_id;
+    console.log(new_url);
+    console.log("get player recent match history>>");
 
-    log.info(new_url);
     request(new_url,function (err,data) {
         if(err){
             //logger.info(err);
@@ -503,7 +499,12 @@ function getPlayerRecentMatchHistory(account_id, callback) {
 
                 if(matches){
                     let lastest_match_id=matches[0].match_id;
-                    accountMatchHistoryModel.selectByMatchId([lastest_match_id],function (data) {
+                    console.log("lasted_match_id",lastest_match_id);
+                    
+                    //match_id 可以重复   match_detail 表里的不可以重复
+               //     accountMatchHistoryModel.selectByMatchId([lastest_match_id],function (data) {
+                    matchDetailModel.selectByMatchId([lastest_match_id],function(data){
+//                        console.log(data);
                         if(data.rowCount==0){
                             console.warn("THE ACCOUNT NEED TO UPDATE DATA");
                             //更新玩家比赛记录
@@ -512,7 +513,9 @@ function getPlayerRecentMatchHistory(account_id, callback) {
                         }else if(data.rowCount==1){
                             //取最近20场比赛
                             let request_num=20;
-                            selectPlayerMatch(account_id,request_num,function (data) {
+                            //selectPlayerMatch(account_id,request_num,function (data) {
+                            //查询t_match_detail表，包含该account_id的元素最新20个元素；
+                            selectPlayerLatest20Match(account_id,function (data) {
                                 console.log(data.rows[0]);
                                 let matches=[];
                                 for(let i in data.rows){
@@ -541,6 +544,7 @@ function getPlayerRecentMatchHistory(account_id, callback) {
  * */
 function updatePlayerMatchHistory(account_id,callback) {
     console.log("IN  updatePlayerMatchHistory");
+    //查询表中是否有 该账号？
     accountMatchHistoryModel.selectIDSByAccount([account_id],function (data) {
         if(data.rowCount>0){
             log.info(data.rowCount);
@@ -552,18 +556,23 @@ function updatePlayerMatchHistory(account_id,callback) {
             console.log('=更新用户所有比赛==');
             async.eachSeries(dota2constant.heroes,function (item,callback) {
                 getAccountMatchHistorySeries(account_id,"",item.id,callback);
+            },function (err) {
+                if(err){
+                    log.error("updatePlayerMatchHistory   ==>    async.eachSeries>>   ",err);
+                }
+               // callback({"result":"success"});
+                getPlayerRecentMatchHistory(account_id,function (data) {
+                    callback(data);
+                })
             });
-           callback({"result":"success"});
+
         }
     });
 
 }
 
-function selectPlayerMatch(account_id,request_num,callback) {
-    let sql_params=[];
-    sql_params.push(account_id);
-    sql_params.push(request_num);
-    accountMatchHistoryModel.selectByPlayerIdAndLimit(sql_params,function (data) {
+function selectPlayerLatest20Match(account_id,callback) {
+    matchDetailModel.selectRecentByContainAccountIDLimit20([account_id],function (data) {
         let matches=data.rows;
         //没办法，查询20个，写到数据库
         for(var i in matches){
