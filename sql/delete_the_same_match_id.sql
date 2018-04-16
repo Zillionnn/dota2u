@@ -1,0 +1,1 @@
+delete from t_match_detail where id not in (select min(id) from t_match_detail group by match_id);
