@@ -265,6 +265,11 @@ exports.requestPlayerInfo=function (account_id) {
     return result;
 };
 
+/**
+ * 获取玩家资料卡
+ * @param account_id
+ * @param callback
+ */
 exports.requestProfileCard=function (account_id,callback) {
     Dota2.requestProfileCard(account_id,function (err, data) {
         if(err){

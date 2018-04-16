@@ -24,6 +24,9 @@ const sql_options={
 
     SELECT_BY_ACCOUNT_ID:`SELECT * FROM t_user_info where account_id=$1;`,
 
+    SELECT_SYNCHRON_BY_ACCOUNT_ID:`SELECT synchron from t_user_info where account_id=$1;`,
+    
+    UPDATE_SYNCHRON_BY_ACCOUNT_ID:`update t_user_info SET synchron=$1 WHERE account_id=$2;`
 };
 //继承
 util.inherits(UserInfoModel,_pgdb);
@@ -67,6 +70,30 @@ UserInfoModel.prototype.update=function (params,callback) {
 UserInfoModel.prototype.selectByAccountID=function (params,callback) {
     //   console.log(params);
     this._query(sql_options.SELECT_BY_ACCOUNT_ID,params,function (data) {
+        callback(data);
+    });
+}
+
+/**
+ * 查询玩家是否同步过数据
+ * @param params
+ * @param callback
+ */
+UserInfoModel.prototype.selectPlayerISSyn=function (params,callback) {
+    //   console.log(params);
+    this._query(sql_options.SELECT_SYNCHRON_BY_ACCOUNT_ID,params,function (data) {
+        callback(data);
+    });
+}
+
+/**
+ * 更新同步情况
+ * @param params
+ * @param callback
+ */
+UserInfoModel.prototype.updatePlayerSynchron=function (params,callback) {
+    //   console.log(params);
+    this._query(sql_options.UPDATE_SYNCHRON_BY_ACCOUNT_ID,params,function (data) {
         callback(data);
     });
 }
