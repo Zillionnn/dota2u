@@ -105,7 +105,7 @@ let getMatchHistoryURL='http://api.steampowered.com/IDOTA2Match_570/GetMatchHist
 let getMatchDetail='http://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/v1?key='+CONFIG.key+'&match_id=';
 
 var matchhistory=new MatchHistoryModel();
-var accountMatchHistoryModel=new AccountMatchHistoryModel();
+//var accountMatchHistoryModel=new AccountMatchHistoryModel();
 var userInfoModel=new UserInfoModel();
 let matchDetailModel=new MatchDetailModel();
 
@@ -204,6 +204,7 @@ function fetchUserInfo(account_id,callback) {
 
 
 /***
+ * 同步所有比赛--
  * 获取玩家比赛记录
  * account_id
  * start_at_match_id
@@ -240,33 +241,13 @@ function getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callb
                     function (series_callback) {
                         async.eachSeries(matches,function (match, callback_c) {
                             console.log("in series>");
-                            let match_param=[];
-                            match_param.push(account_id);
-                            match_param.push(match.match_id);
-                            match_param.push(match.match_seq_num);
-                            match_param.push(match.start_time);
-                            match_param.push(match.lobby_type);
-                            match_param.push(match.radiant_team_id);
-                            match_param.push(match.dire_team_id);
-                            match_param.push(JSON.stringify(match.players));
-                            //  log.info(match_param);
-
-                            let rowcount_match_id;
-                            accountMatchHistoryModel.selectByMatchId([match.match_id],function (data ) {
+                            matchDetailModel.selectByMatchId([match.match_id],function (data) {
                                 // log.info("select by id",data.rowCount);
-                                rowcount_match_id=data.rowCount;
-
-                                if(rowcount_match_id<=0){
-                                    console.log("rowcount>>",rowcount_match_id);
-                                    accountMatchHistoryModel.insert(match_param,function (data) {
-                                        console.log('insert a match');
-                                        insertMatchDetails(match.match_id, callback_c);
-                                    });
-
-                                }else {
-                                    console.log("rowcount>>",rowcount_match_id);
+                                if(data.rowCount<=0){
+                                    insertMatchDetails(match.match_id, callback_c);
+                                }else{
+                                    console.log("rowcount>>",data.rowCount);
                                     insertMatchDetails(match.match_id,callback_c);
-
                                 }
                             });
 
@@ -274,10 +255,10 @@ function getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callb
                             if(err){
                                 console.error(err);
                                 log.error("IN getAccountMatchHistorySeries async error ERROR>>",err);
+                            }else{
                                 console.log("all finished ?");
                                 series_callback();
                             }
-                         
                         });
 
                     },
@@ -838,7 +819,7 @@ function insertMatchDetails(match_id,callback) {
             });
 
         }else{
-            //已存在 callback进入下一个
+            console.log('已存在match detail,  callback进入下一个');
             callback();
         }
     });
