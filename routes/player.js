@@ -40,8 +40,8 @@ router.post('/getUserInfoByAccount',function (req, res, next) {
     log.info(req.body);
     log.info("process===",process.pid);
     let account_id=req.body.account;
-    getPlayerProfile(account_id);
     getUserInfo(account_id,function (data) {
+        console.log(data);
         res.send(data);
     });
 });
@@ -52,10 +52,22 @@ router.post('/getUserInfoByAccount',function (req, res, next) {
 router.post('/fetchUserInfoByAccount',function (req, res, next) {
     log.info(req.body);
     log.info("process===",process.pid);
-    let account_id=req.body.account;
-    fetchUserInfo(account_id,function (data) {
-        res.send(data);
+    let rank_tier,
+        leaderboard_rank,
+        account_id=req.body.account;
+
+    getPlayerProfile(account_id,function (data) {
+        rank_tier=data.rank_tier.toString();
+        leaderboard_rank=data.leaderboard_rank;
+        fetchUserInfo(account_id,function (data) {
+            let profile=data;
+            profile.rank_tier=rank_tier;
+            profile.leaderboard_rank=leaderboard_rank;
+            console.log("profile>>>",profile);
+            res.send(profile);
+        });
     });
+
 });
 
 /**
@@ -259,10 +271,13 @@ function getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callb
                             });
 
                         },function (err) {
-                            console.error(err);
-                            log.error("IN getAccountMatchHistorySeries async error ERROR>>",err);
-                            console.log("all finished ?");
-                            series_callback();
+                            if(err){
+                                console.error(err);
+                                log.error("IN getAccountMatchHistorySeries async error ERROR>>",err);
+                                console.log("all finished ?");
+                                series_callback();
+                            }
+                         
                         });
 
                     },
@@ -345,7 +360,7 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
                             if(data.rowCount<=0){
                                 insertMatchDetails(match.match_id, callback_c);
                             }else{
-                                update_over=true;
+                               // update_over=true;
                                 console.log("series callback()");
                                 series_callback();
                             }
@@ -928,9 +943,10 @@ function SynchronousPlayerMatches(account_id){
  * GC  获取玩家资料卡
  * @param account_id
  */
-function getPlayerProfile(account_id) {
+function getPlayerProfile(account_id,callback) {
     dota2Client.requestProfileCard(account_id,function (data) {
         console.log("PLAYER PROFILE CARD>>",data);
+        callback(data);
     })
     
 }
