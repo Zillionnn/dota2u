@@ -190,82 +190,6 @@ function fetchUserInfo(account_id,callback) {
 
 
 
-//=======100场=====match history================
-//============match history====当前 最新500场============
-let url=getMatchHistoryURL+'&matches_requested='+10+'&min_players='+2;
-//getMatchHistory();
-function getMatchHistory(start_match_id) {
-    log.info(start_match_id);
-    let  new_url=url;
-    if(start_match_id){
-        new_url=new_url+'&start_at_match_id='+start_match_id;
-    }
-    log.info(new_url);
-
-    request(new_url,function (err, data) {
-        if(err){
-            //logger.info(err);
-        }else{
-            //  //logger.info(data.body);
-            var matches=JSON.parse(data.body).result.matches;
-
-            //
-            async.eachSeries(matches,function (match, callback) {
-
-                let match_param=[];
-                match_param.push(match.match_id);
-                match_param.push(match.match_seq_num);
-                match_param.push(match.start_time);
-                match_param.push(match.lobby_type);
-                match_param.push(match.radiant_team_id);
-                match_param.push(match.dire_team_id);
-                match_param.push(JSON.stringify(match.players));
-                //  log.info(match_param);
-                let rowcount_match_id;
-                matchhistory.selectByMatchId([match.match_id],function (data ) {
-                    //    log.info("select by id",data.rowCount);
-                    rowcount_match_id=data.rowCount;
-                    if(rowcount_match_id<=0){
-                        matchhistory.insert(match_param,function (data) {
-                            log.info(data);
-                            //插入成功，查找match detail并写入数据库
-                            if(data.rowCount>0){
-                                insertMatchDetails(match.match_id,callback);
-
-                            }
-
-                        });
-                    }
-                });
-
-            });
-
-
-
-            log.info(matches[9]);
-            if(matches[9]){
-                let lastID=matches[9].match_id-1;
-                getMatchHistory(lastID);
-            }else{
-                setTimeout(function () {
-                    getMatchHistory();
-                },60000);
-            }
-
-
-
-        }
-    });
-}
-
-
-
-//log.info(dota2constant.heroes[1]);
-
-
-//insertAccountMatchHistory100(121320102);
-
-
 /***
  * 获取玩家比赛记录
  * account_id
@@ -498,31 +422,28 @@ function getPlayerRecentMatchHistory(account_id, callback) {
                 let matches=result.matches;
 
                 if(matches){
-                    let lastest_match_id=matches[0].match_id;
-                    console.log("lasted_match_id",lastest_match_id);
+                    let latest_match_id=matches[0].match_id;
+                    console.log("lasted_match_id",latest_match_id);
                     
                     //match_id 可以重复   match_detail 表里的不可以重复
                //     accountMatchHistoryModel.selectByMatchId([lastest_match_id],function (data) {
-                    matchDetailModel.selectByMatchId([lastest_match_id],function(data){
-//                        console.log(data);
-                        if(data.rowCount==0){
+                    selectPlayerLatest20Match(account_id,function (data) {
+                     //  console.log("===================================data.>",data);
+                        //最新的记录不足20场，或者，最新match_id不匹配
+                        if(data.rowCount<20 || data.rows[0].match_id!=latest_match_id){
                             console.warn("THE ACCOUNT NEED TO UPDATE DATA");
                             //更新玩家比赛记录
                             updatePlayerMatchHistory(account_id,callback);
 
-                        }else if(data.rowCount==1){
+                        }else{
                             //取最近20场比赛
-                            let request_num=20;
-                            //selectPlayerMatch(account_id,request_num,function (data) {
-                            //查询t_match_detail表，包含该account_id的元素最新20个元素；
-                            selectPlayerLatest20Match(account_id,function (data) {
-                                console.log(data.rows[0]);
+                              //  console.log(data.rows[0]);
                                 let matches=[];
                                 for(let i in data.rows){
                                     matches.push(data.rows[i]);
                                 }
                                 callback(matches);
-                            });
+
                         }
                     });
                     //   callback(matches);
@@ -544,14 +465,16 @@ function getPlayerRecentMatchHistory(account_id, callback) {
  * */
 function updatePlayerMatchHistory(account_id,callback) {
     console.log("IN  updatePlayerMatchHistory");
-    //查询表中是否有 该账号？
-    accountMatchHistoryModel.selectIDSByAccount([account_id],function (data) {
+    //查询表中有多少条元素包含该account_id
+    //小于20条，就更新比赛
+    matchDetailModel.selectIDsByContainAccount([account_id],function (data) {
+        console.log(data);
         if(data.rowCount>0){
-            log.info(data.rowCount);
+            console.log(data.rowCount);
             //按时间顺序获取记录；
             updateAccount500MatchHistory(account_id,null,null,callback);
 
-        }else{
+        }else if(data.rowCount==0){
             //==========更新用户所有比赛=========
             console.log('=更新用户所有比赛==');
             async.eachSeries(dota2constant.heroes,function (item,callback) {

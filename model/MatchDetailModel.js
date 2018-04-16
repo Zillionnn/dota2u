@@ -18,6 +18,8 @@ const sql_options={
     SELECT_BY_MATCH_ID:`select * from t_match_detail where match_id=$1;`,
 
     SELECT_ALL_BY_CONTAIN_ACCOUNT_ID:`SELECT * FROM t_match_detail where player_accounts @> $1;`,
+    
+    SELECT_ID_BY_CONTAIN_ACCOUNT_ID:`SELECT id FROM t_match_detail where player_accounts @> $1;`,
 
     SELECT_ALL_BY_CONTAIN_ACCOUNT_ID_ORDER_BY_START_TIME_LIMIT_20:`SELECT * FROM t_match_detail where player_accounts @> $1 ORDER BY start_time DESC LIMIT 20;`
 
@@ -59,11 +61,27 @@ MatchDetailModel.prototype.selectByContainAccountID=function (params, callback) 
     });
 };
 
+/**
+ * 查询20条包含指定account_id的元素，按时间降序排列；
+ * @param params
+ * @param callback
+ */
 MatchDetailModel.prototype.selectRecentByContainAccountIDLimit20=function (params, callback) {
     this._query(sql_options.SELECT_ALL_BY_CONTAIN_ACCOUNT_ID_ORDER_BY_START_TIME_LIMIT_20,params,function (data) {
         callback(data);
     });
-}
+};
+
+/**
+ * 查询包含指定account_id的id
+ * @param params
+ * @param callback
+ */
+MatchDetailModel.prototype.selectIDsByContainAccount=function (params, callback) {
+    this._query(sql_options.SELECT_ID_BY_CONTAIN_ACCOUNT_ID,params,function (data) {
+        callback(data);
+    });
+};
 
 
 
