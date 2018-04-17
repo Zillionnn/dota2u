@@ -91,8 +91,12 @@ router.get('/getonematchdetail/:match_id',function (req, res, next) {
 router.post('/SynchronousPlayerData',function (req, res, next) {
     log.info(req.body);
     let account_id=req.body.account;
-    SynchronousPlayerMatches(account_id);
-    res.json({"info":"同步中..."});
+    //res.json({"info":"同步中..."});
+    SynchronousPlayerMatches(account_id,function (data) {
+        console.log(data);
+        res.json(data);
+    });
+    
 });
 
 
@@ -215,7 +219,7 @@ function fetchUserInfo(account_id,callback) {
 function getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callback) {
     console.log('hero id==============',hero_id);
     console.log('getAccountMatchHistorySeries');
-    let url=getMatchHistoryURL+'&matches_requested='+10+'&min_players='+2;
+    let url=getMatchHistoryURL+'&matches_requested='+250+'&min_players='+2;
     let new_url=url+'&account_id='+account_id;
     if(hero_id && start_at_match_id){
         new_url=url+'&account_id='+account_id+'&hero_id='+hero_id+'&start_at_match_id='+start_at_match_id;
@@ -263,7 +267,7 @@ function getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callb
                     },
                     //接上一步做完；
                     function (series_callback) {
-                        if(matches[9]){
+                        if(matches[249]){
                             console.log("has the next 10 matches");
                             let lastID=matches[9].match_id-1;
                             getAccountMatchHistorySeries(account_id,lastID,hero_id,callback);
@@ -913,9 +917,19 @@ function insertMatchDetailsWithoutCallback(match_id) {
  * @param account_id
  * @constructor
  */
-function SynchronousPlayerMatches(account_id){
+function SynchronousPlayerMatches(account_id,callback){
     async.eachSeries(dota2constant.heroes,function (item,callback) {
         getAccountMatchHistorySeries(account_id,"",item.id,callback);
+    },function (err) {
+        if(err){
+            log.error("updatePlayerMatchHistory   ==>    async.eachSeries>>   ",err);
+        }
+        // callback({"result":"success"});
+        //更新同步情况
+        userInfoModel.updatePlayerSynchron([true,account_id],function (data) {
+            console.log("UPDATE USER SYNCRHON>>",data);
+        });
+        callback({"result":"同步成功"});
     });
 }
 
