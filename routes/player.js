@@ -246,8 +246,7 @@ function getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callb
                                 if(data.rowCount<=0){
                                     insertMatchDetails(match.match_id, callback_c);
                                 }else{
-                                    console.log("rowcount>>",data.rowCount);
-                                    insertMatchDetails(match.match_id,callback_c);
+                                  callback_c();
                                 }
                             });
 
@@ -336,7 +335,7 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
                         match_param.push(JSON.stringify(match.players));
                         //  log.info(match_param);
 
-                        let rowcount_match_id;
+                     //   let rowcount_match_id;
                         matchDetailModel.selectByMatchId([match.match_id],function (data) {
                             if(data.rowCount<=0){
                                 insertMatchDetails(match.match_id, callback_c);
