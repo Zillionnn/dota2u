@@ -1,0 +1,5 @@
+CREATE TRIGGER insert_t_match_detail_trigger
+BEFORE INSERT
+ON t_match_detail_main
+FOR EACH ROW
+EXECUTE PROCEDURE auto_insert_into_t_match_detail_main_partition('start_time');

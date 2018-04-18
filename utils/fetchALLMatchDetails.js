@@ -24,7 +24,8 @@ let  MatchHistoryBySequenceNumURL='http://api.steampowered.com/IDOTA2Match_570/G
 /**
  * 获取所有比赛详细；
  */
-fetchMatchHistoryBySequenceNum();
+//201884
+fetchMatchHistoryBySequenceNum(15630,null);
 function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested ) {
     let n_url=MatchHistoryBySequenceNumURL;
     if(start_at_match_seq_num){
@@ -39,7 +40,7 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
     console.log(n_url);
     request(n_url,function (err, data) {
         if(err){
-            console.error(data.body);
+            //console.error(data.body);
             console.error(err);
 
 
@@ -68,7 +69,7 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
                             let last_match_seq_num=matches[99].match_seq_num;
                             setTimeout(function () {
                                 fetchMatchHistoryBySequenceNum(last_match_seq_num,null);
-                            },5000);
+                            },3000);
 
                         }else{
                             callback();
@@ -97,7 +98,7 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
  */
 function insertMatchDetails(match_id,match) {
     console.log('insertMatchDetail');
-    matchDetailModel.selectByMatchId([match_id],function (data) {
+    matchDetailModel.selectIDByMatchId([match_id],function (data) {
         if(data.rowCount==0){
                         let sql_pararms=[];
                         let player_accounts=[];
@@ -108,7 +109,8 @@ function insertMatchDetails(match_id,match) {
                         sql_pararms.push(match.match_seq_num);
                         sql_pararms.push(match.radiant_win);
                         sql_pararms.push(match.duration);
-                        sql_pararms.push(match.start_time);
+                        let start_time=formatVTime(match.start_time);
+                        sql_pararms.push(start_time);
                         sql_pararms.push(match.tower_status_radiant);
                         sql_pararms.push(match.tower_status_dire);
                         sql_pararms.push(match.barracks_status_radiant);
@@ -140,7 +142,7 @@ function insertMatchDetails(match_id,match) {
                         sql_pararms.push(JSON.stringify(player_accounts));
                         sql_pararms.push(JSON.stringify(match.players));
                         sql_pararms.push(JSON.stringify(match.picks_bans));
-                        matchDetailModel.insert(sql_pararms,function (data) {
+                        matchDetailModel.insertPartition(sql_pararms,function (data) {
                             console.log("===INSERT MATCH DETAIL SUCCESS===\n");
                         })
 
@@ -148,3 +150,14 @@ function insertMatchDetails(match_id,match) {
     });
 
 }
+
+
+
+  function formatVTime(time_string) {
+    let n_date=new Date(parseInt(time_string+'000')).toLocaleDateString();
+    let n_time=new Date(parseInt(time_string+'000')).toTimeString();
+    let end=n_time.indexOf("G");
+    n_time=n_time.substring(0,end);
+    let time=n_date+' '+n_time;
+    return time;
+};
