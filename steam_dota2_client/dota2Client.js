@@ -209,6 +209,11 @@ exports.ToSteamID=function (account_id) {
 
 };
 
+/**
+ * 比赛详细信息
+ * @param match_id
+ * @param callback
+ */
 exports.requestMatchDetails=function (match_id,callback) {
     //steamClient.connect();
     console.log("dota2 client>>",match_id);
@@ -226,6 +231,17 @@ exports.requestMatchDetails=function (match_id,callback) {
     steamClient.disconnect();*/
 
 };
+
+exports.requestMatchMinimalDetails=function (match_id,callback) {
+    Dota2.requestMatchMinimalDetails(match_id,function (err, data) {
+        if(err){
+            console.error(err);
+            log.error("requestMatchMinimalDetails  ERROR>>\n",data);
+        }else{
+            callback(data);
+        }
+    });
+}
 
 /**
  * GC 获取比赛
