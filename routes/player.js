@@ -78,7 +78,7 @@ router.get('/getonematchdetail/:match_id',function (req, res, next) {
     let match_id=req.params.match_id;
 //    dota2Client.requestMatchDetails(match_id);
     matchDetailModel.selectByMatchId([match_id],function (data) {
-        log.info("matchDetailsModel>>\n",data);
+       // log.info("matchDetailsModel>>\n",data);
         res.json(data.rows);
     })
 });
@@ -103,10 +103,11 @@ router.post('/SynchronousPlayerData',function (req, res, next) {
 /**
  * ============================================================
  * */
-var  userSummeries='http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key='+CONFIG.key;
-var RecentlyPlayedGames='http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1?key='+CONFIG.key+'&steamid=76561198081585830';
+let  userSummeries='http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key='+CONFIG.key;
+let RecentlyPlayedGames='http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1?key='+CONFIG.key+'&steamid=76561198081585830';
 let getMatchHistoryURL='http://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1?key='+CONFIG.key;
 let getMatchDetail='http://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/v1?key='+CONFIG.key+'&match_id=';
+let  MatchHistoryBySequenceNumURL='http://api.steampowered.com/IDOTA2Match_570/GetMatchHistoryBySequenceNum/v1?key='+CONFIG.key;
 
 var matchhistory=new MatchHistoryModel();
 //var accountMatchHistoryModel=new AccountMatchHistoryModel();
@@ -752,7 +753,7 @@ function getPlayerMatchData(account_id,match_id,done,callback) {
 
 function insertMatchDetails(match_id,callback) {
     console.log("insertMatchDetails>>");
-    matchDetailModel.selectByMatchId([match_id],function (data) {
+    matchDetailModel.selectIDByMatchId([match_id],function (data) {
         if(data.rowCount==0){
 
             let url=getMatchDetail+match_id;
@@ -836,7 +837,7 @@ function insertMatchDetails(match_id,callback) {
  */
 function insertMatchDetailsWithoutCallback(match_id) {
     console.log('insertMatchDetailsWithoutCallback');
-    matchDetailModel.selectByMatchId([match_id],function (data) {
+    matchDetailModel.selectIDByMatchId([match_id],function (data) {
         if(data.rowCount==0){
 
             let url=getMatchDetail+match_id;
