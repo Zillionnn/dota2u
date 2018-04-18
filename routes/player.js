@@ -359,7 +359,7 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
                 },
                 //接上一步做完；
                 function (series_callback) {
-                    console.log("update_over>>",update_over);
+                 //   console.log("update_over>>",update_over);
                     if(result_remianing>450){
                         if(matches[9]){
                             console.log("has the next 10 matches");
