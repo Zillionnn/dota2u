@@ -24,8 +24,8 @@ let  MatchHistoryBySequenceNumURL='http://api.steampowered.com/IDOTA2Match_570/G
 /**
  * 获取所有比赛详细；
  */
-//""1155139""
-fetchMatchHistoryBySequenceNum(1155139,null);
+//""""1829932""""
+fetchMatchHistoryBySequenceNum(1829932,null);
 function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested ) {
     let n_url=MatchHistoryBySequenceNumURL;
     if(start_at_match_seq_num){
@@ -50,7 +50,11 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
                        for(var i in matches){
                            let match_id=matches[i].match_id;
                            let match=matches[i];
+
                            insertMatchDetailsWithoutCallback(match_id,match);
+
+
+
                            if(i==99){
                                console.log("callback>>>>next step");
                                callback();
@@ -74,11 +78,11 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
                    function (callback) {
                        if(matches[99]){
                            console.log("next 100");
-                           let last_match_seq_num=matches[99].match_seq_num;
+                           let last_match_seq_num=matches[99].match_seq_num+1;
                          //  fetchMatchHistoryBySequenceNum(last_match_seq_num,null);
                               setTimeout(function () {
                                   fetchMatchHistoryBySequenceNum(last_match_seq_num,null);
-                              },10000);
+                              },5000);
 
                        }else{
                            callback();
@@ -176,10 +180,7 @@ function insertMatchDetails(match_id,match,callback) {
 }
 
 function insertMatchDetailsWithoutCallback(match_id,match) {
-    console.log('insertMatchDetail');
-    matchDetailModel.selectIDByMatchId([match_id],function (data) {
-        console.log("row count>>>",data.rowCount);
-        if(data.rowCount==0){
+
             let sql_pararms=[];
             let player_accounts=[];
             for(var i in match.players){
@@ -226,8 +227,6 @@ function insertMatchDetailsWithoutCallback(match_id,match) {
                 console.log("===INSERT MATCH DETAIL SUCCESS===\n");
             })
 
-        }
-    });
 
 }
 
