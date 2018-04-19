@@ -24,8 +24,8 @@ let  MatchHistoryBySequenceNumURL='http://api.steampowered.com/IDOTA2Match_570/G
 /**
  * 获取所有比赛详细；
  */
-//1046046
-fetchMatchHistoryBySequenceNum(1040685,null);
+//1069227
+fetchMatchHistoryBySequenceNum(1059282,null);
 function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested ) {
     let n_url=MatchHistoryBySequenceNumURL;
     if(start_at_match_seq_num){
@@ -38,58 +38,65 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
         n_url=n_url+'&start_at_match_seq_num='+start_at_match_seq_num+"&matches_requested="+matches_requested;
     }
     console.log(n_url);
-    request(n_url,function (err, data) {
-        if(err){
-            //console.error(data.body);
-            console.error(err);
+    request(n_url,function (err, data,body) {
+
+       try{
+           try{
+               //   console.log(body);
+               //console.log(data.body);
+               let matches=JSON.parse(data.body).result.matches;
+               async.series([
+                   function (callback) {
+
+                       //console.log(matches.length);
+                       async.eachSeries(matches,function(match,inside_callback){
+                           let match_id=match.match_id;
+                           insertMatchDetails(match_id,match, inside_callback);
+
+                       },function (err) {
+                           if(err){
+                               console.log(err);
+                               log.error(err);
+                           }
+                           console.log("callback>>>>next step");
+                           callback();
+                       });
+
+                   },
+                   function (callback) {
+                       if(matches[99]){
+                           console.log("next 100");
+                           let last_match_seq_num=matches[99].match_seq_num;
+                           fetchMatchHistoryBySequenceNum(last_match_seq_num,null);
+                           /*   setTimeout(function () {
+                                  fetchMatchHistoryBySequenceNum(last_match_seq_num,null);
+                              },3000);*/
+
+                       }else{
+                           callback();
+                       }
+                   }
+               ]);
+           }catch (e) {
+               console.log(e);
+               console.log(data.body);
+               log.error("fetch ALL MATCH DETAILS>>",e);
+               log.error("fetch ALL MATCH DETAILS>>",data.body);
+               setTimeout(function () {
+                   fetchMatchHistoryBySequenceNum(n_url);
+               },10000);
+
+           }
+       }catch (e) {
+           console.error(e);
+           setTimeout(function () {
+               fetchMatchHistoryBySequenceNum(n_url);
+           },10000);
+       }
 
 
-        }else{
-            try{
-
-                //console.log(data.body);
-                let matches=JSON.parse(data.body).result.matches;
-                async.series([
-                    function (callback) {
-
-                        //console.log(matches.length);
-                        async.eachSeries(matches,function(match,inside_callback){
-                            let match_id=match.match_id;
-                            insertMatchDetails(match_id,match, inside_callback);
-
-                        },function (err) {
-                            if(err){
-                                console.log(err);
-                                log.error(err);
-                            }
-                            console.log("callback>>>>next step");
-                            callback();
-                        });
-
-                    },
-                    function (callback) {
-                        if(matches[99]){
-                            console.log("next 100");
-                            let last_match_seq_num=matches[99].match_seq_num;
-                            fetchMatchHistoryBySequenceNum(last_match_seq_num,null);
-                         /*   setTimeout(function () {
-                                fetchMatchHistoryBySequenceNum(last_match_seq_num,null);
-                            },3000);*/
-
-                        }else{
-                            callback();
-                        }
-                    }
-                ]);
-            }catch (e) {
-                console.log(e);
-                console.log(data.body);
-                log.error("fetch ALL MATCH DETAILS>>",e);
-                log.error("fetch ALL MATCH DETAILS>>",data.body);
-            }
 
 
-        }
     });
 
 
