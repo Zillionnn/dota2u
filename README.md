@@ -18,3 +18,8 @@ http://steamcommunity.com/dev
 
 
  #### 成勋运行时，另外启动dota2client ???
+
+
+
+
+ dota2client  requestMatchDetail 和steamwebapi多一个replay信息；

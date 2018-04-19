@@ -24,8 +24,8 @@ let  MatchHistoryBySequenceNumURL='http://api.steampowered.com/IDOTA2Match_570/G
 /**
  * 获取所有比赛详细；
  */
-//201884
-fetchMatchHistoryBySequenceNum(15630,null);
+//1046046
+fetchMatchHistoryBySequenceNum(1040685,null);
 function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested ) {
     let n_url=MatchHistoryBySequenceNumURL;
     if(start_at_match_seq_num){
@@ -53,23 +53,28 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
                     function (callback) {
 
                         //console.log(matches.length);
-                        for(let i in matches){
-                            let match=matches[i];
+                        async.eachSeries(matches,function(match,inside_callback){
                             let match_id=match.match_id;
-                            insertMatchDetails(match_id,match);
+                            insertMatchDetails(match_id,match, inside_callback);
 
-                        }
+                        },function (err) {
+                            if(err){
+                                console.log(err);
+                                log.error(err);
+                            }
+                            console.log("callback>>>>next step");
+                            callback();
+                        });
 
-                        console.log("callback>>>>");
-                        callback();
                     },
                     function (callback) {
                         if(matches[99]){
                             console.log("next 100");
                             let last_match_seq_num=matches[99].match_seq_num;
-                            setTimeout(function () {
+                            fetchMatchHistoryBySequenceNum(last_match_seq_num,null);
+                         /*   setTimeout(function () {
                                 fetchMatchHistoryBySequenceNum(last_match_seq_num,null);
-                            },3000);
+                            },3000);*/
 
                         }else{
                             callback();
@@ -96,9 +101,10 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
  * 无回调插入比赛详细；
  * @param match_id
  */
-function insertMatchDetails(match_id,match) {
+function insertMatchDetails(match_id,match,callback) {
     console.log('insertMatchDetail');
     matchDetailModel.selectIDByMatchId([match_id],function (data) {
+        console.log("row count>>>",data.rowCount);
         if(data.rowCount==0){
                         let sql_pararms=[];
                         let player_accounts=[];
@@ -144,8 +150,11 @@ function insertMatchDetails(match_id,match) {
                         sql_pararms.push(JSON.stringify(match.picks_bans));
                         matchDetailModel.insertPartition(sql_pararms,function (data) {
                             console.log("===INSERT MATCH DETAIL SUCCESS===\n");
+                            callback();
                         })
 
+        }else{
+            callback();
         }
     });
 

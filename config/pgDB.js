@@ -2,7 +2,7 @@ var pg=require("pg");
 const log=require('log4js').getLogger("POSTGRESQL>>");
 
 var config={
-    host:'192.168.137.164',
+    host:'192.168.137.220',
     user:"postgres",
     database:"dota2u",
     password:"123456",
