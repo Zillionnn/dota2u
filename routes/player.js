@@ -753,7 +753,7 @@ function getPlayerMatchData(account_id,match_id,done,callback) {
 
 function insertMatchDetails(match_id,callback) {
     console.log("insertMatchDetails>>");
-    matchDetailModel.selectIDByMatchId([match_id],function (data) {
+    matchDetailModel.selectByMatchId([match_id],function (data) {
         if(data.rowCount==0){
 
             let url=getMatchDetail+match_id;
