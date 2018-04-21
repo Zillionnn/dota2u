@@ -7,9 +7,9 @@ var config={
     database:"dota2u",
     password:"123456",
     port:"5432",
-
-    max:20,
-    idleTimeoutMillis:3000, // 连接最大空闲时间 3s
+    connectionTimeoutMillis:2000,
+    max:1000,
+    idleTimeoutMillis:10000, // 连接最大空闲时间 3s
 }
 
 var pool=new pg.Pool(config);
@@ -62,6 +62,22 @@ _pgdb.prototype._query=function (sql, params, callback) {
     })
 };
 
+/*
+client.query(sql,params,function (err, result) {
+    try {
+        done();
+        callback(result);
+    }catch (e) {
+        console.error("查询错误.QueryERROR>> ",err);
+        log.error("查询错误.SQL_PARAMS>> ",params);
+        log.error("查询错误.QueryERROR>> ",err);
+        setTimeout(()=>{
+            _pgdb.prototype._query(sql,params,callback)
+        },10000);
+
+    }
+
+});*/
 
 module.exports=_pgdb;
 
