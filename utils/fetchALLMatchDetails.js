@@ -1,6 +1,7 @@
 const  express = require('express');
 const  router = express.Router();
 const  request=require('request');
+const rp=require('request-promise');
 const fs=require('fs');
 const log=require('log4js').getLogger("fetchALLMatchDetails");
 
@@ -24,8 +25,8 @@ let  MatchHistoryBySequenceNumURL='http://api.steampowered.com/IDOTA2Match_570/G
 /**
  * 获取所有比赛详细；
  */
-//""""1829932""""
-fetchMatchHistoryBySequenceNum(1829932,null);
+//""""""3685840"""""201201
+fetchMatchHistoryBySequenceNum(3685840,null);
 function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested ) {
     let n_url=MatchHistoryBySequenceNumURL;
     if(start_at_match_seq_num){
@@ -38,7 +39,85 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
         n_url=n_url+'&start_at_match_seq_num='+start_at_match_seq_num+"&matches_requested="+matches_requested;
     }
     console.log(n_url);
-    request(n_url,function (err, data,body) {
+    console.log(start_at_match_seq_num);
+    rp(n_url).then(function (data) {
+      //  console.log(JSON.parse(data).result.matches);
+
+        try{
+            //   console.log(body);
+            //console.log(data.body);
+            let matches=JSON.parse(data).result.matches;
+            console.log(matches.length);
+            if(matches.length==0){
+                console.log("it's none   request again");
+                setTimeout(function () {
+                    fetchMatchHistoryBySequenceNum(start_at_match_seq_num,null)
+                },5000);
+            }
+            async.series([
+                function (callback) {
+                    for(var i in matches){
+                        let match_id=matches[i].match_id;
+                        let match=matches[i];
+
+                        insertMatchDetailsWithoutCallback(match_id,match);
+
+                        if(i==99){
+                            console.log("callback>>>>next step");
+                            callback();
+                        }
+                    }
+                    //console.log(matches.length);
+                    /*     async.eachSeries(matches,function(match,inside_callback){
+                             let match_id=match.match_id;
+                             insertMatchDetails(match_id,match, inside_callback);
+
+                         },function (err) {
+                             if(err){
+                                 console.log(err);
+                                 log.error(err);
+                             }
+                             console.log("callback>>>>next step");
+                             callback();
+                         });*/
+
+                },
+                function (callback) {
+                let last_index=matches.length-1;
+                    if(matches[last_index]){
+
+                        console.log("next 100", last_index);
+                        let last_match_seq_num=matches[last_index].match_seq_num+1;
+                        //  fetchMatchHistoryBySequenceNum(last_match_seq_num,null);
+                        setTimeout(function () {
+                            fetchMatchHistoryBySequenceNum(last_match_seq_num,null);
+                        },5000);
+
+                    }else{
+                      //  fetchMatchHistoryBySequenceNum(last_match_seq_num,null);
+                        callback();
+                    }
+                }
+            ]);
+        }catch (e) {
+            console.log(e);
+            console.log(data.body);
+            log.error("fetch ALL MATCH DETAILS>>",e);
+            log.error("fetch ALL MATCH DETAILS>>",data.body);
+            setTimeout(function () {
+                fetchMatchHistoryBySequenceNum(start_at_match_seq_num);
+            },10000);
+
+        }
+    }).catch(function (err) {
+        console.error("err",err);
+        console.log("request again",start_at_match_seq_num);
+        fetchMatchHistoryBySequenceNum(start_at_match_seq_num,null);
+    });
+
+
+
+  /*  request(n_url,function (err, data,body) {
 
        try{
            try{
@@ -53,15 +132,13 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
 
                            insertMatchDetailsWithoutCallback(match_id,match);
 
-
-
                            if(i==99){
                                console.log("callback>>>>next step");
                                callback();
                            }
                        }
                        //console.log(matches.length);
-                  /*     async.eachSeries(matches,function(match,inside_callback){
+                  /!*     async.eachSeries(matches,function(match,inside_callback){
                            let match_id=match.match_id;
                            insertMatchDetails(match_id,match, inside_callback);
 
@@ -72,7 +149,7 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
                            }
                            console.log("callback>>>>next step");
                            callback();
-                       });*/
+                       });*!/
 
                    },
                    function (callback) {
@@ -109,7 +186,7 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
 
 
 
-    });
+    });*/
 
 
 }
@@ -183,8 +260,16 @@ function insertMatchDetailsWithoutCallback(match_id,match) {
 
             let sql_pararms=[];
             let player_accounts=[];
-            for(var i in match.players){
-                player_accounts.push(match.players[i].account_id);
+            let account_array=[];
+            let players=match.players;
+
+            for(var i in players){
+                player_accounts.push(players[i].account_id);
+                if(players[i].hasOwnProperty("account_id")){
+                    account_array.push(parseInt(players[i].account_id));
+                }else{
+                    account_array.push(4294967295);
+                }
             }
             sql_pararms.push(match.match_id);
             sql_pararms.push(match.match_seq_num);
@@ -223,12 +308,13 @@ function insertMatchDetailsWithoutCallback(match_id,match) {
             sql_pararms.push(JSON.stringify(player_accounts));
             sql_pararms.push(JSON.stringify(match.players));
             sql_pararms.push(JSON.stringify(match.picks_bans));
+            sql_pararms.push(account_array);
+
             matchDetailModel.insertPartition(sql_pararms,function (data) {
                 console.log("===INSERT MATCH DETAIL SUCCESS===\n");
             })
-
-
 }
+
 
   function formatVTime(time_string) {
     let n_date=new Date(parseInt(time_string+'000')).toLocaleDateString();
