@@ -51,7 +51,7 @@ _pgdb.prototype._query=function (sql, params, callback) {
         client.query(sql,params,function (err, result) {
             done();
             if(err){
-                console.error("查询错误.QueryERROR>> ",err);
+                console.error("查询错误.QueryERROR>> ",err,"sql>>",sql,params);
                 log.error("查询错误.SQL_PARAMS>> ",params);
                 return log.error("查询错误.QueryERROR>> ",err);
 
