@@ -50,8 +50,8 @@ router.post('/getUserInfoByAccount',function (req, res, next) {
  * 通过steam web api 查询玩家信息；
  */
 router.post('/fetchUserInfoByAccount',function (req, res, next) {
-    log.info(req.body);
-    log.info("process===",process.pid);
+    /*log.info(req.body);
+    log.info("process===",process.pid);*/
     let rank_tier,
         leaderboard_rank,
         account_id=req.body.account;
@@ -358,6 +358,7 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
 
                      //   let rowcount_match_id;
                         matchDetailModel.selectIDByMatchId([[account_id],match.match_id],function (data) {
+                            console.log("row count is>",data.rowCount);
                             if(data.rowCount<=0){
                                 insertMatchDetails(match.match_id, callback_c);
                             }else{
@@ -385,9 +386,9 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
                         }
                     }else{
                         console.log('update player RECENT matches OVER>>');
-                        matchDetailModel.selectRecentByContainAccountIDLimit20([account_id],function (data) {
+                        matchDetailModel.selectRecentByContainAccountIDLimit20([[account_id]],function (data) {
                             //更新同步情况
-                            let mat
+
                             for(let i in data.rows){
                                 matches.push(data.rows[i]);
                             }
