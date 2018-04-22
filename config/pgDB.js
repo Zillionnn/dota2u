@@ -2,14 +2,14 @@ var pg=require("pg");
 const log=require('log4js').getLogger("POSTGRESQL>>");
 
 var config={
-    host:'192.168.137.220',
+    host:'192.168.137.51',
     user:"postgres",
     database:"dota2u",
     password:"123456",
     port:"5432",
-    connectionTimeoutMillis:2000,
-    max:1000,
-    idleTimeoutMillis:10000, // 连接最大空闲时间 3s
+
+    max:20,
+    idleTimeoutMillis:3000, // 连接最大空闲时间 3s
 }
 
 var pool=new pg.Pool(config);

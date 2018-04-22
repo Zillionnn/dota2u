@@ -357,7 +357,7 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
                         console.log(" 500  in series>>");
 
                      //   let rowcount_match_id;
-                        matchDetailModel.selectByMatchId([match.match_id],function (data) {
+                        matchDetailModel.selectIDByMatchId([[account_id],match.match_id],function (data) {
                             if(data.rowCount<=0){
                                 insertMatchDetails(match.match_id, callback_c);
                             }else{
