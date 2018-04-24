@@ -378,7 +378,7 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
                 //接上一步做完；
                 function (series_callback) {
                  //   console.log("update_over>>",update_over);
-                    if(result_remianing>450){
+                    if(result_remianing>250){
                         if(matches[9]){
                             console.log("has the next 10 matches");
                             let lastID=matches[9].match_id-1;
@@ -386,7 +386,8 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
                         }
                     }else{
                         console.log('update player RECENT matches OVER>>');
-                        matchDetailModel.selectRecentByContainAccountIDLimit20([[account_id]],function (data) {
+                        callback_main({"result":200});
+                      /*  matchDetailModel.selectRecentByContainAccountIDLimit20([[account_id]],function (data) {
                             //更新同步情况
 
                             for(let i in data.rows){
@@ -394,7 +395,7 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
                             }
                             //返回结果
                             callback_main(matches);
-                        });
+                        });*/
                     }
 
                    // series_callback();
@@ -438,13 +439,16 @@ function getPlayerRecentMatchHistory(account_id, callback) {
                     
                     //match_id 可以重复   match_detail 表里的不可以重复
                //     accountMatchHistoryModel.selectByMatchId([lastest_match_id],function (data) {
-                    matchDetailModel.selectRecentByContainAccountIDLimit20([[account_id]
-                    ],function (data) {
-                        console.log("selectRecentByContainAccountIDLimit20>>",data.rowCount);
-                        if(data.rowCount<20 || data.rows[0].match_id!=latest_match_id){
+                    matchDetailModel.selectRecentByContainAccountIDLimit20([[account_id]],function (data) {
+                      //  console.log("selectRecentByContainAccountIDLimit20>>",data.rowCount);
+                        let handleRows=data.rows.slice(0,20);
+                        console.log(handleRows.length);
+                        if(handleRows<20 || data.rows[0].match_id!=latest_match_id){
                             console.warn("THE ACCOUNT NEED TO UPDATE DATA");
                             //更新玩家比赛记录
-                            updatePlayerMatchHistory(account_id,callback);
+                            updatePlayerMatchHistory(account_id,function (data) {
+                                callback(data);
+                            });
                         }else{
                             callback({"result":200});
                         }
@@ -478,7 +482,9 @@ function updatePlayerMatchHistory(account_id,callback) {
         if(synchron==true){
             console.log(synchron);
             //按时间顺序获取记录；
-            updateAccount500MatchHistory(account_id,null,null,callback);
+            updateAccount500MatchHistory(account_id,null,null,function (data) {
+                callback(data);
+            });
         }else{
             console.log(synchron);
             //==========更新用户所有比赛=========

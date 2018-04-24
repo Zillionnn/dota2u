@@ -32,8 +32,10 @@ const sql_options={
     
     SELECT_ID_BY_CONTAIN_ACCOUNT_ID:`SELECT id FROM t_match_detail_main where player_accounts @> $1;`,
 
+    //暂时降序获取所有，后台获取截取20条记录；
     SELECT_ALL_BY_CONTAIN_ACCOUNT_ID_ORDER_BY_START_TIME_LIMIT_20:
-        `SELECT match_id  FROM t_match_detail_main where  account_array @>$1 ORDER BY match_seq_num DESC LIMIT 20;`,
+      //  `SELECT match_id  FROM t_match_detail_main where  account_array @>$1 ORDER BY match_seq_num DESC LIMIT 20;`,
+      `SELECT match_id  FROM t_match_detail_main where  account_array @>$1 ORDER BY match_seq_num DESC;`,
 
     SELECT_ID_BY_MATCH_ID:
         `select id from 
