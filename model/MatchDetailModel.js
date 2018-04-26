@@ -38,8 +38,9 @@ const sql_options={
       `SELECT match_id  FROM t_match_detail_main where  account_array @>$1 ORDER BY match_seq_num DESC;`,
 
     SELECT_ID_BY_MATCH_ID:
-        `select id from 
-        (select id,match_id from  t_match_detail_main where account_array @>$1) temp  where match_id=$2 ;`,
+        `SELECT id from
+     (SELECT id,match_id from t_match_detail_main where start_time=$1) temp
+      WHERE match_id =$2 ;`,
 
     SELECT_SUMMERY_BY_CONTAIN_ACCOUNT_ID:`select 
 match_id, start_time,duration,radiant_win,game_mode, players->array_position(account_array,$1)-1 player_json ,
