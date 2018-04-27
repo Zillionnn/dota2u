@@ -25,6 +25,7 @@ let CONFIG=require('../config/config');
 router.post('/getRecentMatchesByAccount', function(req, res, next) {
    console.log("getRecentMatchesByAccount");
     let account=req.body.account;
+    console.log('getRecentMatchesByAccount',account)
     getPlayerRecentMatchHistory(account,function (data) {
         //log.info(data);
         res.send(data);
@@ -404,7 +405,7 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
  * @param callback
  */
 function getPlayerRecentMatchHistory(account_id, callback) {
-    let recentURL=getMatchHistoryURL+'&matches_requested='+1+'&min_players='+2;
+    let recentURL=getMatchHistoryURL+'&matches_requested='+20+'&min_players='+2;
     let new_url=recentURL+'&account_id='+account_id;
     console.log(new_url);
     console.log("get player recent match history>>");
@@ -426,21 +427,31 @@ function getPlayerRecentMatchHistory(account_id, callback) {
 
                 if(matches){
                     let latest_match_id=matches[0].match_id;
-                    console.log("lasted_match_id",latest_match_id);
+                    let latest_19th_match_id=matches[19].match_id;
+                    console.log(`latest_match_id=${latest_match_id}  ${typeof  latest_match_id} and ${latest_19th_match_id}` );
                     
                     //match_id 可以重复   match_detail 表里的不可以重复
                //     accountMatchHistoryModel.selectByMatchId([lastest_match_id],function (data) {
                     matchDetailModel.selectRecentByContainAccountIDLimit20([[account_id]],function (data) {
                       //  console.log("selectRecentByContainAccountIDLimit20>>",data.rowCount);
                         let handleRows=data.rows.slice(0,20);
-                        console.log(handleRows.length);
-                        if(handleRows<20 || data.rows[0].match_id!=latest_match_id){
-                            console.warn("THE ACCOUNT NEED TO UPDATE DATA");
+                        console.log("最近20场？？",handleRows);
+
+                        console.log(  data.rows[19].match_id);
+                        if(handleRows.length<20 ){
+                            console.warn("no  20   matches   THE ACCOUNT NEED TO UPDATE DATA");
                             //更新玩家比赛记录
                             updatePlayerMatchHistory(account_id,function (data) {
                                 callback(data);
                             });
-                        }else{
+                        }else if(parseInt(data.rows[0].match_id)!=latest_match_id || parseInt(data.rows[19].match_id)!=latest_19th_match_id){
+                            console.warn("not newest matches THE ACCOUNT NEED TO UPDATE DATA");
+                            //更新玩家比赛记录
+                            updatePlayerMatchHistory(account_id,function (data) {
+                                callback(data);
+                            });
+                        } else{
+                            console.warn("all matches are recent");
                             callback({"result":200});
                         }
                     });
