@@ -12,6 +12,8 @@ global.config = require("./config");
 
 const async=require("async");
 const request=require('request');
+const log=require('log4js').getLogger("dota2Client");
+
 
 var onSteamLogOn = function onSteamLogOn(logonResp) {
     console.log("on steam log on");

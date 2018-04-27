@@ -26,7 +26,9 @@ const sql_options={
 
     SELECT_SYNCHRON_BY_ACCOUNT_ID:`SELECT synchron from t_user_info where account_id=$1;`,
     
-    UPDATE_SYNCHRON_BY_ACCOUNT_ID:`update t_user_info SET synchron=$1 WHERE account_id=$2;`
+    UPDATE_SYNCHRON_BY_ACCOUNT_ID:`update t_user_info SET synchron=$1 WHERE account_id=$2;`,
+
+    UPDATE_PLAYER_RANK:`update t_user_info SET rank_tier=$1,leaderboard_rank=$2    WHERE account_id=$3;`
 };
 //继承
 util.inherits(UserInfoModel,_pgdb);
@@ -96,6 +98,17 @@ UserInfoModel.prototype.updatePlayerSynchron=function (params,callback) {
     this._query(sql_options.UPDATE_SYNCHRON_BY_ACCOUNT_ID,params,function (data) {
         callback(data);
     });
-}
+};
+
+/**
+ * 更新rank
+ * @type {UserInfoModel}
+ */
+UserInfoModel.prototype.updatePlayerRank=function (params,callback) {
+    //   console.log(params);
+    this._query(sql_options.UPDATE_PLAYER_RANK,params,function (data) {
+        callback(data);
+    });
+};
 
 module.exports=UserInfoModel;

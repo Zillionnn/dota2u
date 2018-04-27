@@ -4,6 +4,7 @@ const  request=require('request');
 const rp=require('request-promise');
 const fs=require('fs');
 const log=require('log4js').getLogger("fetchALLMatchDetails");
+const fetch=require('whatwg-fetch');
 
 const  MatchHistoryModel=require('../model/MatchHistoryModel');
 const  AccountMatchHistoryModel=require('../model/AccountMatchHistoryModel');
@@ -25,8 +26,8 @@ let  MatchHistoryBySequenceNumURL='http://api.steampowered.com/IDOTA2Match_570/G
 /**
  * 获取所有比赛详细；
  */
-//""""""""""""8178435"""""""201203
-fetchMatchHistoryBySequenceNum(8178435,null);
+//""""""""""""""""8440425""""""""""    """"201203
+fetchMatchHistoryBySequenceNum(8440425,null);
 function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested ) {
     let n_url = MatchHistoryBySequenceNumURL;
     if (start_at_match_seq_num) {
@@ -45,11 +46,16 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
 
         if (err) {
             //handleError({ error: err, response: response, ... });
-        } else if (!(/^2/.test('' + data.statusCode))) { // Status Codes other than 2xx
-            console.log('res.code not 200');
+            console.warn(err);
             setTimeout(function () {
                 fetchMatchHistoryBySequenceNum(start_at_match_seq_num, null);
-            }, 3000);
+            }, 30000);
+        } else if (!(/^2/.test('' + data.statusCode))) { // Status Codes other than 2xx
+            console.log('res.code not 200');
+            console.log(data.statusCode);
+            setTimeout(function () {
+                fetchMatchHistoryBySequenceNum(start_at_match_seq_num, null);
+            }, 30000);
 
         } else {
 
@@ -78,9 +84,9 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
                                 console.log("next 100");
                                 let last_match_seq_num = matches[99].match_seq_num ;
                                 //  fetchMatchHistoryBySequenceNum(last_match_seq_num,null);
-                               // setTimeout(function () {
+                               setTimeout(function () {
                                     fetchMatchHistoryBySequenceNum(last_match_seq_num, null);
-                          //      }, 5000);
+                                }, 5000);
 
                             } else {
                                 callback();

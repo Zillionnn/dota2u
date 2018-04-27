@@ -60,6 +60,9 @@ router.post('/fetchUserInfoByAccount',function (req, res, next) {
     getPlayerProfile(account_id,function (data) {
         rank_tier=data.rank_tier.toString();
         leaderboard_rank=data.leaderboard_rank;
+        userInfoModel.updatePlayerRank([rank_tier,leaderboard_rank,account_id],function (data) {
+            console.log(data);
+        });
         fetchUserInfo(account_id,function (data) {
             let profile=data;
             profile.rank_tier=rank_tier;
@@ -167,7 +170,8 @@ function fetchUserInfo(account_id,callback) {
     console.log(new_url);
     request(new_url,function (err, data) {
         if(err){
-            throw log.error(err);
+             log.error(err);
+             fetchUserInfo(account_id,callback);
         }else{
             try{
                 let result=JSON.parse(data.body).response.players[0];
@@ -205,7 +209,7 @@ function fetchUserInfo(account_id,callback) {
                         userInfoModel.insert(sql_params,function (data) {
                             if(data.rowCount>=1){
                                 log.info("insert user info SUCCESS");
-                            };
+                            }
                             callback(result);
                         });
                     }
@@ -418,7 +422,7 @@ function getPlayerRecentMatchHistory(account_id, callback) {
             try{
 
                 let result=JSON.parse(data.body).result;
-             console.log(result);
+          //   console.log(result);
                 if(result.status!=1){
                     callback({error:403});
                     return;
@@ -435,9 +439,9 @@ function getPlayerRecentMatchHistory(account_id, callback) {
                     matchDetailModel.selectRecentByContainAccountIDLimit20([[account_id]],function (data) {
                       //  console.log("selectRecentByContainAccountIDLimit20>>",data.rowCount);
                         let handleRows=data.rows.slice(0,20);
-                        console.log("最近20场？？",handleRows);
+                     //   console.log("最近20场？？",handleRows);
 
-                        console.log(  data.rows[19].match_id);
+                       // console.log(  data.rows[19].match_id);
                         if(handleRows.length<20 ){
                             console.warn("no  20   matches   THE ACCOUNT NEED TO UPDATE DATA");
                             //更新玩家比赛记录
@@ -1034,4 +1038,10 @@ function formatVTime(time_string) {
     let time=n_date+' '+n_time;
     return time;
 };
+
+
+function updatePlayerRankByAccountID(sql_params,account_id){
+
+
+}
 module.exports = router;
