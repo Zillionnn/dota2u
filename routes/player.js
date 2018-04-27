@@ -260,11 +260,12 @@ function getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callb
                         let toInsertMatchArray=[];
                         async.eachSeries(matches,function (match, callback_c) {
                             console.log("in series>");
-                            matchDetailModel.selectIDByMatchId([match.start_time,match.match_id],function (data) {
+                            let start_time=formatVTime(match.start_time);
+                            matchDetailModel.selectIDByMatchId([start_time,match.match_id],function (data) {
                                 // log.info("select by id",data.rowCount);
                                 if(data.rowCount<=0){
-                                   toInsertMatchArray.push(match.match_id);
-                                   callback_c();
+                                    insertMatchDetails(match.match_id, callback_c);
+
                                 }else{
                                     callback_c();
                                 }
@@ -275,20 +276,8 @@ function getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callb
                                 console.error(err);
                                 log.error("IN getAccountMatchHistorySeries async error ERROR>>",err);
                             }else{
-                                if(toInsertMatchArray.length==0){
-                                    series_callback();
-                                }else{
-                                    async.eachSeries(toInsertMatchArray,function (match_id, callback) {
-                                        insertMatchDetails(match_id,callback);
-                                    },function (err) {
-                                        if(err){
-                                            console.error(err);
-                                        }else{
-                                            series_callback();
-                                        }
-                                    });
-                                }
-                                //series_callback();
+
+                                series_callback();
                             }
                         });
 
@@ -358,7 +347,8 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
                         console.log(" 500  in series>>");
 
                      //   let rowcount_match_id;
-                        matchDetailModel.selectIDByMatchId([match.start_time,match.match_id],function (data) {
+                        let start_time=formatVTime(match.start_time);
+                        matchDetailModel.selectIDByMatchId([start_time,match.match_id],function (data) {
                             console.log("row count is>",data.rowCount);
                             if(data.rowCount<=0){
                                 insertMatchDetails(match.match_id, callback_c);
