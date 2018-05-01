@@ -45,7 +45,10 @@ const sql_options={
     SELECT_SUMMERY_BY_CONTAIN_ACCOUNT_ID:`select 
 match_id, start_time,duration,radiant_win,game_mode, players->array_position(account_array,$1)-1 player_json ,
 array_position(account_array,$1)-1  player_position
-from t_match_detail_main where account_array @>$2  order by start_time DESC;`
+from t_match_detail_main where account_array @>$2  order by start_time DESC;`,
+
+    DELETE_BY_START_TIME_AND_MATCH_ID:`delete  from  t_match_detail_main 
+      WHERE start_time=$1  AND match_id =$2 ;`
 
 
     
@@ -143,6 +146,12 @@ MatchDetailModel.prototype.updateMatchDetailSetPlayerByMatchID=function (params,
     });
 };
 
+
+MatchDetailModel.prototype.deleteMatchDetail=function (params,callback) {
+    this._query(sql_options.DELETE_BY_START_TIME_AND_MATCH_ID,params,function (data) {
+        callback( data);
+    });
+};
 
 
 

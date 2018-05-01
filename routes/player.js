@@ -3,6 +3,7 @@ const  router = express.Router();
 const  request=require('request');
 const fs=require('fs');
 const log=require('log4js').getLogger("player");
+const child_process =require('child_process');
 
 const  MatchHistoryModel=require('../model/MatchHistoryModel');
 const  AccountMatchHistoryModel=require('../model/AccountMatchHistoryModel');
@@ -97,6 +98,15 @@ router.post('/SynchronousPlayerData',function (req, res, next) {
     log.info(req.body);
     let account_id=req.body.account;
     //res.json({"info":"同步中..."});
+   /* child_process.exec(`node process/sycnAllMatches_process.js  ${account_id}`,function (error, stdout, stderr) {
+        if (error) {
+            console.log(error.stack);
+            console.log('Error code: '+error.code);
+            console.log('Signal received: '+error.signal);
+        }
+        console.log('stdout: ' + stdout);
+        console.log('stderr: ' + stderr);
+    });*/
     SynchronousPlayerMatches(account_id,function (data) {
         console.log(data);
         res.json(data);
@@ -253,7 +263,7 @@ function getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callb
     console.log(new_url);
     request(new_url,function (err,data) {
         if(err){
-            //logger.info(err);
+            setTimeout()
         }else{
             //  //logger.info(data.body);
             try{
@@ -266,11 +276,18 @@ function getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callb
                         async.eachSeries(matches,function (match, callback_c) {
                             console.log("in series>");
                             let start_time=formatVTime(match.start_time);
+                        //    console.log(start_time);
                             matchDetailModel.selectIDByMatchId([start_time,match.match_id],function (data) {
-                                // log.info("select by id",data.rowCount);
-                                if(data.rowCount<=0){
+
+                               console.log(`data.rowCount> ${start_time}     ${match.match_id}   ${data.rowCount}`);
+                                if(data.rowCount==0){
                                     insertMatchDetails(match.match_id, callback_c);
 
+                                }else if(data.rowCount>1){
+                                    matchDetailModel.deleteMatchDetail([start_time,match.match_id],function () {
+                                        console.warn(`has delete the same`);
+                                        insertMatchDetails(match.match_id,callback_c);
+                                    });
                                 }else{
                                     callback_c();
                                 }
@@ -353,9 +370,10 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
 
                      //   let rowcount_match_id;
                         let start_time=formatVTime(match.start_time);
+                        console.log(start_time);
                         matchDetailModel.selectIDByMatchId([start_time,match.match_id],function (data) {
                             console.log("row count is>",data.rowCount);
-                            if(data.rowCount<=0){
+                            if(data.rowCount==0){
                                 insertMatchDetails(match.match_id, callback_c);
                             }else{
                                // update_over=true;
@@ -493,13 +511,12 @@ function updatePlayerMatchHistory(account_id,callback) {
                 callback(data);
             });
         }else{
-            SynchronousPlayerMatches(account_id,function (data) {
-
-            });
-            updateAccount500MatchHistory(account_id,null,null,function (data) {
+            SynchronousPlayerMatches(account_id,callback);
+            //TODO 需要指定进程？
+         /*   updateAccount500MatchHistory(account_id,null,null,function (data) {
 
                 callback(data);
-            });
+            });*/
             console.log(synchron);
             //==========更新用户所有比赛=========
          /*   console.log('=更新用户所有比赛==');
