@@ -29,7 +29,7 @@ let  MatchHistoryBySequenceNumURL='http://api.steampowered.com/IDOTA2Match_570/G
 taskFetchMatchDetail();
 function taskFetchMatchDetail(){
     let start_at_match_seq_num;
-    fs.readFile('201204.json',function (err,data) {
+    fs.readFile('20180503.json',function (err,data) {
      //   console.log(data.toString());
         start_at_match_seq_num=parseInt(data.toString());
         console.log(start_at_match_seq_num);
@@ -38,8 +38,8 @@ function taskFetchMatchDetail(){
 
 }
 
-//""""""""""""""""13728896    """""    """"201204
-//fetchMatchHistoryBySequenceNum(13667070,null);
+//""""""""""""""""3356653377    """""    """"201204
+//fetchMatchHistoryBySequenceNum(3356653377,null);
 function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested ) {
 
     let n_url = MatchHistoryBySequenceNumURL;
@@ -56,7 +56,7 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
     console.log(start_at_match_seq_num);
     let time=new Date().toLocaleString();
     console.log(time);
-    fs.writeFile('201204.json',`${start_at_match_seq_num}`,function () {
+    fs.writeFile('20180503.json',`${start_at_match_seq_num}`,function () {
 
     });
 
@@ -67,13 +67,13 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
             console.warn(err);
             setTimeout(function () {
                 fetchMatchHistoryBySequenceNum(start_at_match_seq_num, null);
-            }, 30000);
+            }, 11000);
         } else if (!(/^2/.test('' + data.statusCode))) { // Status Codes other than 2xx
             console.log('res.code not 200');
             console.log(data.statusCode);
             setTimeout(function () {
                 fetchMatchHistoryBySequenceNum(start_at_match_seq_num, null);
-            }, 30000);
+            }, 10101);
 
         } else {
 
@@ -104,9 +104,14 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
                                 //  fetchMatchHistoryBySequenceNum(last_match_seq_num,null);
                                setTimeout(function () {
                                     fetchMatchHistoryBySequenceNum(last_match_seq_num, null);
-                                }, 5000);
+                                }, 1000);
 
                             } else {
+                                console.warn("NO 99 item");
+                                let last_match_seq_num = matches[matches.length-1].match_seq_num ;
+                                setTimeout(function () {
+                                    fetchMatchHistoryBySequenceNum(last_match_seq_num, null);
+                                }, 3000);
                                 callback();
                             }
                         }
