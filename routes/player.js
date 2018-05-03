@@ -263,7 +263,17 @@ function getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callb
     console.log(new_url);
     request(new_url,function (err,data) {
         if(err){
-            setTimeout()
+            console.log('error');
+            setTimeout(function () {
+                 getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callback);
+                },30000);
+        }else if (!(/^2/.test('' + data.statusCode))) { // Status Codes other than 2xx
+            console.log('res.code not 200');
+            console.log(data.statusCode);
+            setTimeout(function () {
+                getAccountMatchHistorySeries(account_id,start_at_match_id,hero_id,callback);
+            }, 30000);
+
         }else{
             //  //logger.info(data.body);
             try{

@@ -25,8 +25,8 @@ let  MatchHistoryBySequenceNumURL='http://api.steampowered.com/IDOTA2Match_570/G
 /**
  * 获取所有比赛详细；
  */
-//""""""""""""""""12688219"""""    """"201204
-fetchMatchHistoryBySequenceNum(12688219,null);
+//""""""""""""""""13372230    """""    """"201204
+fetchMatchHistoryBySequenceNum(13372230,null);
 function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested ) {
     let n_url = MatchHistoryBySequenceNumURL;
     if (start_at_match_seq_num) {
@@ -40,10 +40,12 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
     }
     console.log(n_url);
     console.log(start_at_match_seq_num);
-    fs.writeFile('201204.json',start_at_match_seq_num,function () {
+    let time=new Date().toLocaleString();
+    console.log(time);
+    fs.writeFile('201204.json',`${start_at_match_seq_num}  ${time}`,function () {
 
     });
-    console.log(new Date().toLocaleString());
+
     request(n_url, function (err, data, body) {
 
         if (err) {
