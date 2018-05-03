@@ -3,6 +3,7 @@ const  router = express.Router();
 const  request=require('request');
 const rp=require('request-promise');
 const fs=require('fs');
+const spawn=require('child_process').spawn;
 const log=require('log4js').getLogger("fetchALLMatchDetails");
 
 const  MatchHistoryModel=require('../model/MatchHistoryModel');
@@ -25,9 +26,22 @@ let  MatchHistoryBySequenceNumURL='http://api.steampowered.com/IDOTA2Match_570/G
 /**
  * 获取所有比赛详细；
  */
-//""""""""""""""""13372230    """""    """"201204
-fetchMatchHistoryBySequenceNum(13372230,null);
+taskFetchMatchDetail();
+function taskFetchMatchDetail(){
+    let start_at_match_seq_num;
+    fs.readFile('201204.json',function (err,data) {
+     //   console.log(data.toString());
+        start_at_match_seq_num=parseInt(data.toString());
+        console.log(start_at_match_seq_num);
+        fetchMatchHistoryBySequenceNum(start_at_match_seq_num,null);
+    });
+
+}
+
+//""""""""""""""""13667070    """""    """"201204
+//fetchMatchHistoryBySequenceNum(13667070,null);
 function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested ) {
+
     let n_url = MatchHistoryBySequenceNumURL;
     if (start_at_match_seq_num) {
         n_url = n_url + '&start_at_match_seq_num=' + start_at_match_seq_num;
@@ -42,7 +56,7 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
     console.log(start_at_match_seq_num);
     let time=new Date().toLocaleString();
     console.log(time);
-    fs.writeFile('201204.json',`${start_at_match_seq_num}  ${time}`,function () {
+    fs.writeFile('201204.json',`${start_at_match_seq_num}`,function () {
 
     });
 
