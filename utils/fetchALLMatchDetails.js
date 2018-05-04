@@ -3,7 +3,6 @@ const  router = express.Router();
 const  request=require('request');
 const rp=require('request-promise');
 const fs=require('fs');
-const spawn=require('child_process').spawn;
 const log=require('log4js').getLogger("fetchALLMatchDetails");
 
 const  MatchHistoryModel=require('../model/MatchHistoryModel');
@@ -26,23 +25,25 @@ let  MatchHistoryBySequenceNumURL='http://api.steampowered.com/IDOTA2Match_570/G
 /**
  * 获取所有比赛详细；
  */
+
 taskFetchMatchDetail();
 function taskFetchMatchDetail(){
     let start_at_match_seq_num;
     fs.readFile('201204.json',function (err,data) {
-     //   console.log(data.toString());
+        //   console.log(data.toString());
         start_at_match_seq_num=parseInt(data.toString());
         console.log(start_at_match_seq_num);
         fetchMatchHistoryBySequenceNum(start_at_match_seq_num,null);
     });
 
 }
-
-//""""""""""""""""13728896    """""    """"201204
-//fetchMatchHistoryBySequenceNum(13667070,null);
+//"""""""""""""""452071414  """"""""""201402
+//fetchMatchHistoryBySequenceNum(452071414,null);
 function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested ) {
-
     let n_url = MatchHistoryBySequenceNumURL;
+    let requestObj=new Object()
+    requestObj.isRequest=false;
+    requestObj.nextRequesting=false;
     if (start_at_match_seq_num) {
         n_url = n_url + '&start_at_match_seq_num=' + start_at_match_seq_num;
     }
@@ -56,14 +57,28 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
     console.log(start_at_match_seq_num);
     let time=new Date().toLocaleString();
     console.log(time);
+    //没办法，无响应。递归
+    let checkRequest=setTimeout(()=>{
+        console.log('isRequest',requestObj);
+        if(requestObj.isRequest==false){
+            clearTimeout(checkRequest);
+            requestObj.nextRequesting=true;
+            fetchMatchHistoryBySequenceNum(start_at_match_seq_num);
+        }
+    },70000);
     fs.writeFile('201204.json',`${start_at_match_seq_num}`,function () {
 
     });
 
-    request(n_url, function (err, data, body) {
 
+    request(n_url, function (err, data, body) {
+        requestObj.isRequest=true;
+        clearTimeout(checkRequest);
+        if(requestObj.nextRequesting){
+            console.warn("time to return....");
+            return ;
+        }
         if (err) {
-            //handleError({ error: err, response: response, ... });
             console.warn(err);
             setTimeout(function () {
                 fetchMatchHistoryBySequenceNum(start_at_match_seq_num, null);
@@ -102,9 +117,9 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
                                 console.log("next 100");
                                 let last_match_seq_num = matches[99].match_seq_num ;
                                 //  fetchMatchHistoryBySequenceNum(last_match_seq_num,null);
-                               setTimeout(function () {
+                                setTimeout(function () {
                                     fetchMatchHistoryBySequenceNum(last_match_seq_num, null);
-                                }, 5000);
+                                }, 6567);
 
                             } else {
                                 callback();
@@ -131,6 +146,7 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
         }
 
     });
+
 
 }
 
@@ -184,11 +200,11 @@ function insertMatchDetails(match_id,match,callback) {
             sql_pararms.push(match.tournament_round);
             sql_pararms.push(match.radiant_team_id);
             sql_pararms.push(match.radiant_name);
-            sql_pararms.push(match.radiant_logo);
+          //  sql_pararms.push(match.radiant_logo);
             sql_pararms.push(match.radiant_team_complete);
             sql_pararms.push(match.dire_team_id);
             sql_pararms.push(match.dire_name);
-            sql_pararms.push(match.dire_logo);
+           // sql_pararms.push(match.dire_logo);
             sql_pararms.push(match.dire_team_complete);
             sql_pararms.push(match.radiant_captain);
             sql_pararms.push(match.dire_captain);
@@ -211,65 +227,65 @@ function insertMatchDetails(match_id,match,callback) {
 
 function insertMatchDetailsWithoutCallback(match_id,match) {
 
-            let sql_pararms=[];
-            let player_accounts=[];
-            let account_array=[];
-            let players=match.players;
+    let sql_pararms=[];
+    let player_accounts=[];
+    let account_array=[];
+    let players=match.players;
 
-            for(var i in players){
-                player_accounts.push(players[i].account_id);
-                if(players[i].hasOwnProperty("account_id")){
-                    account_array.push(parseInt(players[i].account_id));
-                }else{
-                    account_array.push(4294967295);
-                }
-            }
-            sql_pararms.push(match.match_id);
-            sql_pararms.push(match.match_seq_num);
-            sql_pararms.push(match.radiant_win);
-            sql_pararms.push(match.duration);
-            let start_time=formatVTime(match.start_time);
-            sql_pararms.push(start_time);
-            sql_pararms.push(match.tower_status_radiant);
-            sql_pararms.push(match.tower_status_dire);
-            sql_pararms.push(match.barracks_status_radiant);
-            sql_pararms.push(match.barracks_status_dire);
-            sql_pararms.push(match.cluster);
-            sql_pararms.push(match.first_blood_time);
-            sql_pararms.push(match.lobby_type);
-            sql_pararms.push(match.human_players);
-            sql_pararms.push(match.leagueid);
-            sql_pararms.push(match.positive_votes);
-            sql_pararms.push(match.negative_votes);
-            sql_pararms.push(match.game_mode);
-            sql_pararms.push(match.flags);
-            sql_pararms.push(match.engine);
-            sql_pararms.push(match.radiant_score);
-            sql_pararms.push(match.dire_score);
-            sql_pararms.push(match.tournament_id);
-            sql_pararms.push(match.tournament_round);
-            sql_pararms.push(match.radiant_team_id);
-            sql_pararms.push(match.radiant_name);
-            sql_pararms.push(match.radiant_logo);
-            sql_pararms.push(match.radiant_team_complete);
-            sql_pararms.push(match.dire_team_id);
-            sql_pararms.push(match.dire_name);
-            sql_pararms.push(match.dire_logo);
-            sql_pararms.push(match.dire_team_complete);
-            sql_pararms.push(match.radiant_captain);
-            sql_pararms.push(match.dire_captain);
-            sql_pararms.push(JSON.stringify(player_accounts));
-            sql_pararms.push(JSON.stringify(match.players));
-            sql_pararms.push(JSON.stringify(match.picks_bans));
-            sql_pararms.push(account_array);
+    for(var i in players){
+        player_accounts.push(players[i].account_id);
+        if(players[i].hasOwnProperty("account_id")){
+            account_array.push(parseInt(players[i].account_id));
+        }else{
+            account_array.push(4294967295);
+        }
+    }
+    sql_pararms.push(match.match_id);
+    sql_pararms.push(match.match_seq_num);
+    sql_pararms.push(match.radiant_win);
+    sql_pararms.push(match.duration);
+    let start_time=formatVTime(match.start_time);
+    sql_pararms.push(start_time);
+    sql_pararms.push(match.tower_status_radiant);
+    sql_pararms.push(match.tower_status_dire);
+    sql_pararms.push(match.barracks_status_radiant);
+    sql_pararms.push(match.barracks_status_dire);
+    sql_pararms.push(match.cluster);
+    sql_pararms.push(match.first_blood_time);
+    sql_pararms.push(match.lobby_type);
+    sql_pararms.push(match.human_players);
+    sql_pararms.push(match.leagueid);
+    sql_pararms.push(match.positive_votes);
+    sql_pararms.push(match.negative_votes);
+    sql_pararms.push(match.game_mode);
+    sql_pararms.push(match.flags);
+    sql_pararms.push(match.engine);
+    sql_pararms.push(match.radiant_score);
+    sql_pararms.push(match.dire_score);
+    sql_pararms.push(match.tournament_id);
+    sql_pararms.push(match.tournament_round);
+    sql_pararms.push(match.radiant_team_id);
+    sql_pararms.push(match.radiant_name);
+    sql_pararms.push(match.radiant_logo);
+    sql_pararms.push(match.radiant_team_complete);
+    sql_pararms.push(match.dire_team_id);
+    sql_pararms.push(match.dire_name);
+    sql_pararms.push(match.dire_logo);
+    sql_pararms.push(match.dire_team_complete);
+    sql_pararms.push(match.radiant_captain);
+    sql_pararms.push(match.dire_captain);
+    sql_pararms.push(JSON.stringify(player_accounts));
+    sql_pararms.push(JSON.stringify(match.players));
+    sql_pararms.push(JSON.stringify(match.picks_bans));
+    sql_pararms.push(account_array);
 
-            matchDetailModel.insertPartition(sql_pararms,function (data) {
-                console.log("===INSERT MATCH DETAIL SUCCESS===\n");
-            })
+    matchDetailModel.insertPartition(sql_pararms,function (data) {
+        console.log("===INSERT MATCH DETAIL SUCCESS===\n");
+    })
 }
 
 
-  function formatVTime(time_string) {
+function formatVTime(time_string) {
     let n_date=new Date(parseInt(time_string+'000')).toLocaleDateString();
     let n_time=new Date(parseInt(time_string+'000')).toTimeString();
     let end=n_time.indexOf("G");

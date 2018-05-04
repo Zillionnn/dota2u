@@ -41,7 +41,9 @@ function taskFetchMatchDetail(){
 //fetchMatchHistoryBySequenceNum(452071414,null);
 function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested ) {
     let n_url = MatchHistoryBySequenceNumURL;
-    let isRequest=false;
+    let requestObj=new Object()
+    requestObj.isRequest=false;
+    requestObj.nextRequesting=false;
     if (start_at_match_seq_num) {
         n_url = n_url + '&start_at_match_seq_num=' + start_at_match_seq_num;
     }
@@ -51,16 +53,16 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
     if (start_at_match_seq_num && matches_requested) {
         n_url = n_url + '&start_at_match_seq_num=' + start_at_match_seq_num + "&matches_requested=" + matches_requested;
     }
-    //console.log(n_url);
- //   console.log(start_at_match_seq_num);
+ console.log(n_url);
+    console.log(start_at_match_seq_num);
     let time=new Date().toLocaleString();
     console.log(time);
     //没办法，无响应。递归
     let checkRequest=setTimeout(()=>{
-        console.log('isRequest',isRequest);
-        if(isRequest==false){
+        console.log('isRequest',requestObj);
+        if(requestObj.isRequest==false){
             clearTimeout(checkRequest);
-            isRequest=true;
+            requestObj.nextRequesting=true;
             fetchMatchHistoryBySequenceNum(start_at_match_seq_num);
         }
     },70000);
@@ -68,10 +70,14 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
 
     });
 
-        if(isRequest==false){
+
             request(n_url, function (err, data, body) {
-                isRequest=true;
+                requestObj.isRequest=true;
                 clearTimeout(checkRequest);
+                if(requestObj.nextRequesting){
+                    console.warn("time to return....");
+                    return ;
+                }
                 if (err) {
                     console.warn(err);
                     setTimeout(function () {
@@ -140,7 +146,7 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
                 }
 
             });
-        }
+
 
 }
 
@@ -194,11 +200,11 @@ function insertMatchDetails(match_id,match,callback) {
             sql_pararms.push(match.tournament_round);
             sql_pararms.push(match.radiant_team_id);
             sql_pararms.push(match.radiant_name);
-            sql_pararms.push(match.radiant_logo);
+           // sql_pararms.push(match.radiant_logo);
             sql_pararms.push(match.radiant_team_complete);
             sql_pararms.push(match.dire_team_id);
             sql_pararms.push(match.dire_name);
-            sql_pararms.push(match.dire_logo);
+            //sql_pararms.push(match.dire_logo);
             sql_pararms.push(match.dire_team_complete);
             sql_pararms.push(match.radiant_captain);
             sql_pararms.push(match.dire_captain);
