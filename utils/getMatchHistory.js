@@ -44,8 +44,12 @@ function taskFetchMatchHistory(){
 //""""""""""""""""13728896    """""    """"201204
 //fetchMatchHistory(13667070,null);
 fetchMatchHistory(null,1);
-fetchMatchHistory(null,2);
-fetchMatchHistory(null,3);
+setTimeout(function () {
+    fetchMatchHistory(null,2);
+},3000);
+setTimeout(function () {
+    fetchMatchHistory(null,3);
+},6000);
 function fetchMatchHistory(start_at_match_id,skill) {
     let isRequest=false;
     let n_url = MatchHistoryURL;
@@ -68,91 +72,97 @@ function fetchMatchHistory(start_at_match_id,skill) {
         console.log('isRequest',isRequest);
         if(isRequest==false){
             clearTimeout(checkRequest);
+            isRequest=true;
             fetchMatchHistory(start_at_match_id, skill);
         }
     },70000);
-    request(n_url, function (err, data, body) {
-        clearTimeout(checkRequest);
-        if (err) {
-            //handleError({ error: err, response: response, ... });
-            console.warn(err);
-            setTimeout(function () {
-                fetchMatchHistory(start_at_match_id, skill);
-            }, 30000);
-        } else if (!(/^2/.test('' + data.statusCode))) { // Status Codes other than 2xx
-            console.log('res.code not 200');
-            console.log(data.statusCode);
-            setTimeout(function () {
-                fetchMatchHistory(start_at_match_id, skill);
-            }, 30000);
 
-        } else {
+    if(isRequest==false){
+        request(n_url, function (err, data, body) {
+            isRequest=true;
+            clearTimeout(checkRequest);
+            if (err) {
+                //handleError({ error: err, response: response, ... });
+                console.warn(err);
+                setTimeout(function () {
+                    fetchMatchHistory(start_at_match_id, skill);
+                }, 30000);
+            } else if (!(/^2/.test('' + data.statusCode))) { // Status Codes other than 2xx
+                console.log('res.code not 200');
+                console.log(data.statusCode);
+                setTimeout(function () {
+                    fetchMatchHistory(start_at_match_id, skill);
+                }, 30000);
 
-            try {
+            } else {
+
                 try {
-                    //   console.log(body);
-                    //console.log(data.body);
-                    let matches = JSON.parse(data.body).result.matches;
-                    let results_remaining=JSON.parse(data.body).result.results_remaining;
-               //     console.log(matches);
+                    try {
+                        //   console.log(body);
+                        //console.log(data.body);
+                        let matches = JSON.parse(data.body).result.matches;
+                        let results_remaining=JSON.parse(data.body).result.results_remaining;
+                        //     console.log(matches);
 
-                    async.series([
-                        function (callback) {
-                            async.eachSeries(matches,function (match, each_callback) {
-                                insertMatchDetails(match,skill,each_callback);
-                            },function (err) {
-                                if(err){
-                                    console.error(err);
+                        async.series([
+                            function (callback) {
+                                async.eachSeries(matches,function (match, each_callback) {
+                                    insertMatchDetails(match,skill,each_callback);
+                                },function (err) {
+                                    if(err){
+                                        console.error(err);
+                                    }else{
+                                        console.log("over,");
+                                        callback();
+                                    }
+                                });
+
+                            },
+                            function (callback) {
+                                console.log("        result.results_remaining;",results_remaining);
+                                if(results_remaining==0){
+                                    setTimeout(()=>{
+                                        fetchMatchHistory(null,skill);
+                                    },30000);
+
                                 }else{
-                                    console.log("over,");
-                                    callback();
+                                    if (matches[matches.length-1]) {
+                                        console.log("next 100");
+                                        let last_match_id = matches[matches.length-1].match_id ;
+                                        //  fetchMatchHistory(last_match_id,null);
+                                        setTimeout(function () {
+                                            fetchMatchHistory(last_match_id, skill);
+                                        }, 5000);
+
+                                    } else {
+                                        callback();
+                                    }
                                 }
-                            });
 
-                        },
-                        function (callback) {
-                        console.log("        result.results_remaining;",results_remaining);
-                        if(results_remaining==0){
-                            setTimeout(()=>{
-                                fetchMatchHistory(null,skill);
-                            },30000);
-
-                        }else{
-                            if (matches[matches.length-1]) {
-                                console.log("next 100");
-                                let last_match_id = matches[matches.length-1].match_id ;
-                                //  fetchMatchHistory(last_match_id,null);
-                                setTimeout(function () {
-                                    fetchMatchHistory(last_match_id, skill);
-                                }, 5000);
-
-                            } else {
-                                callback();
                             }
-                        }
+                        ]);
+                    } catch (e) {
+                        console.log(e);
+                        console.log(data.body);
+                        log.error("fetch ALL MATCH DETAILS>>", e);
+                        log.error("fetch ALL MATCH DETAILS>>", data.body);
+                        setTimeout(function () {
+                            fetchMatchHistory(start_at_match_id,skill);
+                        }, 5000);
 
-                        }
-                    ]);
+                    }
                 } catch (e) {
-                    console.log(e);
-                    console.log(data.body);
-                    log.error("fetch ALL MATCH DETAILS>>", e);
-                    log.error("fetch ALL MATCH DETAILS>>", data.body);
+                    console.error(e);
                     setTimeout(function () {
                         fetchMatchHistory(start_at_match_id,skill);
                     }, 5000);
-
                 }
-            } catch (e) {
-                console.error(e);
-                setTimeout(function () {
-                    fetchMatchHistory(start_at_match_id,skill);
-                }, 5000);
+
             }
 
-        }
+        });
+    }
 
-    });
 
 }
 
@@ -171,85 +181,91 @@ function insertMatchDetails(match,skill,callback) {
                 console.log('isRequest',isRequest);
                 if(isRequest==false){
                     clearTimeout(checkDetailRequest);
+                    isRequest=true;
                     insertMatchDetails(match,skill,callback);
                 }
             },70000);
-            request(url,function (err,data) {
-                clearTimeout(checkDetailRequest);
+            if(isRequest==false){
+                request(url,function (err,data) {
+                    isRequest=true;
+                    clearTimeout(checkDetailRequest);
 
-                if (err) {
-                    //handleError({ error: err, response: response, ... });
-                } else if (!(/^2/.test('' + data.statusCode))) { // Status Codes other than 2xx
-                    console.log('res.code not 200');
-                    console.log(data.statusCode);
-                    setTimeout(()=>{
-                        insertMatchDetails(match,skill, callback);
-                    },3210);
-                }
-                else {
-                    let match=JSON.parse(data.body).result;
-                    let sql_pararms = [];
-                    let player_accounts = [];
-                    let account_array = [];
-                    let players = match.players;
-
-                    for (var i in players) {
-                        player_accounts.push(players[i].account_id);
-                        if (players[i].hasOwnProperty("account_id")) {
-                            account_array.push(parseInt(players[i].account_id));
-                        } else {
-                            account_array.push(4294967295);
-                        }
+                    if (err) {
+                        //handleError({ error: err, response: response, ... });
+                    } else if (!(/^2/.test('' + data.statusCode))) { // Status Codes other than 2xx
+                        console.log('res.code not 200');
+                        console.log(data.statusCode);
+                        setTimeout(()=>{
+                            insertMatchDetails(match,skill, callback);
+                        },3210);
                     }
-                    sql_pararms.push(match.match_id);
-                    sql_pararms.push(match.match_id);
-                    sql_pararms.push(match.radiant_win);
-                    sql_pararms.push(match.duration);
-                    let start_time_param = formatVTime(match.start_time);
-                    sql_pararms.push(start_time_param);
-                    sql_pararms.push(match.tower_status_radiant);
-                    sql_pararms.push(match.tower_status_dire);
-                    sql_pararms.push(match.barracks_status_radiant);
-                    sql_pararms.push(match.barracks_status_dire);
-                    sql_pararms.push(match.cluster);
-                    sql_pararms.push(match.first_blood_time);
-                    sql_pararms.push(match.lobby_type);
-                    sql_pararms.push(match.human_players);
-                    sql_pararms.push(match.leagueid);
-                    sql_pararms.push(match.positive_votes);
-                    sql_pararms.push(match.negative_votes);
-                    sql_pararms.push(match.game_mode);
-                    sql_pararms.push(match.flags);
-                    sql_pararms.push(match.engine);
-                    sql_pararms.push(match.radiant_score);
-                    sql_pararms.push(match.dire_score);
-                    sql_pararms.push(match.tournament_id);
-                    sql_pararms.push(match.tournament_round);
-                    sql_pararms.push(match.radiant_team_id);
-                    sql_pararms.push(match.radiant_name);
-                    sql_pararms.push(match.radiant_logo);
-                    sql_pararms.push(match.radiant_team_complete);
-                    sql_pararms.push(match.dire_team_id);
-                    sql_pararms.push(match.dire_name);
-                    sql_pararms.push(match.dire_logo);
-                    sql_pararms.push(match.dire_team_complete);
-                    sql_pararms.push(match.radiant_captain);
-                    sql_pararms.push(match.dire_captain);
-                    sql_pararms.push(JSON.stringify(player_accounts));
-                    sql_pararms.push(JSON.stringify(match.players));
-                    sql_pararms.push(JSON.stringify(match.picks_bans));
-                    sql_pararms.push(account_array);
-                    sql_pararms.push(skill);
+                    else {
+                        isRequest=true;
+                        let match=JSON.parse(data.body).result;
+                        let sql_pararms = [];
+                        let player_accounts = [];
+                        let account_array = [];
+                        let players = match.players;
 
-                    matchDetailModel.insertPartitionHasSkill(sql_pararms, function (data) {
-                        console.log("===INSERT MATCH DETAIL SUCCESS===\n");
-                        callback();
-                    })
+                        for (var i in players) {
+                            player_accounts.push(players[i].account_id);
+                            if (players[i].hasOwnProperty("account_id")) {
+                                account_array.push(parseInt(players[i].account_id));
+                            } else {
+                                account_array.push(4294967295);
+                            }
+                        }
+                        sql_pararms.push(match.match_id);
+                        sql_pararms.push(match.match_id);
+                        sql_pararms.push(match.radiant_win);
+                        sql_pararms.push(match.duration);
+                        let start_time_param = formatVTime(match.start_time);
+                        sql_pararms.push(start_time_param);
+                        sql_pararms.push(match.tower_status_radiant);
+                        sql_pararms.push(match.tower_status_dire);
+                        sql_pararms.push(match.barracks_status_radiant);
+                        sql_pararms.push(match.barracks_status_dire);
+                        sql_pararms.push(match.cluster);
+                        sql_pararms.push(match.first_blood_time);
+                        sql_pararms.push(match.lobby_type);
+                        sql_pararms.push(match.human_players);
+                        sql_pararms.push(match.leagueid);
+                        sql_pararms.push(match.positive_votes);
+                        sql_pararms.push(match.negative_votes);
+                        sql_pararms.push(match.game_mode);
+                        sql_pararms.push(match.flags);
+                        sql_pararms.push(match.engine);
+                        sql_pararms.push(match.radiant_score);
+                        sql_pararms.push(match.dire_score);
+                        sql_pararms.push(match.tournament_id);
+                        sql_pararms.push(match.tournament_round);
+                        sql_pararms.push(match.radiant_team_id);
+                        sql_pararms.push(match.radiant_name);
+                        sql_pararms.push(match.radiant_logo);
+                        sql_pararms.push(match.radiant_team_complete);
+                        sql_pararms.push(match.dire_team_id);
+                        sql_pararms.push(match.dire_name);
+                        sql_pararms.push(match.dire_logo);
+                        sql_pararms.push(match.dire_team_complete);
+                        sql_pararms.push(match.radiant_captain);
+                        sql_pararms.push(match.dire_captain);
+                        sql_pararms.push(JSON.stringify(player_accounts));
+                        sql_pararms.push(JSON.stringify(match.players));
+                        sql_pararms.push(JSON.stringify(match.picks_bans));
+                        sql_pararms.push(account_array);
+                        sql_pararms.push(skill);
+
+                        matchDetailModel.insertPartitionHasSkill(sql_pararms, function (data) {
+                            console.log("===INSERT MATCH DETAIL SUCCESS===\n");
+                            callback();
+                        })
 
 
-                }
+                    }
 
-            });
+                });
+            }
+
         }else{
             callback();
         }

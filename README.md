@@ -23,3 +23,11 @@ http://steamcommunity.com/dev
 
 
  dota2client  requestMatchDetail 和steamwebapi多一个replay信息；
+
+
+
+ 已更新
+ 2011
+ 201201-02
+
+ 201512从31号开始更新的
