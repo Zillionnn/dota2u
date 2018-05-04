@@ -648,11 +648,11 @@ function insertMatchDetails(match_id,callback) {
                         sql_pararms.push(match.tournament_round);
                         sql_pararms.push(match.radiant_team_id);
                         sql_pararms.push(match.radiant_name);
-                        sql_pararms.push(match.radiant_logo);
+                    //    sql_pararms.push(match.radiant_logo);
                         sql_pararms.push(match.radiant_team_complete);
                         sql_pararms.push(match.dire_team_id);
                         sql_pararms.push(match.dire_name);
-                        sql_pararms.push(match.dire_logo);
+                   //     sql_pararms.push(match.dire_logo);
                         sql_pararms.push(match.dire_team_complete);
                         sql_pararms.push(match.radiant_captain);
                         sql_pararms.push(match.dire_captain);
@@ -734,11 +734,11 @@ function insertMatchDetailsWithoutCallback(match_id) {
                         sql_pararms.push(match.tournament_round);
                         sql_pararms.push(match.radiant_team_id);
                         sql_pararms.push(match.radiant_name);
-                        sql_pararms.push(match.radiant_logo);
+                        //sql_pararms.push(match.radiant_logo);
                         sql_pararms.push(match.radiant_team_complete);
                         sql_pararms.push(match.dire_team_id);
                         sql_pararms.push(match.dire_name);
-                        sql_pararms.push(match.dire_logo);
+                  //      sql_pararms.push(match.dire_logo);
                         sql_pararms.push(match.dire_team_complete);
                         sql_pararms.push(match.radiant_captain);
                         sql_pararms.push(match.dire_captain);
