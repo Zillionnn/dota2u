@@ -124,7 +124,7 @@ MatchDetailModel.prototype.selectIDsByContainAccount=function (params, callback)
  */
 MatchDetailModel.prototype.selectIDByMatchId=function (params,callback) {
     this._query(sql_options.SELECT_ID_BY_MATCH_ID,params,function (data) {
-        callback( data);
+        callback(data);
     });
 };
 

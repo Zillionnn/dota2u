@@ -50,21 +50,21 @@ _pgdb.prototype._query=function (sql, params, callback) {
         var done=result.done;
         client.query(sql,params,function (err, result) {
             done();
-            try {
+           /* try {
                 callback(result);
             }catch (e) {
                 console.error("查询错误.QueryERROR>> ",err,"sql>>",sql,params);
                 log.error("查询错误.SQL_PARAMS>> ",params);
                 callback();
-            }
-/*            if(err){
+            }*/
+            if(err){
                 console.error("查询错误.QueryERROR>> ",err,"sql>>",sql,params);
                 log.error("查询错误.SQL_PARAMS>> ",params);
              //   return log.error("查询错误.QueryERROR>> ",err);
 
             }else{
                 callback(result);
-            }*/
+            }
         });
     })
 };

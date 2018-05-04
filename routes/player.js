@@ -370,7 +370,8 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
         }else{
             //  //logger.info(data.body);
             var matches=JSON.parse(data.body).result.matches;
-            let result_remianing=JSON.parse(data.body).result.result_remaining;
+          //  console.log(JSON.parse(data.body).result);
+            let results_remaining=JSON.parse(data.body).result.results_remaining;
             //  log.info(matches);
 
             async.series([
@@ -382,13 +383,21 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
                         let start_time=formatVTime(match.start_time);
                         console.log(start_time);
                         matchDetailModel.selectIDByMatchId([start_time,match.match_id],function (data) {
-                            console.log("row count is>",data.rowCount);
+                            console.log("row count is>", data.rowCount);
                             if(data.rowCount==0){
                                 insertMatchDetails(match.match_id, callback_c);
                             }else{
                                // update_over=true;
-                                console.log("series callback()");
-                                series_callback();
+                                console.log("result_remianing    ",results_remaining);
+
+                                if(results_remaining>=400){
+                                    console.log("series callback()");
+                                    callback_c();
+                                   // series_callback();
+                                }else{
+                                    series_callback();
+                                }
+
                             }
                         });
                     },function (err) {
@@ -402,10 +411,10 @@ function updateAccount500MatchHistory(account_id,start_at_match_id,hero_id,callb
                 //接上一步做完；
                 function (series_callback) {
                  //   console.log("update_over>>",update_over);
-                    if(result_remianing>400){
+                    if(results_remaining>400){
                         if(matches[49]){
                             console.log("has the next 10 matches");
-                            let lastID=matches[9].match_id-1;
+                            let lastID=matches[49].match_id-1;
                             updateAccount500MatchHistory(account_id,lastID,null,callback_main);
                         }
                     }else{
