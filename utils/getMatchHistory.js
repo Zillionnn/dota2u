@@ -51,7 +51,9 @@ setTimeout(function () {
     fetchMatchHistory(null,3);
 },6000);
 function fetchMatchHistory(start_at_match_id,skill) {
-    let isRequest=false;
+    let requestObj=new Object();
+    requestObj.isRequest=false;
+    requestObj.nextRequesting=false;
     let n_url = MatchHistoryURL;
     if (start_at_match_id) {
         n_url = n_url + '&start_at_match_id=' + start_at_match_id;
@@ -68,19 +70,25 @@ function fetchMatchHistory(start_at_match_id,skill) {
     fs.writeFile('match_id_history.json',`${start_at_match_id}`,function () {
 
     });
+
+    //没办法，无响应。递归
     let checkRequest=setTimeout(()=>{
-        console.log('isRequest',isRequest);
-        if(isRequest==false){
+        console.log('isRequest',requestObj);
+        if(requestObj.isRequest==false){
             clearTimeout(checkRequest);
-            isRequest=true;
+            requestObj.nextRequesting=true;
             fetchMatchHistory(start_at_match_id, skill);
         }
     },70000);
 
-    if(isRequest==false){
         request(n_url, function (err, data, body) {
-            isRequest=true;
+            requestObj.isRequest=true;
             clearTimeout(checkRequest);
+            console.log(requestObj);
+            if(requestObj.nextRequesting){
+                console.warn("time to return....");
+                return ;
+            }
             if (err) {
                 //handleError({ error: err, response: response, ... });
                 console.warn(err);
@@ -161,7 +169,7 @@ function fetchMatchHistory(start_at_match_id,skill) {
             }
 
         });
-    }
+
 
 
 }
@@ -216,7 +224,7 @@ function insertMatchDetails(match,skill,callback) {
                             }
                         }
                         sql_pararms.push(match.match_id);
-                        sql_pararms.push(match.match_id);
+                        sql_pararms.push(match.match_seq_num);
                         sql_pararms.push(match.radiant_win);
                         sql_pararms.push(match.duration);
                         let start_time_param = formatVTime(match.start_time);
@@ -241,11 +249,11 @@ function insertMatchDetails(match,skill,callback) {
                         sql_pararms.push(match.tournament_round);
                         sql_pararms.push(match.radiant_team_id);
                         sql_pararms.push(match.radiant_name);
-                        sql_pararms.push(match.radiant_logo);
+                      //  sql_pararms.push(match.radiant_logo);
                         sql_pararms.push(match.radiant_team_complete);
                         sql_pararms.push(match.dire_team_id);
                         sql_pararms.push(match.dire_name);
-                        sql_pararms.push(match.dire_logo);
+                      //  sql_pararms.push(match.dire_logo);
                         sql_pararms.push(match.dire_team_complete);
                         sql_pararms.push(match.radiant_captain);
                         sql_pararms.push(match.dire_captain);

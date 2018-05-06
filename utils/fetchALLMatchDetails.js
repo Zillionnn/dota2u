@@ -1,4 +1,4 @@
-const  express = require('express');
+﻿const  express = require('express');
 const  router = express.Router();
 const  request=require('request');
 const rp=require('request-promise');
@@ -29,7 +29,7 @@ let  MatchHistoryBySequenceNumURL='http://api.steampowered.com/IDOTA2Match_570/G
 taskFetchMatchDetail();
 function taskFetchMatchDetail(){
     let start_at_match_seq_num;
-    fs.readFile('201204.json',function (err,data) {
+    fs.readFile('201805.json',function (err,data) {
         //   console.log(data.toString());
         start_at_match_seq_num=parseInt(data.toString());
         console.log(start_at_match_seq_num);
@@ -41,7 +41,7 @@ function taskFetchMatchDetail(){
 //fetchMatchHistoryBySequenceNum(452071414,null);
 function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested ) {
     let n_url = MatchHistoryBySequenceNumURL;
-    let requestObj=new Object()
+    let requestObj=new Object();
     requestObj.isRequest=false;
     requestObj.nextRequesting=false;
     if (start_at_match_seq_num) {
@@ -53,7 +53,7 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
     if (start_at_match_seq_num && matches_requested) {
         n_url = n_url + '&start_at_match_seq_num=' + start_at_match_seq_num + "&matches_requested=" + matches_requested;
     }
-    console.log(n_url);
+ console.log(n_url);
     console.log(start_at_match_seq_num);
     let time=new Date().toLocaleString();
     console.log(time);
@@ -66,86 +66,88 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
             fetchMatchHistoryBySequenceNum(start_at_match_seq_num);
         }
     },70000);
-    fs.writeFile('201204.json',`${start_at_match_seq_num}`,function () {
+    fs.writeFile('201805.json',`${start_at_match_seq_num}`,function () {
 
     });
 
 
+    console.log('?');
     request(n_url, function (err, data, body) {
-        requestObj.isRequest=true;
-        clearTimeout(checkRequest);
-        if(requestObj.nextRequesting){
-            console.warn("time to return....");
-            return ;
-        }
-        if (err) {
-            console.warn(err);
-            setTimeout(function () {
-                fetchMatchHistoryBySequenceNum(start_at_match_seq_num, null);
-            }, 30000);
-        } else if (!(/^2/.test('' + data.statusCode))) { // Status Codes other than 2xx
-            console.log('res.code not 200');
-            console.log(data.statusCode);
-            setTimeout(function () {
-                fetchMatchHistoryBySequenceNum(start_at_match_seq_num, null);
-            }, 30000);
-
-        } else {
-
-            try {
-                try {
-                    //   console.log(body);
-                    //console.log(data.body);
-                    let matches = JSON.parse(data.body).result.matches;
-                    let toInsertMatchArray=[];
-                    async.series([
-                        function (callback) {
-                            async.eachSeries(matches,function (match, each_callback) {
-                                insertMatchDetails(match.match_id,match,each_callback);
-                            },function (err) {
-                                if(err){
-                                    console.error(err);
-                                }else{
-                                    console.log("over,");
-                                    callback();
-                                }
-                            });
-
-                        },
-                        function (callback) {
-                            if (matches[99]) {
-                                console.log("next 100");
-                                let last_match_seq_num = matches[99].match_seq_num ;
-                                //  fetchMatchHistoryBySequenceNum(last_match_seq_num,null);
-                                setTimeout(function () {
-                                    fetchMatchHistoryBySequenceNum(last_match_seq_num, null);
-                                }, 6567);
-
-                            } else {
-                                callback();
-                            }
-                        }
-                    ]);
-                } catch (e) {
-                    console.log(e);
-                    console.log(data.body);
-                    log.error("fetch ALL MATCH DETAILS>>", e);
-                    log.error("fetch ALL MATCH DETAILS>>", data.body);
+                requestObj.isRequest=true;
+                clearTimeout(checkRequest);
+                console.log(requestObj);
+                if(requestObj.nextRequesting){
+                    console.warn("time to return....");
+                    return ;
+                }
+                if (err) {
+                    console.warn(err);
                     setTimeout(function () {
-                        fetchMatchHistoryBySequenceNum(start_at_match_seq_num);
-                    }, 5000);
+                        fetchMatchHistoryBySequenceNum(start_at_match_seq_num, null);
+                    }, 30000);
+                } else if (!(/^2/.test('' + data.statusCode))) { // Status Codes other than 2xx
+                    console.log('res.code not 200');
+                    console.log(data.statusCode);
+                    setTimeout(function () {
+                        fetchMatchHistoryBySequenceNum(start_at_match_seq_num, null);
+                    }, 30000);
+
+                } else {
+
+                    try {
+                        try {
+                            //   console.log(body);
+                            //console.log(data.body);
+                            let matches = JSON.parse(data.body).result.matches;
+                            let toInsertMatchArray=[];
+                            async.series([
+                                function (callback) {
+                                    async.eachSeries(matches,function (match, each_callback) {
+                                        insertMatchDetails(match.match_id,match,each_callback);
+                                    },function (err) {
+                                        if(err){
+                                            console.error(err);
+                                        }else{
+                                            console.log("over,");
+                                            callback();
+                                        }
+                                    });
+
+                                },
+                                function (callback) {
+                                    if (matches[99]) {
+                                        console.log("next 100");
+                                        let last_match_seq_num = matches[99].match_seq_num ;
+                                        //  fetchMatchHistoryBySequenceNum(last_match_seq_num,null);
+                                        setTimeout(function () {
+                                            fetchMatchHistoryBySequenceNum(last_match_seq_num, null);
+                                        }, 4567);
+
+                                    } else {
+                                        callback();
+                                    }
+                                }
+                            ]);
+                        } catch (e) {
+                            console.log(e);
+                            console.log(data.body);
+                            log.error("fetch ALL MATCH DETAILS>>", e);
+                            log.error("fetch ALL MATCH DETAILS>>", data.body);
+                            setTimeout(function () {
+                                fetchMatchHistoryBySequenceNum(start_at_match_seq_num);
+                            }, 5000);
+
+                        }
+                    } catch (e) {
+                        console.error(e);
+                        setTimeout(function () {
+                            fetchMatchHistoryBySequenceNum(start_at_match_seq_num);
+                        }, 5000);
+                    }
 
                 }
-            } catch (e) {
-                console.error(e);
-                setTimeout(function () {
-                    fetchMatchHistoryBySequenceNum(start_at_match_seq_num);
-                }, 5000);
-            }
 
-        }
-
-    });
+            });
 
 
 }
@@ -200,11 +202,11 @@ function insertMatchDetails(match_id,match,callback) {
             sql_pararms.push(match.tournament_round);
             sql_pararms.push(match.radiant_team_id);
             sql_pararms.push(match.radiant_name);
-          //  sql_pararms.push(match.radiant_logo);
+           // sql_pararms.push(match.radiant_logo);
             sql_pararms.push(match.radiant_team_complete);
             sql_pararms.push(match.dire_team_id);
             sql_pararms.push(match.dire_name);
-           // sql_pararms.push(match.dire_logo);
+            //sql_pararms.push(match.dire_logo);
             sql_pararms.push(match.dire_team_complete);
             sql_pararms.push(match.radiant_captain);
             sql_pararms.push(match.dire_captain);
