@@ -122,6 +122,7 @@ function fetchMatchHistoryBySequenceNum(start_at_match_seq_num,matches_requested
                                         }, 4567);
 
                                     } else if(matches.length<100){
+                                        let last_match_seq_num = matches[matches.length-1].match_seq_num ;
                                         setTimeout(function () {
                                             fetchMatchHistoryBySequenceNum(last_match_seq_num, null);
                                         }, 60000);

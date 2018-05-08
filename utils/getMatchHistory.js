@@ -27,7 +27,7 @@ let getMatchDetail='http://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/
 /**
  * 获取所有比赛详细；
  */
-//taskFetchMatchHistory();
+taskFetchMatchHistory();
 function taskFetchMatchHistory(){
     let start_at_match_id;
     fs.readFile('match_id_history.json',function (err,data) {
@@ -35,21 +35,19 @@ function taskFetchMatchHistory(){
         start_at_match_id=parseInt(data.toString());
         console.log(start_at_match_id);
         fetchMatchHistory(start_at_match_id,1);
-        fetchMatchHistory(start_at_match_id,2);
-        fetchMatchHistory(start_at_match_id,3);
+        setTimeout(function () {
+            fetchMatchHistory(start_at_match_id,2);
+        },3000);
+        setTimeout(function () {
+            fetchMatchHistory(start_at_match_id,3);
+        },6000);
     });
 
 }
 
 //""""""""""""""""13728896    """""    """"201204
 //fetchMatchHistory(13667070,null);
-fetchMatchHistory(null,1);
-setTimeout(function () {
-    fetchMatchHistory(null,2);
-},3000);
-setTimeout(function () {
-    fetchMatchHistory(null,3);
-},6000);
+
 function fetchMatchHistory(start_at_match_id,skill) {
     let requestObj=new Object();
     requestObj.isRequest=false;
@@ -67,9 +65,11 @@ function fetchMatchHistory(start_at_match_id,skill) {
     let time=new Date().toLocaleString();
     //let match_skill=skill;
     console.log(time);
-    fs.writeFile('match_id_history.json',`${start_at_match_id}`,function () {
+    if(skill==1){
+        fs.writeFile('match_id_history.json',`${start_at_match_id}`,function () {
+        });
+    }
 
-    });
 
     //没办法，无响应。递归
     let checkRequest=setTimeout(()=>{
@@ -177,29 +177,41 @@ function fetchMatchHistory(start_at_match_id,skill) {
 
 
 function insertMatchDetails(match,skill,callback) {
+    let requestObj=new Object();
+    requestObj.isRequest=false;
+    requestObj.nextRequesting=false;
     let match_id=match.match_id;
     let start_time=formatVTime(match.start_time);
     console.log(match_id,start_time);
     matchDetailModel.selectIDByMatchId([start_time,match_id],function (data) {
         console.log("row count>>>",data.rowCount);
-        let isRequest=false;
+
         if(data.rowCount==0){
             let url=getMatchDetail+match_id;
-            let checkDetailRequest=setTimeout(()=>{
-                console.log('isRequest',isRequest);
-                if(isRequest==false){
-                    clearTimeout(checkDetailRequest);
-                    isRequest=true;
-                    insertMatchDetails(match,skill,callback);
+            //没办法，无响应。递归
+            let checkRequest=setTimeout(()=>{
+                console.log('isRequest',requestObj);
+                if(requestObj.isRequest==false){
+                    clearTimeout(checkRequest);
+                    requestObj.nextRequesting=true;
+                   insertMatchDetails(match,skill,callback);
                 }
             },70000);
-            if(isRequest==false){
+
                 request(url,function (err,data) {
-                    isRequest=true;
-                    clearTimeout(checkDetailRequest);
+                    requestObj.isRequest=true;
+                    clearTimeout(checkRequest);
+                    console.log(requestObj);
+                    if(requestObj.nextRequesting){
+                        console.warn("time to return....");
+                        return ;
+                    }
 
                     if (err) {
                         //handleError({ error: err, response: response, ... });
+                        setTimeout(()=>{
+                            insertMatchDetails(match,skill, callback);
+                        },10010);
                     } else if (!(/^2/.test('' + data.statusCode))) { // Status Codes other than 2xx
                         console.log('res.code not 200');
                         console.log(data.statusCode);
@@ -208,7 +220,7 @@ function insertMatchDetails(match,skill,callback) {
                         },3210);
                     }
                     else {
-                        isRequest=true;
+                        requestObj.isRequest=true;
                         let match=JSON.parse(data.body).result;
                         let sql_pararms = [];
                         let player_accounts = [];
@@ -272,7 +284,6 @@ function insertMatchDetails(match,skill,callback) {
                     }
 
                 });
-            }
 
         }else{
             callback();
