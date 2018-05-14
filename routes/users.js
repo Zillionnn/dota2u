@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const request = require('request');
+const cipher = require('../utils/crypto/cipher');
 
 const UserModel = require('../model/User');
-
 const userModel = new UserModel();
 
 const dota2constant = require('dotaconstants');
@@ -16,10 +16,12 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/signup', function (req, res, next) {
-    let   password = req.body.password,
+    let   origin_password = req.body.password,
         nick_name = req.body.nick_name,
         email = req.body.email;
 
+    let password=cipher.encrypted(origin_password);
+    console.log(password);
     userModel.signUp([password,nick_name, email], (data) => {
         console.log(`REGISTER CALLBACK>>>`,data);
         if(data.rowCount==1){
