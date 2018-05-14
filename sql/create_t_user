@@ -1,7 +1,0 @@
-create table t_user(
-	id serial PRIMARY KEY,
-	user_name character varying(20) NOT NULL,
-	password text NOT NULL,
-	nick_name character varying(20) DEFAULT 'user',
-	sex boolean DEFAULT true
-);
