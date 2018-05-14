@@ -7,8 +7,8 @@ function User(obj) {
 }
 const sql_options={
     SING_UP:`INSERT INTO t_user(
-	account_name,password,  nick_name, email)
-	VALUES ($1, $2, $3,$4);`,
+	password,  nick_name, email)
+	VALUES ($1, $2, $3);`,
 
     SELECT_ONE_USER_BY_ACCOUNT_NAME:`SELECT id from t_user where account_name=$1;`,
 

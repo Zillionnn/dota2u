@@ -16,13 +16,11 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/signup', function (req, res, next) {
-    let account = req.body.account,
-        password = req.body.password,
+    let   password = req.body.password,
         nick_name = req.body.nick_name,
         email = req.body.email;
 
-    console.log(account, nick_name, email);
-    userModel.signUp([account, password,nick_name, email], (data) => {
+    userModel.signUp([password,nick_name, email], (data) => {
         console.log(`REGISTER CALLBACK>>>`,data);
         if(data.rowCount==1){
             res.send({registerResult: 200});
