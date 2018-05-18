@@ -28,8 +28,45 @@ var onSteamLogOn = function onSteamLogOn(logonResp) {
 
             Dota2.on("ready", function() {
                 util.log("Node-dota2 ready.");
+                let a=0;
+                if(a==1){
+                    Dota2.requestTopFriendMatches((err,data)=>{
+                        console.error("err",err);
+                        console.log('data>',data);
+                    });
 
+                    Dota2.requestPlayerStats(121320102,(err,data)=>{
+                        if(err){
+                            console.error(err);
+                        }
+                        console.log('requestPlayerStats  data================',data);
+                    });
 
+                    Dota2.requestPracticeLobbyList((err,data)=>{
+                        if(err){
+                            console.error(err);
+                        }
+                        console.log(data);
+                    });
+
+                    Dota2.requestPlayerCardsByPlayer((err,data)=>{
+                        console.log('-------------');
+                        console.error(err);
+                        console.log(data);
+                    });
+
+                    Dota2.requestPlayerInfo([121320102]);
+
+                    Dota2.on('playerInfoData',(data)=>{
+                        console.log('EVENT: playerinfo Data>',data);
+                    });
+
+                    Dota2.requestHallOfFame(1,(err,data)=>{
+                        console.log('--======requestHallOfFame=====');
+                        console.error(err);
+                        console.log(data);
+                    });
+                }
 
 
               /* let match_id=3830421190;
@@ -297,5 +334,21 @@ exports.requestProfileCard=function (account_id,callback) {
             callback(data);
         }
     });
+};
+
+exports.requestTopFriendMatches =function (callback) {
+    Dota2.requestTopFriendMatches((err,data)=>{
+        console.error("err",err);
+        console.log('data>',data);
+    });
 }
 
+exports.requestPlayerStats=function (account_id,callback) {
+    Dota2.requestPlayerStats(account_id,(err,data)=>{
+        if(err){
+            console.error(err);
+        }else{
+            callback(data);
+        }
+    });
+}

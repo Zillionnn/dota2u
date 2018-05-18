@@ -27,7 +27,7 @@ let CONFIG=require('../config/config');
 router.post('/getRecentMatchesByAccount', function(req, res, next) {
    console.log("getRecentMatchesByAccount");
     let account=req.body.account;
-    console.log('getRecentMatchesByAccount',account)
+    console.log('getRecentMatchesByAccount',account);
     getPlayerRecentMatchHistory(account,function (data) {
         //log.info(data);
         res.send(data);
@@ -58,6 +58,11 @@ router.post('/fetchUserInfoByAccount',function (req, res, next) {
     let rank_tier,
         leaderboard_rank,
         account_id=req.body.account;
+
+    //玩家最近20场雷达图
+    dota2Client.requestPlayerStats(account_id,function (data) {
+        console.log(`PLAYER STATUS >>`,data);
+    });
 
     getPlayerProfile(account_id,function (data) {
         rank_tier=data.rank_tier.toString();
