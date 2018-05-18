@@ -50,6 +50,7 @@ router.post('/check_account',(req,res,next)=>{
 
     })
 });
+
 router.post('/check_nickname',(req,res,next)=>{
        let    nick_name = req.body.nick_name;
     userModel.selectOneByNickName([nick_name],(data)=>{
@@ -60,6 +61,7 @@ router.post('/check_nickname',(req,res,next)=>{
         }
     })
 });
+
 router.post('/check_email',(req,res,next)=>{
    let     email = req.body.email;
     userModel.selectOneByEmail([email],(data)=>{
@@ -105,7 +107,7 @@ router.post('/signin',(req,res,next)=>{
                   //console.log();
               });
 
-              res.send({ret_code:0,ret_msg:token,nick_name:nick_name});
+              res.send({ret_code:0,ret_msg:token,nick_name:nick_name,user_id:user_id});
             //console.log(token);
           }else{
               res.send({result:'wrong password'});
@@ -117,7 +119,31 @@ router.post('/signin',(req,res,next)=>{
 router.post('/heart',(req,res,next)=>{
     let token=req.body.token;
     console.log(token);
+});
 
+router.post('/getBindAccount',(req,res,next)=>{
+    let id=req.body.user_id;
+    console.log(id);
+    userModel.selectBindAccountID([id],(data)=>{
+        console.log(data);
+        let game_account_id=data.rows[0].game_account_id;
+
+        if(game_account_id==null){
+            res.send({ret_code:2,ret_msg:'null'});
+        }else{
+            res.send(game_account_id);
+        }
+
+    })
+});
+
+router.post('/bindAccount',(req,res,next)=>{
+    let bind_account=req.body.bind_account;
+    let user_id=req.body.user_id;
+    userModel.updateGameAccountID([bind_account,user_id],(data)=>{
+        console.log(data);
+        res.send({ret_code:0,ret_msg:'bind success'});
+    })
 
 });
 module.exports = router;

@@ -20,7 +20,13 @@ const sql_options={
 
     UPDATE_TOKEN_BY_ID:`UPDATE t_user
 	SET   token=$1
-	WHERE  id=$2;`
+	WHERE  id=$2;`,
+
+    SELECT_BINDACCOUNT_BY_ID:`SELECT game_account_id from t_user where id=$1;`,
+
+    UPDATE_GAME_ACCOUNT:`UPDATE t_user
+	SET   game_account_id=$1
+	WHERE  id=$2;`,
 };
 //继承
 util.inherits(User,_pgdb);
@@ -56,13 +62,25 @@ User.prototype.checkPwd=function(params,callback){
     this._query(sql_options.SELECT_PWD_WHERE_EMAIL,params,(data)=>{
         callback(data);
     })
-}
+};
 
 User.prototype.updateToken=function(params,callback){
     this._query(sql_options.UPDATE_TOKEN_BY_ID,params,(data)=>{
         callback(data);
     })
-}
+};
+
+User.prototype.selectBindAccountID=function(params,callback){
+    this._query(sql_options.SELECT_BINDACCOUNT_BY_ID,params,(data)=>{
+        callback(data);
+    })
+};
+
+User.prototype.updateGameAccountID=function(params,callback){
+    this._query(sql_options.UPDATE_GAME_ACCOUNT,params,(data)=>{
+        callback(data);
+    })
+};
 
 
 module.exports=User;

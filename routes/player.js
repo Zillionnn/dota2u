@@ -14,6 +14,7 @@ const MatchDetailModel=require('../model/MatchDetailModel');
 const  dota2constant=require('dotaconstants');
 const  async=require('async');
 const dota2Client=require('../steam_dota2_client/dota2Client');
+const downloadUtil=require('../utils/parseReplay/downloadUtil');
 
 let CONFIG=require('../config/config');
 
@@ -81,7 +82,7 @@ router.post('/fetchUserInfoByAccount',function (req, res, next) {
 router.get('/getonematchdetail/:match_id',function (req, res, next) {
     log.info("match_id>>",req.params.match_id);
     let match_id=req.params.match_id;
-//    dota2Client.requestMatchDetails(match_id);
+  // parseReplay(match_id);
     matchDetailModel.selectByMatchId([match_id],function (data) {
         log.info("matchDetailsModel>>\n",data);
 
@@ -459,7 +460,7 @@ function getPlayerRecentMatchHistory(account_id, callback) {
             try{
 
                 let result=JSON.parse(data.body).result;
-             console.log(result);
+             //console.log(result);
                 if(result.status!=1){
                     callback({error:403});
                     return;
@@ -468,7 +469,7 @@ function getPlayerRecentMatchHistory(account_id, callback) {
 
                 if(matches){
                     let latest_match_id=matches[0].match_id;
-                    let latest_49th_match_id=matches[49].match_id;
+                    let latest_49th_match_id=matches[matches.length-1].match_id;
                     console.log(`latest_match_id=${latest_match_id}  ${typeof  latest_match_id} and ${latest_49th_match_id}` );
                     
                     //match_id 可以重复   match_detail 表里的不可以重复
@@ -530,7 +531,9 @@ function updatePlayerMatchHistory(account_id,callback) {
                 callback(data);
             });
         }else{
-            SynchronousPlayerMatches(account_id,callback);
+            SynchronousPlayerMatches(account_id,function (data) {
+                callback(data);
+            });
             //TODO 需要指定进程？
          /*   updateAccount500MatchHistory(account_id,null,null,function (data) {
 
@@ -601,7 +604,9 @@ function insertMatchDetails(match_id,callback) {
 
             request(url,function (err,data) {
                 if (err) {
-                    //handleError({ error: err, response: response, ... });
+                   setTimeout(()=>{
+                       insertMatchDetails(match_id,callback);
+                   },12000);
                 } else if (!(/^2/.test('' + data.statusCode))) { // Status Codes other than 2xx
                     insertMatchDetails(match_id,callback);
                 } else {
@@ -826,5 +831,22 @@ function formatVTime(time_string) {
     return time;
 };
 
+function parseReplay(match_id){
+    dota2Client.requestMatchDetails(match_id,function (data) {
+        console.log("=================");
+        //console.log(data);
+        let replay_state=data.replay_state;
+        let cluster=data.cluster;
+        let replay_salt=data.replay_salt;
+        /*      if(replay_state==0){
+                  console.log(`${data.cluster}    ${data.replay_salt}`);
+                  console.log(`download url==http://replay${cluster}.valve.net/570/${match_id}_${replay_salt}.dem.bz2`);
+                  let downloadUri=`http://replay${cluster}.valve.net/570/${match_id}_${replay_salt}.dem.bz2`;
+                  downloadUtil.downloadReply(downloadUri,`${match_id}.dem`,function (data) {
+                      console.log(data);
+                  })
+              }*/
 
+    });
+}
 module.exports = router;
