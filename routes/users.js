@@ -3,6 +3,8 @@ const router = express.Router();
 const request = require('request');
 const cipher = require('../utils/crypto/cipher');
 const jwt=require('jsonwebtoken');
+const jwtVerify=require('../utils/verifyJWT');
+
 
 const UserModel = require('../model/User');
 const userModel = new UserModel();
@@ -17,10 +19,6 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/signup', function (req, res, next) {
-    let session=req.session;
-    console.log('session',session);
-    let session_email=session.email;
-
     let   origin_password = req.body.password,
         nick_name = req.body.nick_name,
         email = req.body.email;
@@ -96,12 +94,14 @@ router.post('/signin',(req,res,next)=>{
           if(correct_pwd==password){
               //return true;
               console.log('true');
-              let data=`${email}&&${password}`;
+              let payload={
+                  id:user_id,
+                  email:email,
+                  password:correct_pwd
+              };
               console.log(data);
-            let token=jwt.sign({
-             data:data,
-                exp:Math.floor(Date.now()/1000)+(60*60)
-            },CONFIG.token_keys);
+              // /second
+            let token=jwt.sign(payload,CONFIG.privateKey,{expiresIn:600});
              // let en_token=cipher.encrypted(token);
               userModel.updateToken([token,user_id],(data)=>{
                   //console.log();
@@ -117,8 +117,18 @@ router.post('/signin',(req,res,next)=>{
 });
 
 router.post('/heart',(req,res,next)=>{
-    let token=req.body.token;
-    console.log(token);
+    let token=req.headers.authorization;
+    jwtVerify.checkJWT(token,(data)=>{
+        console.log('verify  result>>',data);
+        if(data.ret_code>=20){
+            res.send(data);
+        }else{
+
+        }
+
+    });
+
+
 });
 
 router.post('/getBindAccount',(req,res,next)=>{
@@ -137,13 +147,45 @@ router.post('/getBindAccount',(req,res,next)=>{
     })
 });
 
+/**
+ * 绑定game account
+ */
 router.post('/bindAccount',(req,res,next)=>{
-    let bind_account=req.body.bind_account;
-    let user_id=req.body.user_id;
-    userModel.updateGameAccountID([bind_account,user_id],(data)=>{
-        console.log(data);
-        res.send({ret_code:0,ret_msg:'bind success'});
-    })
+    console.log('/bindAccount');
+
+    checkJWT(req).then((data)=>{
+        console.log('jwtResult>>',data);
+        return data;
+    }).then((data)=>{
+        if(data){
+            let bind_account=req.body.bind_account;
+            let user_id=req.body.user_id;
+            userModel.updateGameAccountID([bind_account,user_id],(data)=>{
+               // console.log(data);
+                res.send({ret_code:0,ret_msg:'bind success'});
+            })
+        }else{
+            res.send({ret_code:2,ret_msg:'token Expire  please sign in again'});
+        }
+    });
 
 });
+
+
+function checkJWT(req){
+    let token=req.headers.authorization;
+    let p=new Promise((resolve,reject)=>{
+        jwtVerify.verifyJWT(token,(data)=>{
+            console.log('verify  result>>',data);
+            if(data.ret_code>=20){
+                //res.send(data);
+                resolve(false);
+            }else if(data.ret_code==0){
+                console.log(data);
+                resolve(true);
+            }
+        });
+    });
+    return p;
+}
 module.exports = router;
