@@ -174,7 +174,7 @@ router.post('/bindAccount',(req,res,next)=>{
 
 function checkJWT(req){
     let token=req.headers.authorization;
-    let p=new Promise((resolve,reject)=>{
+    return new Promise((resolve,reject)=>{
         jwtVerify.verifyJWT(token,(data)=>{
             console.log('verify  result>>',data);
             if(data.ret_code>=20){
@@ -186,6 +186,6 @@ function checkJWT(req){
             }
         });
     });
-    return p;
+
 }
 module.exports = router;
