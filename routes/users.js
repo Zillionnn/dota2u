@@ -80,7 +80,7 @@ router.post('/signin',(req,res,next)=>{
    // console.log(password);
     userModel.checkPwd([email],function (data) {
       if(data.rowCount==0){
-          res.send({result:'no email'});
+          res.send({ret_code:2,ret_msg:'no email'});
       }else {
           console.log(data);
           let password=cipher.encrypted(origin_pwd);
@@ -110,24 +110,24 @@ router.post('/signin',(req,res,next)=>{
               res.send({ret_code:0,ret_msg:token,nick_name:nick_name,user_id:user_id});
             //console.log(token);
           }else{
-              res.send({result:'wrong password'});
+              res.send({ret_code:2,ret_msg:'wrong password'});
           }
       }
     })
 });
 
 router.post('/heart',(req,res,next)=>{
-    let token=req.headers.authorization;
-    jwtVerify.checkJWT(token,(data)=>{
-        console.log('verify  result>>',data);
-        if(data.ret_code>=20){
-            res.send(data);
+
+    checkJWT(req).then((data)=>{
+        console.log('jwtResult>>',data);
+        return data;
+    }).then((data)=>{
+        if(data){
+          return ;
         }else{
-
+            res.send({ret_code:2,ret_msg:'token Expire  please sign in again'});
         }
-
     });
-
 
 });
 
