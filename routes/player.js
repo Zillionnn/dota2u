@@ -59,11 +59,6 @@ router.post('/fetchUserInfoByAccount',function (req, res, next) {
         leaderboard_rank,
         account_id=req.body.account;
 
-    //玩家最近20场雷达图
-    dota2Client.requestPlayerStats(account_id,function (data) {
-        console.log(`PLAYER STATUS >>`,data);
-    });
-
     getPlayerProfile(account_id,function (data) {
         rank_tier=data.rank_tier.toString();
         leaderboard_rank=data.leaderboard_rank;
@@ -79,6 +74,21 @@ router.post('/fetchUserInfoByAccount',function (req, res, next) {
         });
     });
 
+});
+
+
+/**
+ * 最近20场比赛数据，生涯数据
+ */
+router.post('/getRecentData',function (req, res, next) {
+    let account_id=req.body.account;
+    console.log('========================',account_id);
+    //玩家最近20场雷达图
+    dota2Client.requestPlayerStats(account_id,function (data) {
+        console.log(`PLAYER STATUS >>`,data);
+        let player_status=data;
+        res.send(player_status);
+    });
 });
 
 /**
