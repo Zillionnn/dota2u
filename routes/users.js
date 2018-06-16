@@ -101,7 +101,8 @@ router.post('/signin',(req,res,next)=>{
               };
               console.log(data);
               // /second
-            let token=jwt.sign(payload,CONFIG.privateKey,{expiresIn:600});
+            let token=jwt.sign(payload,CONFIG.privateKey,{expiresIn:604800});
+            console.log(token);
              // let en_token=cipher.encrypted(token);
               userModel.updateToken([token,user_id],(data)=>{
                   //console.log();
@@ -123,7 +124,7 @@ router.post('/heart',(req,res,next)=>{
         return data;
     }).then((data)=>{
         if(data){
-          return ;
+          res.send({ret_code: 0, message: 'success'});
         }else{
             res.send({ret_code:2,ret_msg:'token Expire  please sign in again'});
         }
@@ -174,6 +175,7 @@ router.post('/bindAccount',(req,res,next)=>{
 
 function checkJWT(req){
     let token=req.headers.authorization;
+    console.log('checkJWT>>>>>>>>>',token);
     return new Promise((resolve,reject)=>{
         jwtVerify.verifyJWT(token,(data)=>{
             console.log('verify  result>>',data);

@@ -1,10 +1,11 @@
-const jwt=require('jsonwebtoken');
+let jwt=require('jsonwebtoken');
 const CONFIG=require('../config/config');
 const UserModel = require('../model/User');
 const userModel = new UserModel();
 
 exports.verifyJWT=function (token,callback) {
     jwt.verify(token,CONFIG.privateKey,function (err, decode) {
+        console.error(err     );
         if(err){
             if(err.name=='TokenExpiredError'){
                 console.error(err.name);
