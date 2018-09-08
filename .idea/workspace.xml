@@ -1,0 +1,1296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d855041f-bc09-419d-a6ff-8bc6b53379bd" name="Default" comment="index.html">
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/static/js/manifest.2ae2e69a05c33dfc65f8.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/public/static/js/manifest.2ae2e69a05c33dfc65f8.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/steam_dota2_client/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/steam_dota2_client/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/parseReplay/downloadUtil.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/parseReplay/downloadUtil.js" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/.tmp/" />
+    <ignored path="$PROJECT_DIR$/temp/" />
+    <ignored path="$PROJECT_DIR$/tmp/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="dota2u" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file leaf-file-name="User.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/model/User.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="207">
+              <caret line="9" column="32" selection-start-line="9" selection-start-column="32" selection-end-line="9" selection-end-column="32" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="users.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/routes/users.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2369">
+              <caret line="103" column="74" selection-start-line="103" selection-start-column="74" selection-end-line="103" selection-end-column="74" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="config.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config/config.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="46">
+              <caret line="2" column="4" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="downloadUtil.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/utils/parseReplay/downloadUtil.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="828">
+              <caret line="36" selection-start-line="36" selection-end-line="36" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="config.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/steam_dota2_client/config.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="184">
+              <caret line="12" column="24" selection-start-line="12" selection-start-column="24" selection-end-line="12" selection-end-column="24" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="verifyJWT.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/utils/verifyJWT.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="115">
+              <caret line="5" column="30" selection-start-line="5" selection-start-column="30" selection-end-line="5" selection-end-column="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="verify.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/node_modules/jsonwebtoken/verify.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="874">
+              <caret line="38" column="16" selection-start-line="38" selection-start-column="16" selection-end-line="38" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="276">
+              <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="UserInfo.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/model/UserInfo.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1127">
+              <caret line="49" column="19" selection-start-line="49" selection-start-column="19" selection-end-line="49" selection-end-column="19" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="tsconfig.json" />
+        <option value="HTML File" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>meteor-boo</find>
+      <find>====================</find>
+      <find>requestMatchDetails</find>
+      <find>done</find>
+      <find>got</find>
+      <find>insertMa</find>
+      <find>seri</find>
+      <find>invo</find>
+      <find>latest_match_id=</find>
+      <find>insertMatchDetails</find>
+      <find>requestPlayerStats</find>
+      <find>clai</find>
+      <find>getUser</find>
+      <find>UserInfoModel</find>
+      <find>error</find>
+      <find>get player recent match history&gt;&gt;</find>
+      <find>updatePlayerMatchHistory</find>
+      <find>IDOTA2Match_570/GetMatchDetails/v1SELECT_ONE_USER_BY_EMAIL</find>
+      <find>selectOneByEmail</find>
+      <find>dota2</find>
+      <find>getPlayerProfile</find>
+      <find>jwtResult</find>
+      <find>session</find>
+      <find>jwtR</find>
+      <find>getRec</find>
+      <find>getRecentData</find>
+      <find>PLAYER STATUS</find>
+      <find>===</find>
+      <find>============</find>
+      <find>eslint</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>console.log</replace>
+      <replace>match_id</replace>
+      <replace>User</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="UPDATE_TYPE" value="MERGE" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/utils/fetchALLMatchDetails201706.js" />
+        <option value="$PROJECT_DIR$/utils/201706.json" />
+        <option value="$PROJECT_DIR$/utils/fetchALLMatchDetails201801.js" />
+        <option value="$PROJECT_DIR$/utils/start_task.bat" />
+        <option value="$PROJECT_DIR$/utils/201601.json" />
+        <option value="$PROJECT_DIR$/utils/201801.json" />
+        <option value="$PROJECT_DIR$/utils/20180503.json" />
+        <option value="$PROJECT_DIR$/utils/fetchALLMatchDetails0503.js" />
+        <option value="$PROJECT_DIR$/config/pgDB.js" />
+        <option value="$PROJECT_DIR$/utils/main_process.js" />
+        <option value="$PROJECT_DIR$/utils/getMatchHistory/getMatchHIstiory.js" />
+        <option value="$PROJECT_DIR$/utils/getMatchHistory/getMatchHistory.js" />
+        <option value="$PROJECT_DIR$/log/app.log" />
+        <option value="$PROJECT_DIR$/utils/201204.json" />
+        <option value="$PROJECT_DIR$/model/MatchDetailModel.js" />
+        <option value="$PROJECT_DIR$/utils/fetchALLMatchDetails2016.js" />
+        <option value="$PROJECT_DIR$/utils/fetchALLMatchDetails2017.js" />
+        <option value="$PROJECT_DIR$/utils/201402.json" />
+        <option value="$PROJECT_DIR$/utils/fetchALLMatchDetails2014.js" />
+        <option value="$PROJECT_DIR$/utils/fetchALLMatchDetails.js" />
+        <option value="$PROJECT_DIR$/utils/getMatchHistory.js" />
+        <option value="$PROJECT_DIR$/public/meteor.html" />
+        <option value="$PROJECT_DIR$/public/meteor.sh" />
+        <option value="$PROJECT_DIR$/routes/index.js" />
+        <option value="$PROJECT_DIR$/utils/download/downloadUtil.js" />
+        <option value="$PROJECT_DIR$/routes/parseReply.js" />
+        <option value="$PROJECT_DIR$/node_modules/dotaconstants/index.js" />
+        <option value="$PROJECT_DIR$/utils/downloadPic/downloadpic.js" />
+        <option value="$PROJECT_DIR$/config/redisConfig.js" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/test/readline.js" />
+        <option value="$PROJECT_DIR$/openid/test.js" />
+        <option value="$PROJECT_DIR$/sql/create_t_user.sql" />
+        <option value="$PROJECT_DIR$/utils/parseReplay/downloadUtil.js" />
+        <option value="$PROJECT_DIR$/utils/crypto/testCrypto.js" />
+        <option value="$PROJECT_DIR$/utils/crypto/dechipher.js" />
+        <option value="$PROJECT_DIR$/utils/crypto/chipher.js" />
+        <option value="$PROJECT_DIR$/test/test.html" />
+        <option value="$PROJECT_DIR$/utils/crypto/cipher.js" />
+        <option value="$PROJECT_DIR$/test/dfsaf.js" />
+        <option value="$PROJECT_DIR$/model/User.js" />
+        <option value="$PROJECT_DIR$/steam_dota2_client/dota2Client.js" />
+        <option value="$PROJECT_DIR$/test/jwt.js" />
+        <option value="$PROJECT_DIR$/config/PRIVATEKEY.js" />
+        <option value="$PROJECT_DIR$/app.js" />
+        <option value="$PROJECT_DIR$/routes/player.js" />
+        <option value="$PROJECT_DIR$/.eslint.js" />
+        <option value="$PROJECT_DIR$/.eslintrc.js" />
+        <option value="$PROJECT_DIR$/config/config.js" />
+        <option value="$PROJECT_DIR$/utils/verifyJWT.js" />
+        <option value="$PROJECT_DIR$/routes/users.js" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER">
+    <package-json value="$PROJECT_DIR$/package.json" />
+  </component>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/package.json" />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="185" />
+    <option name="y" value="200" />
+    <option name="width" value="1475" />
+    <option name="height" value="875" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="dota2u" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dota2u" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="HbShouldOpenHtmlAsHb" value="" />
+    <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="javascript.nodejs.core.library.configured.version" value="8.9.0" />
+    <property name="js-jscs-nodeInterpreter" value="E:\Program Files\nodejs\node.exe" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../dota2u-web" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.prettier" value="true" />
+    <property name="node.js.detected.package.standard" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.prettier" value="project" />
+    <property name="node.js.path.for.package.standard" value="project" />
+    <property name="node.js.selected.package.eslint" value="D:\PROJECT\dota2u\node_modules\eslint" />
+    <property name="node.js.selected.package.prettier" value="" />
+    <property name="node.js.selected.package.standard" value="" />
+    <property name="nodejs_interpreter_path" value="node" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="settings.javascript.linters.eslint" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\PROJECT\dota2u\node_modules\dotaconstants\build" />
+      <recent name="D:\PROJECT\dota2u\utils" />
+      <recent name="D:\PROJECT\dota2u\routes" />
+      <recent name="D:\PROJECT\dota2u\public" />
+      <recent name="D:\PROJECT\dota2u\img\hero_ver" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\PROJECT\dota2u\public" />
+      <recent name="D:\PROJECT\dota2u\utils\downloadPic" />
+      <recent name="D:\PROJECT\dota2u\utils\parseReplay\parsejar" />
+      <recent name="D:\PROJECT\dota2u\utils\parseReplay" />
+      <recent name="D:\PROJECT\dota2u\utils\download" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Node.js.bin\www">
+    <configuration name="cipher.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/utils/crypto/cipher.js" working-dir="$PROJECT_DIR$/utils/crypto" />
+    <configuration name="dechipher.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" nameIsGenerated="true" path-to-js-file="dechipher.js" working-dir="$PROJECT_DIR$/utils/crypto" />
+    <configuration name="dfsaf.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" nameIsGenerated="true" path-to-js-file="dfsaf.js" working-dir="$PROJECT_DIR$/test" />
+    <configuration name="dota2Client.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" nameIsGenerated="true" path-to-js-file="dota2Client.js" working-dir="$PROJECT_DIR$/steam_dota2_client" />
+    <configuration name="downloadUtil.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" nameIsGenerated="true" path-to-js-file="downloadUtil.js" working-dir="$PROJECT_DIR$/utils/parseReplay" />
+    <configuration name="jwt.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" nameIsGenerated="true" path-to-js-file="jwt.js" working-dir="$PROJECT_DIR$/test" />
+    <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
+      <method />
+    </configuration>
+    <configuration default="true" type="DartTestRunConfigurationType" factoryName="Dart Test">
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma">
+      <config-file value="" />
+      <node-interpreter value="project" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="project" working-dir="">
+      <method />
+    </configuration>
+    <configuration default="true" type="cucumber.js" factoryName="Cucumber.js">
+      <option name="cucumberJsArguments" value="" />
+      <option name="executablePath" />
+      <option name="filePath" />
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.npm" factoryName="npm">
+      <command value="run-script" />
+      <scripts />
+      <node-interpreter value="project" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <envs />
+    </configuration>
+    <configuration default="true" type="mocha-javascript-test-runner" factoryName="Mocha">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <working-directory />
+      <pass-parent-env>true</pass-parent-env>
+      <ui>bdd</ui>
+      <extra-mocha-options />
+      <test-kind>DIRECTORY</test-kind>
+      <test-directory />
+      <recursive>false</recursive>
+    </configuration>
+    <list>
+      <item itemvalue="Node.js.bin\www" />
+      <item itemvalue="Node.js.dfsaf.js" />
+      <item itemvalue="Node.js.downloadUtil.js" />
+      <item itemvalue="Node.js.dota2Client.js" />
+      <item itemvalue="Node.js.dechipher.js" />
+      <item itemvalue="Node.js.jwt.js" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Node.js.jwt.js" />
+        <item itemvalue="Node.js.dfsaf.js" />
+        <item itemvalue="Node.js.dechipher.js" />
+        <item itemvalue="Node.js.dota2Client.js" />
+        <item itemvalue="Node.js.downloadUtil.js" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="StructureViewFactory">
+    <option name="AUTOSCROLL_FROM_SOURCE" value="true" />
+    <option name="ACTIVE_ACTIONS" value=",HIDE_INHERITED_FROM_OBJECT,HIDE_INHERITED,SHOW_CLASSES,SHOW_FIELDS" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d855041f-bc09-419d-a6ff-8bc6b53379bd" name="Default" comment="" />
+      <created>1521082448771</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1521082448771</updated>
+      <workItem from="1521082450253" duration="20015000" />
+      <workItem from="1521112854217" duration="4282000" />
+      <workItem from="1521383584093" duration="10053000" />
+      <workItem from="1521721877293" duration="3255000" />
+      <workItem from="1521857360777" duration="1795000" />
+      <workItem from="1521984338450" duration="24000" />
+      <workItem from="1522459841306" duration="2535000" />
+      <workItem from="1523237601065" duration="620000" />
+      <workItem from="1523238239690" duration="34012000" />
+      <workItem from="1523367489712" duration="1244000" />
+      <workItem from="1523408000377" duration="23503000" />
+      <workItem from="1523499122317" duration="11317000" />
+      <workItem from="1523591756392" duration="17626000" />
+      <workItem from="1523616204241" duration="2159000" />
+      <workItem from="1523670017367" duration="6511000" />
+      <workItem from="1523698750484" duration="6221000" />
+      <workItem from="1523755339785" duration="48298000" />
+      <workItem from="1524028534458" duration="4134000" />
+      <workItem from="1524032869488" duration="74731000" />
+      <workItem from="1524236219935" duration="71516000" />
+      <workItem from="1524647254341" duration="65901000" />
+      <workItem from="1524900252059" duration="35046000" />
+      <workItem from="1525075511859" duration="41822000" />
+      <workItem from="1525266662783" duration="100950000" />
+      <workItem from="1525656496946" duration="7787000" />
+      <workItem from="1525711813588" duration="6044000" />
+      <workItem from="1525826531129" duration="20337000" />
+      <workItem from="1526028365244" duration="18970000" />
+      <workItem from="1526141612078" duration="13952000" />
+      <workItem from="1526259571014" duration="30085000" />
+      <workItem from="1526610229711" duration="24281000" />
+      <workItem from="1526830844360" duration="3095000" />
+      <workItem from="1526906817296" duration="345000" />
+      <workItem from="1526957537620" duration="4090000" />
+      <workItem from="1526962927169" duration="1760000" />
+      <workItem from="1526992642993" duration="723000" />
+      <workItem from="1527300786388" duration="5967000" />
+      <workItem from="1527496159614" duration="2720000" />
+      <workItem from="1528068328878" duration="746000" />
+      <workItem from="1528372811635" duration="1297000" />
+      <workItem from="1528900603365" duration="67000" />
+      <workItem from="1529116716774" duration="12789000" />
+      <workItem from="1529223919671" duration="605000" />
+      <workItem from="1529228682857" duration="10000" />
+      <workItem from="1532616743848" duration="1354000" />
+      <workItem from="1532963412779" duration="780000" />
+      <workItem from="1532965968235" duration="594000" />
+      <workItem from="1533958120953" duration="28000" />
+      <workItem from="1536373999842" duration="341000" />
+    </task>
+    <task id="LOCAL-00054" summary="加速写入">
+      <created>1524126965558</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1524126965558</updated>
+    </task>
+    <task id="LOCAL-00055" summary="暴力快速">
+      <created>1524144508619</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1524144508619</updated>
+    </task>
+    <task id="LOCAL-00056" summary="修复">
+      <created>1524196242661</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1524196242661</updated>
+    </task>
+    <task id="LOCAL-00057" summary="pgconfig update">
+      <created>1524292308481</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1524292308482</updated>
+    </task>
+    <task id="LOCAL-00058" summary="接口更新；&#10;采用分区表；&#10;查询速度优化；">
+      <created>1524317092860</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1524317092860</updated>
+    </task>
+    <task id="LOCAL-00059" summary="修复">
+      <created>1524361235399</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1524361235399</updated>
+    </task>
+    <task id="LOCAL-00060" summary="数据库修改">
+      <created>1524366180215</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1524366180215</updated>
+    </task>
+    <task id="LOCAL-00061" summary="static">
+      <created>1524376471189</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1524376471189</updated>
+    </task>
+    <task id="LOCAL-00062" summary="bug修复">
+      <created>1524376518839</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1524376518839</updated>
+    </task>
+    <task id="LOCAL-00063" summary="查询优化">
+      <created>1524552195294</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1524552195294</updated>
+    </task>
+    <task id="LOCAL-00064" summary="更新">
+      <created>1524629044025</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1524629044025</updated>
+    </task>
+    <task id="LOCAL-00065" summary="优化查询">
+      <created>1524754327399</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1524754327399</updated>
+    </task>
+    <task id="LOCAL-00066" summary="修复BUG">
+      <created>1524797513074</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1524797513074</updated>
+    </task>
+    <task id="LOCAL-00067" summary="修改">
+      <created>1524799810913</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1524799810913</updated>
+    </task>
+    <task id="LOCAL-00068" summary="天梯获取优化">
+      <created>1524802901965</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1524802901965</updated>
+    </task>
+    <task id="LOCAL-00069" summary="修复">
+      <created>1524906091593</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1524906091593</updated>
+    </task>
+    <task id="LOCAL-00070" summary="删除已有match detail">
+      <created>1525162485632</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1525162485632</updated>
+    </task>
+    <task id="LOCAL-00071" summary="index.html">
+      <created>1525162496029</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1525162496029</updated>
+    </task>
+    <task id="LOCAL-00072" summary="修复">
+      <created>1525267170228</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1525267170228</updated>
+    </task>
+    <task id="LOCAL-00073" summary="index.html">
+      <created>1525267177245</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1525267177245</updated>
+    </task>
+    <task id="LOCAL-00074" summary="request 优化">
+      <created>1525343552778</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1525343552778</updated>
+    </task>
+    <task id="LOCAL-00075" summary="request 优化">
+      <created>1525351653971</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1525351653971</updated>
+    </task>
+    <task id="LOCAL-00076" summary="api取数据">
+      <created>1525388609518</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1525388609518</updated>
+    </task>
+    <task id="LOCAL-00077" summary="修复">
+      <created>1525388835955</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1525388835955</updated>
+    </task>
+    <task id="LOCAL-00078" summary="更新最近比赛，更新100场，">
+      <created>1525392639062</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1525392639062</updated>
+    </task>
+    <task id="LOCAL-00079" summary="index.html">
+      <created>1525401728405</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1525401728405</updated>
+    </task>
+    <task id="LOCAL-00080" summary="api取数据">
+      <created>1525413689749</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1525413689749</updated>
+    </task>
+    <task id="LOCAL-00081" summary="skill;&#10;dont insert team logo any more;">
+      <created>1525439916357</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1525439916357</updated>
+    </task>
+    <task id="LOCAL-00082" summary="insert real time matchdetails">
+      <created>1525439942535</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1525439942535</updated>
+    </task>
+    <task id="LOCAL-00083" summary="index.html">
+      <created>1525440664263</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1525440664263</updated>
+    </task>
+    <task id="LOCAL-00084" summary="修改写法">
+      <created>1525566336202</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1525566336202</updated>
+    </task>
+    <task id="LOCAL-00085" summary="修改写法">
+      <created>1525745408010</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1525745408010</updated>
+    </task>
+    <task id="LOCAL-00086" summary="download replay;&#10;unzip replay;">
+      <created>1526005989961</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1526005989961</updated>
+    </task>
+    <task id="LOCAL-00087" summary="index.html">
+      <created>1526007702781</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1526007702781</updated>
+    </task>
+    <task id="LOCAL-00088" summary="register user">
+      <created>1526285048606</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1526285048606</updated>
+    </task>
+    <task id="LOCAL-00089" summary="index.html">
+      <created>1526285053428</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1526285053428</updated>
+    </task>
+    <task id="LOCAL-00090" summary="register user">
+      <created>1526285095880</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1526285095880</updated>
+    </task>
+    <task id="LOCAL-00091" summary="register user">
+      <created>1526285106629</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1526285106629</updated>
+    </task>
+    <task id="LOCAL-00092" summary="register user">
+      <created>1526289203587</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1526289203587</updated>
+    </task>
+    <task id="LOCAL-00093" summary="cipher">
+      <created>1526290474646</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1526290474646</updated>
+    </task>
+    <task id="LOCAL-00094" summary="bug">
+      <created>1526559978281</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1526559978281</updated>
+    </task>
+    <task id="LOCAL-00095" summary="sign in;&#10;token?;">
+      <created>1526560026450</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1526560026451</updated>
+    </task>
+    <task id="LOCAL-00096" summary="fix bug;&#10;add bind a game account;">
+      <created>1526637506043</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1526637506043</updated>
+    </task>
+    <task id="LOCAL-00097" summary="player status">
+      <created>1526644610782</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1526644610782</updated>
+    </task>
+    <task id="LOCAL-00098" summary="bind account need right token;&#10;verify token;">
+      <created>1526701807110</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1526701807110</updated>
+    </task>
+    <task id="LOCAL-00099" summary="bind account need right token;&#10;verify token;">
+      <created>1526703610129</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1526703610129</updated>
+    </task>
+    <task id="LOCAL-00100" summary="change logic">
+      <created>1526992744512</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1526992744513</updated>
+    </task>
+    <task id="LOCAL-00101" summary="send player status;&#10;recent 20 matches radar and something;">
+      <created>1527308190411</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1527308190411</updated>
+    </task>
+    <task id="LOCAL-00102" summary="fix jwt bug">
+      <created>1529194470986</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1529194470987</updated>
+    </task>
+    <option name="localTasksCounter" value="103" />
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="746337000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6169265" visible="true" weight="0.24702774" />
+      <window_info anchor="bottom" id="TODO" order="7" weight="0.32952926" />
+      <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5006605" side_tool="true" weight="0.34950072" />
+      <window_info anchor="bottom" id="NativeScript" order="12" weight="0.3266762" />
+      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.4993395" visible="true" weight="0.19971469" />
+      <window_info id="npm" order="1" side_tool="true" />
+      <window_info anchor="bottom" id="Run" order="3" sideWeight="0.4993395" weight="0.38516405" />
+      <window_info id="Structure" order="3" sideWeight="0.62138087" side_tool="true" weight="0.19550858" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.34615386" />
+      <window_info id="Favorites" order="2" sideWeight="0.37861916" side_tool="true" weight="0.19550858" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="Messages" order="0" />
+      <window_info anchor="bottom" id="Message" order="1" />
+      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="2" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="更新" />
+    <MESSAGE value="优化查询" />
+    <MESSAGE value="修复BUG" />
+    <MESSAGE value="修改" />
+    <MESSAGE value="天梯获取优化" />
+    <MESSAGE value="删除已有match detail" />
+    <MESSAGE value="request 优化" />
+    <MESSAGE value="修复" />
+    <MESSAGE value="更新最近比赛，更新100场，" />
+    <MESSAGE value="api取数据" />
+    <MESSAGE value="skill;&#10;dont insert team logo any more;" />
+    <MESSAGE value="insert real time matchdetails" />
+    <MESSAGE value="修改写法" />
+    <MESSAGE value="download replay;&#10;unzip replay;" />
+    <MESSAGE value="index.html" />
+    <MESSAGE value="register user" />
+    <MESSAGE value="cipher" />
+    <MESSAGE value="bug" />
+    <MESSAGE value="sign in;&#10;token?;" />
+    <MESSAGE value="fix bug;&#10;add bind a game account;" />
+    <MESSAGE value="player status" />
+    <MESSAGE value="bind account need right token;&#10;verify token;" />
+    <MESSAGE value="change logic" />
+    <MESSAGE value="send player status;&#10;recent 20 matches radar and something;" />
+    <MESSAGE value="fix jwt bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix jwt bug" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="16" />
+    </breakpoint-manager>
+  </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="breakpointLogExpression">
+      <expression>
+        <expression-string>sql_pararms.push(match.match_id);
+            sql_pararms.push(match.match_id);
+            sql_pararms.push(match.radiant_win);
+            sql_pararms.push(match.duration);
+            let start_time_param=formatVTime(match.start_time);
+            sql_pararms.push(start_time_param);
+            sql_pararms.push(match.tower_status_radiant);
+            sql_pararms.push(match.tower_status_dire);
+            sql_pararms.push(match.barracks_status_radiant);
+            sql_pararms.push(match.barracks_status_dire);
+            sql_pararms.push(match.cluster);
+            sql_pararms.push(match.first_blood_time);
+            sql_pararms.push(match.lobby_type);
+            sql_pararms.push(match.human_players);
+            sql_pararms.push(match.leagueid);
+            sql_pararms.push(match.positive_votes);
+            sql_pararms.push(match.negative_votes);
+            sql_pararms.push(match.game_mode);
+            sql_pararms.push(match.flags);
+            sql_pararms.push(match.engine);
+            sql_pararms.push(match.radiant_score);
+            sql_pararms.push(match.dire_score);
+            sql_pararms.push(match.tournament_id);
+            sql_pararms.push(match.tournament_round);
+            sql_pararms.push(match.radiant_team_id);
+            sql_pararms.push(match.radiant_name);
+            sql_pararms.push(match.radiant_logo);
+            sql_pararms.push(match.radiant_team_complete);
+            sql_pararms.push(match.dire_team_id);
+            sql_pararms.push(match.dire_name);
+            sql_pararms.push(match.dire_logo);
+            sql_pararms.push(match.dire_team_complete);
+            sql_pararms.push(match.radiant_captain);
+            sql_pararms.push(match.dire_captain);
+            sql_pararms.push(JSON.stringify(player_accounts));
+            sql_pararms.push(JSON.stringify(match.players));
+            sql_pararms.push(JSON.stringify(match.picks_bans));
+            sql_pararms.push(account_array);
+
+            matchDetailModel.insertPartition(sql_pararms,function (data) {
+                console.log(&quot;===INSERT MATCH DETAIL SUCCESS===\n&quot;);
+                callback();
+            })</expression-string>
+        <language-id>JavaScript</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/model/UserInfo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1586">
+          <caret line="61" column="7" lean-forward="true" selection-start-line="61" selection-start-column="7" selection-end-line="61" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/meteor.json" />
+    <entry file="file://$PROJECT_DIR$/log/errors.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="634">
+          <caret line="70421" column="70" selection-start-line="70421" selection-start-column="70" selection-end-line="70421" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/download/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2314">
+          <caret line="89" column="11" lean-forward="true" selection-start-line="89" selection-start-column="11" selection-end-line="89" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/dotaconstants/build/heroes.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="338">
+          <caret line="2805" column="30" selection-start-line="2805" selection-start-column="30" selection-end-line="2805" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/dotaconstants/build/hero_names.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2730" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/dotaconstants/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="11" column="42" selection-start-line="11" selection-start-column="42" selection-end-line="11" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/downloadPic/downloadpic.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="12" column="5" selection-start-line="12" selection-start-column="5" selection-end-line="12" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/redisConfig.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="8" column="16" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/redis/lib/createClient.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="5" column="70" selection-start-line="5" selection-start-column="70" selection-end-line="5" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/redis/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="30" column="70" selection-start-line="30" selection-start-column="70" selection-end-line="30" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="962">
+            <caret line="37" column="29" selection-start-line="37" selection-start-column="29" selection-end-line="37" selection-end-column="29" />
+          </first_editor>
+          <second_editor>
+            <markdownNavigatorState />
+          </second_editor>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/openid/test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="25" column="35" lean-forward="true" selection-start-line="25" selection-start-column="35" selection-end-line="26" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sql/creat_t_user_data.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="10" column="42" lean-forward="true" selection-end-line="15" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sql/create_t_user.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26">
+          <caret line="1" column="26" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/crypto/dechipher.js" />
+    <entry file="file://$PROJECT_DIR$/test/test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-8" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/readline.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-8">
+          <caret line="13" column="3" selection-start-line="13" selection-start-column="3" selection-end-line="13" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/test.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/javascript/nodejs/8.9.0/core-modules/crypto.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="129">
+          <caret line="27" column="5" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/crypto/cipher.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="104">
+          <caret line="10" column="21" selection-start-line="10" selection-start-column="21" selection-end-line="10" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/dfsaf.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="213">
+          <caret line="77" column="10" selection-start-line="77" selection-start-column="10" selection-end-line="77" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/201601.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="10" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/PRIVATEKEY.js" />
+    <entry file="file://$PROJECT_DIR$/test/jwt.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="11" column="12" lean-forward="true" selection-start-line="11" selection-start-column="12" selection-end-line="11" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/mount-middlewares/index.js" />
+    <entry file="file://$PROJECT_DIR$/node_modules/mount-middlewares/README.md" />
+    <entry file="file://$PROJECT_DIR$/node_modules/request/request.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1075">
+          <caret line="185" column="21" selection-start-line="185" selection-start-column="21" selection-end-line="185" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/log/app.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3050346">
+          <caret line="117321" column="36" selection-start-line="117321" selection-start-column="17" selection-end-line="117321" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/pgDB.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1690">
+          <caret line="65" column="16" selection-start-line="65" selection-start-column="16" selection-end-line="65" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.eslintrc.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="10" column="1" lean-forward="true" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="166">
+          <caret line="33" column="32" lean-forward="true" selection-start-line="33" selection-start-column="32" selection-end-line="33" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/fetchALLMatchDetails.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="5" column="62" lean-forward="true" selection-start-line="5" selection-start-column="62" selection-end-line="5" selection-end-column="62" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/steam_dota2_client/dota2Client.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="733">
+          <caret line="269" column="31" lean-forward="true" selection-start-line="269" selection-start-column="31" selection-end-line="269" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/TEST.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/player.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="676">
+          <caret line="26" column="7" selection-start-line="26" selection-start-column="7" selection-end-line="26" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/openid.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="6" column="10" selection-start-line="6" selection-start-column="10" selection-end-line="6" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="6" column="3" selection-start-line="6" selection-start-column="3" selection-end-line="6" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/AccountMatchHistoryModel.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="5" column="20" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/MatchDetailModel.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="884">
+          <caret line="34" selection-start-line="44" selection-start-column="7" selection-end-line="44" selection-end-column="102" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/MatchHistoryModel.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="9" column="52" selection-start-line="9" selection-start-column="52" selection-end-line="9" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/UserInfo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1127">
+          <caret line="49" column="19" selection-start-line="49" selection-start-column="19" selection-end-line="49" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/User.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="9" column="32" selection-start-line="9" selection-start-column="32" selection-end-line="9" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/jsonwebtoken/verify.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="874">
+          <caret line="38" column="16" selection-start-line="38" selection-start-column="16" selection-end-line="38" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/verifyJWT.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="115">
+          <caret line="5" column="30" selection-start-line="5" selection-start-column="30" selection-end-line="5" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/users.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2369">
+          <caret line="103" column="74" selection-start-line="103" selection-start-column="74" selection-end-line="103" selection-end-column="74" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/parseReplay/downloadUtil.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="828">
+          <caret line="36" selection-start-line="36" selection-end-line="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/steam_dota2_client/config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="12" column="24" selection-start-line="12" selection-start-column="24" selection-end-line="12" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="46">
+          <caret line="2" column="4" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+  </component>
+</project>

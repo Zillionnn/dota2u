@@ -4,7 +4,7 @@ const download=require('download');
 const decompress=require('decompress');
 const progress=require('request-progress');
 const child_process=require('child_process');
-const readline=require('linebyline');
+const readline=require('readline');
 const async=require('async');
 
 let url='http://replay227.valve.net/570/3876545217_1920391580.dem.bz2';
@@ -29,13 +29,27 @@ let bunzip2=function (filename,callback) {
 
 };
 
-let parseReplay=function (filename) {
+//parseReplay();
+ function parseReplay(filename) {
     //TODO  parse replay
 
         console.log('start parse replay');
 
 
-    //child_process.exec(`java -jar `)
+    child_process.exec(`java -jar ./parsejar/combatlog.one-jar.jar  0510replay.dem`,  { shell: true, maxBuffer: 10 * 1024 * 1024 },  (err,stdout,stderr)=>{
+        if(err){
+            console.error(err)
+        }
+        console.log(stdout);
+        const parseStream = readline.createInterface({
+            input: process.stdin,
+        });
+        parseStream.on('line', (e) => {
+
+
+      console.log('---stdin---',e);
+        });
+    })
 };
 
 

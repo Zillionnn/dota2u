@@ -31,3 +31,8 @@ http://steamcommunity.com/dev
  201201-02
 
  201512从31号开始更新的
+
+
+
+ ? 查询单场比赛需要sql方式修改；
+ ? 查询recent 20 matches  语句修改；
